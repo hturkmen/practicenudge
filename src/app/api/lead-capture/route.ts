@@ -7,8 +7,39 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const TRACKER_SHEET_URL =
   "https://docs.google.com/spreadsheets/d/PLACEHOLDER/copy";
 
+// Simple in-memory rate limiter (resets on cold start)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 5; // max requests
+const RATE_WINDOW = 60 * 60 * 1000; // 1 hour
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+    return false;
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT;
+}
+
+// Basic email validation
+function isValidEmail(email: string): boolean {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email) && email.length <= 254;
+}
+
 export async function POST(request: Request) {
   try {
+    // Rate limiting by IP
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { name, email, practice, clients } = body;
 
@@ -19,12 +50,25 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validate email format
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Invalid email address" },
+        { status: 400 }
+      );
+    }
+
+    // Sanitize inputs (strip HTML/scripts)
+    const safeName = name.slice(0, 100).replace(/<[^>]*>/g, "");
+    const safePractice = practice.slice(0, 200).replace(/<[^>]*>/g, "");
+    const safeClients = (clients || "").slice(0, 20);
+
     // 1. Send the tracker template to the lead
     await resend.emails.send({
       from: "PracticeNudge <onboarding@resend.dev>",
       to: [email],
       subject: "Your MTD Client Readiness Tracker Template",
-      text: `Hi ${name},
+      text: `Hi ${safeName},
 
 Thanks for downloading the MTD Client Readiness Tracker!
 
@@ -56,14 +100,14 @@ You received this because you downloaded the MTD Client Readiness Tracker from p
     // 2. Notify yourself about the new lead
     await resend.emails.send({
       from: "PracticeNudge Leads <onboarding@resend.dev>",
-      to: ["halil.turkmen@gmail.com"],
-      subject: `New MTD Tracker Lead: ${name} (${practice})`,
+      to: [process.env.LEAD_NOTIFICATION_EMAIL || "halil.turkmen@gmail.com"],
+      subject: `New MTD Tracker Lead: ${safeName} (${safePractice})`,
       text: `New lead from /mtd page:
 
-Name: ${name}
+Name: ${safeName}
 Email: ${email}
-Practice: ${practice}
-Client count: ${clients || "Not specified"}
+Practice: ${safePractice}
+Client count: ${safeClients || "Not specified"}
 Time: ${new Date().toISOString()}
 
 ---

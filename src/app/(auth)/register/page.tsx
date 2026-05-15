@@ -34,8 +34,14 @@ export default function RegisterPage() {
     setError(null);
     setLoading(true);
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      setLoading(false);
+      return;
+    }
+
+    if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      setError("Password must contain at least one uppercase letter and one number");
       setLoading(false);
       return;
     }
@@ -202,11 +208,11 @@ export default function RegisterPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="At least 6 characters"
+                placeholder="Min 8 chars, 1 uppercase, 1 number"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
