@@ -30,10 +30,29 @@ export default function MTDLandingPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // TODO: Connect to form handler (email or sheet)
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setSubmitted(true);
-    setLoading(false);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      practice: formData.get("practice"),
+      clients: formData.get("clients"),
+    };
+
+    try {
+      const res = await fetch("/api/lead-capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error("Submission failed");
+      setSubmitted(true);
+    } catch {
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
