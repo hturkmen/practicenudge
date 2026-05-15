@@ -69,13 +69,12 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="flex items-center gap-2 text-primary">
-              <FileCheck className="h-8 w-8" />
-              <span className="text-xl font-bold">MTD Client Chaser</span>
+              <span className="text-xl font-bold">PracticeNudge</span>
             </div>
           </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
           <CardDescription>
-            Sign in to your account to manage client documents
+            Sign in to manage your client readiness dashboard
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

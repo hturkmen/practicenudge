@@ -68,7 +68,7 @@ export default function BillingPage() {
                 <Badge>Active</Badge>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
-                14 days remaining. Upgrade to keep using MTD Client Chaser.
+                14 days remaining. Upgrade to keep using PracticeNudge.
               </p>
             </div>
           </div>

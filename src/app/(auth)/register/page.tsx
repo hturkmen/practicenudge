@@ -89,8 +89,7 @@ export default function RegisterPage() {
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <div className="flex items-center gap-2 text-primary">
-                <FileCheck className="h-8 w-8" />
-                <span className="text-xl font-bold">MTD Client Chaser</span>
+                <span className="text-xl font-bold">PracticeNudge</span>
               </div>
             </div>
             <CardTitle className="text-2xl">Check your email</CardTitle>
@@ -115,13 +114,12 @@ export default function RegisterPage() {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="flex items-center gap-2 text-primary">
-              <FileCheck className="h-8 w-8" />
-              <span className="text-xl font-bold">MTD Client Chaser</span>
+              <span className="text-xl font-bold">PracticeNudge</span>
             </div>
           </div>
           <CardTitle className="text-2xl">Start your free trial</CardTitle>
           <CardDescription>
-            14 days free. No credit card required.
+            Join the early access pilot. No credit card required.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
