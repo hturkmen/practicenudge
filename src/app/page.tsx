@@ -51,7 +51,7 @@ export default function LandingPage() {
       <section className="py-20 md:py-28 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="mb-4" variant="secondary">
-            Built for small UK practices
+            🇬🇧 Built for small UK practices
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
             Stop chasing clients
