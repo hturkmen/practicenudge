@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 interface HeaderProps {
   firmName?: string;
@@ -22,6 +23,7 @@ export function Header({ firmName, userEmail }: HeaderProps) {
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-6">
       <div />
       <div className="flex items-center gap-3">
+        <LanguageSwitcher />
         <ThemeToggle />
         <div className="text-right">
           <p className="text-sm font-medium">{firmName}</p>

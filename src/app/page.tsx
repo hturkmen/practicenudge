@@ -19,6 +19,7 @@ import {
   FileCheck,
   AlertTriangle,
 } from "lucide-react";
+import { LandingLanguageSwitcher } from "@/components/landing-language-switcher";
 
 export default function LandingPage() {
   return (
@@ -37,6 +38,7 @@ export default function LandingPage() {
             <a href="#faq" className="hover:text-foreground transition-colors">FAQ</a>
           </div>
           <div className="flex items-center gap-3">
+            <LandingLanguageSwitcher />
             <Link href="/login">
               <Button variant="ghost" size="sm">Sign in</Button>
             </Link>

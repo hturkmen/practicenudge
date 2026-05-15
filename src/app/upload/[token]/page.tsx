@@ -3,6 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -26,6 +28,7 @@ export default function UploadPage() {
   const params = useParams();
   const token = params.token as string;
   const supabase = createClient();
+  const t = useTranslations("upload");
 
   const [request, setRequest] = useState<any>(null);
   const [firm, setFirm] = useState<any>(null);
@@ -45,7 +48,7 @@ export default function UploadPage() {
         .single();
 
       if (reqError || !req) {
-        setError("This link is invalid or has expired.");
+        setError(t("invalidLinkText"));
         setLoading(false);
         return;
       }
@@ -90,11 +93,11 @@ export default function UploadPage() {
   ) => {
     if (!request) return;
     if (file.size > 50 * 1024 * 1024) {
-      alert("File size must be less than 50MB");
+      alert(t("fileTooLarge"));
       return;
     }
     if (!ALLOWED_TYPES.includes(file.type)) {
-      alert("File type not allowed. Please upload PDF, images, Word, Excel, or CSV files.");
+      alert(t("fileTypeNotAllowed"));
       return;
     }
 
@@ -109,7 +112,7 @@ export default function UploadPage() {
       .upload(filePath, file, { upsert: true });
 
     if (uploadError) {
-      alert("Upload failed. Please try again.");
+      alert(t("uploadFailed"));
       setUploading(null);
       return;
     }
@@ -200,7 +203,7 @@ export default function UploadPage() {
         <Card className="w-full max-w-md text-center">
           <CardContent className="pt-8 pb-8">
             <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
-            <h2 className="text-xl font-bold mb-2">Link not found</h2>
+            <h2 className="text-xl font-bold mb-2">{t("invalidLink")}</h2>
             <p className="text-muted-foreground">{error}</p>
           </CardContent>
         </Card>
@@ -230,7 +233,8 @@ export default function UploadPage() {
               {firm?.name?.[0] || "?"}
             </div>
           )}
-          <span className="font-semibold">{firm?.name}</span>
+          <span className="font-semibold flex-1">{firm?.name}</span>
+          <LanguageSwitcher />
         </div>
       </header>
 
@@ -239,11 +243,11 @@ export default function UploadPage() {
         <div>
           <h1 className="text-2xl font-bold">{request.title}</h1>
           <p className="text-muted-foreground mt-1">
-            Hi {request.clients?.name}, please upload the documents listed below.
+            {t("greeting", { name: request.clients?.name })}
           </p>
           {request.deadline && (
             <p className="text-sm mt-2">
-              <span className="font-medium">Deadline:</span>{" "}
+              <span className="font-medium">{t("deadline")}:</span>{" "}
               {new Date(request.deadline).toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "long",
@@ -258,7 +262,7 @@ export default function UploadPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">
-                {completedItems} of {items.length} documents uploaded
+                {t("progress", { completed: completedItems, total: items.length })}
               </span>
               <span className="text-sm text-muted-foreground">
                 {Math.round(progress)}%
@@ -276,7 +280,7 @@ export default function UploadPage() {
               <div className="flex items-center gap-2 mt-3 text-green-600">
                 <CheckCircle2 className="h-5 w-5" />
                 <span className="font-medium">
-                  All documents uploaded! Thank you.
+                  {t("allDone")}
                 </span>
               </div>
             )}
@@ -324,7 +328,7 @@ export default function UploadPage() {
 
                     {item.status === "rejected" && (
                       <p className="text-sm text-red-600 mt-1">
-                        This document was rejected. Please upload a new version.
+                        {t("rejected")}
                       </p>
                     )}
 
@@ -353,10 +357,10 @@ export default function UploadPage() {
                           <>
                             <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-1" />
                             <p className="text-sm text-muted-foreground">
-                              Click or drag file here to upload
+                              {t("dropzone")}
                             </p>
                             <p className="text-xs text-muted-foreground mt-1">
-                              Max 50MB
+                              {t("maxSize")}
                             </p>
                           </>
                         )}
@@ -386,10 +390,9 @@ export default function UploadPage() {
             <div className="flex items-center gap-3">
               <HelpCircle className="h-5 w-5 text-muted-foreground shrink-0" />
               <div>
-                <p className="text-sm font-medium">Need help?</p>
+                <p className="text-sm font-medium">{t("needHelp")}</p>
                 <p className="text-sm text-muted-foreground">
-                  If you have any questions or issues, please contact{" "}
-                  <span className="font-medium">{firm?.name}</span> directly.
+                  {t("needHelpText", { firmName: firm?.name })}
                 </p>
               </div>
             </div>
