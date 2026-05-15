@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "PracticeNudge — MTD Client Readiness Tracking for UK Accountants",
   description:
     "Stop chasing clients for MTD information. See which clients are MTD-ready, what's missing, and who needs a nudge — built for small UK practices.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

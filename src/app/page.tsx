@@ -27,7 +27,7 @@ export default function LandingPage() {
       <nav className="border-b sticky top-0 bg-white/95 backdrop-blur z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-primary">PracticeNudge</span>
+            <img src="/logo.svg" alt="PracticeNudge" className="h-7" />
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
             <a href="#problem" className="hover:text-foreground transition-colors">Problem</a>
