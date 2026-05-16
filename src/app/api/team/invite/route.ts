@@ -68,7 +68,7 @@ export async function POST(request: Request) {
 
       // Send notification email
       await resend.emails.send({
-        from: "PracticeNudge <onboarding@resend.dev>",
+        from: "PracticeNudge <noreply@practicenudge.com>",
         to: [email],
         subject: `You've been added to ${firmName} on PracticeNudge`,
         text: `Hi,
@@ -88,7 +88,7 @@ PracticeNudge`,
 
     // User doesn't exist — send invitation email to register
     await resend.emails.send({
-      from: "PracticeNudge <onboarding@resend.dev>",
+      from: "PracticeNudge <noreply@practicenudge.com>",
       to: [email],
       subject: `${inviterName || "Your colleague"} invited you to ${firmName} on PracticeNudge`,
       text: `Hi,

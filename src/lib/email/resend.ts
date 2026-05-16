@@ -60,7 +60,7 @@ Thanks,
 ${firmName}`;
 
   const { data, error } = await resend.emails.send({
-    from: `${firmName} <onboarding@resend.dev>`,
+    from: `${firmName} <noreply@practicenudge.com>`,
     to: [to],
     subject,
     text: body,

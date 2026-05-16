@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
     // 1. Send the tracker template to the lead
     await resend.emails.send({
-      from: "PracticeNudge <onboarding@resend.dev>",
+      from: "PracticeNudge <noreply@practicenudge.com>",
       to: [email],
       subject: "Your MTD Client Readiness Tracker Template",
       text: `Hi ${safeName},
@@ -100,7 +100,7 @@ You received this because you downloaded the MTD Client Readiness Tracker from p
 
     // 2. Notify yourself about the new lead
     await resend.emails.send({
-      from: "PracticeNudge Leads <onboarding@resend.dev>",
+      from: "PracticeNudge <noreply@practicenudge.com>",
       to: [process.env.LEAD_NOTIFICATION_EMAIL || "halil.turkmen@gmail.com"],
       subject: `New MTD Tracker Lead: ${safeName} (${safePractice})`,
       text: `New lead from /mtd page:
