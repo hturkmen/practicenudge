@@ -63,7 +63,7 @@ export async function POST(request: Request) {
 
   const pendingItems = (items || []).map((item: any) => item.label);
   const isOverdue = docRequest.status === "overdue";
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.practicenudge.com";
+  const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "https://www.practicenudge.com";
   const uploadLink = `${appUrl}/upload/${docRequest.magic_token}`;
 
   try {
