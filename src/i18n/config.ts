@@ -1,4 +1,4 @@
-export const locales = ["en", "pl", "ro", "ur", "bn", "pa", "tr"] as const;
+export const locales = ["en", "pl", "ro", "ur", "bn", "pa", "tr", "de", "fr", "es"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 
@@ -10,6 +10,9 @@ export const localeNames: Record<Locale, string> = {
   bn: "বাংলা",
   pa: "ਪੰਜਾਬੀ",
   tr: "Türkçe",
+  de: "Deutsch",
+  fr: "Français",
+  es: "Español",
 };
 
 // RTL languages
