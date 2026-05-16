@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY is not set");
+  }
+  return new Resend(apiKey);
+}
 
 export async function POST(request: Request) {
   try {
@@ -67,7 +73,7 @@ export async function POST(request: Request) {
       }
 
       // Send notification email
-      await resend.emails.send({
+      await getResend().emails.send({
         from: "PracticeNudge <noreply@practicenudge.com>",
         to: [email],
         subject: `You've been added to ${firmName} on PracticeNudge`,
@@ -87,7 +93,7 @@ PracticeNudge`,
     }
 
     // User doesn't exist — send invitation email to register
-    await resend.emails.send({
+    await getResend().emails.send({
       from: "PracticeNudge <noreply@practicenudge.com>",
       to: [email],
       subject: `${inviterName || "Your colleague"} invited you to ${firmName} on PracticeNudge`,

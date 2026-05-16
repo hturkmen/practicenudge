@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY is not set");
+  }
+  return new Resend(apiKey);
+}
 
 // Google Sheet link for the MTD Client Readiness Tracker Template
 const TRACKER_SHEET_URL =
@@ -65,7 +71,7 @@ export async function POST(request: Request) {
     const safeClients = (clients || "").slice(0, 20);
 
     // 1. Send the tracker template to the lead
-    await resend.emails.send({
+    await getResend().emails.send({
       from: "PracticeNudge <noreply@practicenudge.com>",
       to: [email],
       subject: "Your MTD Client Readiness Tracker Template",
@@ -99,7 +105,7 @@ You received this because you downloaded the MTD Client Readiness Tracker from p
     });
 
     // 2. Notify yourself about the new lead
-    await resend.emails.send({
+    await getResend().emails.send({
       from: "PracticeNudge <noreply@practicenudge.com>",
       to: [process.env.LEAD_NOTIFICATION_EMAIL || "halil.turkmen@gmail.com"],
       subject: `New MTD Tracker Lead: ${safeName} (${safePractice})`,
