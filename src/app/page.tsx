@@ -20,6 +20,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { LandingLanguageSwitcher } from "@/components/landing-language-switcher";
+import { WebsiteStructuredData } from "@/components/structured-data";
 import { getTranslations } from "next-intl/server";
 
 export default async function LandingPage() {
@@ -28,6 +29,7 @@ export default async function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <WebsiteStructuredData />
       {/* Nav */}
       <nav className="border-b sticky top-0 bg-white/95 backdrop-blur z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
