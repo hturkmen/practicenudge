@@ -57,15 +57,14 @@ export function AddClientDialog({
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data: firmUser, error: firmError } = await supabase
+    const { data: firmUser } = await supabase
       .from("firm_users")
       .select("firm_id")
       .eq("user_id", user.id)
       .maybeSingle();
 
     if (!firmUser) {
-      console.error("firm_users lookup failed:", { userId: user.id, firmError });
-      toast.error(`Could not find your firm (user: ${user.id?.slice(0,8)}). Error: ${firmError?.message || "no record found"}`);
+      toast.error("Could not find your firm. Please try logging in again.");
       setLoading(false);
       return;
     }
