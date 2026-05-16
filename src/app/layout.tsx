@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -98,6 +99,20 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning className={cn("font-sans", geistSans.variable)}>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-B8P1PZSHZ9"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-B8P1PZSHZ9');
+          `}
+        </Script>
+      </head>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
