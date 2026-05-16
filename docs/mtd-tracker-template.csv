@@ -1,0 +1,11 @@
+Client Name,Type,Email,UTR Number,Income Band,MTD Software,Software Connected,Agent Auth,Digital Records,Risk Level,Last Chased,Notes
+John Smith,Sole Trader,john.smith@email.com,1234567890,£50k+,Xero,Yes,Done,Yes,🟢 Low,10 May 2026,Fully ready - no action needed
+Sarah Jones,Landlord,sarah.jones@email.com,0987654321,£50k+,None,No,Not done,No,🔴 High,,Needs software setup urgently
+Mike Williams,Sole Trader,mike@mwplumbing.co.uk,5678901234,£50k+,QuickBooks,Yes,Done,Partial,🟡 Medium,8 May 2026,Missing Q1 bank statements
+Emma Brown,Landlord,emma.brown@gmail.com,3456789012,£30k+ (2027),FreeAgent,Yes,Not done,Yes,🟡 Medium,,Agent auth pending - chase HMRC
+David Taylor,Sole Trader,david@taylorconsulting.co.uk,7890123456,£50k+,Xero,Yes,Done,Yes,🟢 Low,12 May 2026,All quarterly submissions on track
+Lisa Chen,Landlord,lisa.chen@outlook.com,2345678901,£50k+,None,No,Not done,No,🔴 High,,Multiple properties - complex setup needed
+James Wilson,Sole Trader,james@wilsondesign.co.uk,8901234567,£30k+ (2027),Xero,Yes,Done,Yes,🟢 Low,,Ready for Phase 2
+Rachel Green,Sole Trader,rachel@greenaccounts.com,4567890123,£50k+,QuickBooks,Yes,Done,Partial,🟡 Medium,5 May 2026,Mileage log not digitised
+Tom Harris,Landlord,tom.harris@btinternet.com,6789012345,£50k+,None,No,Not done,No,🔴 High,,Refuses to use software - needs conversation
+Amy Scott,Sole Trader,amy@scottcatering.co.uk,9012345678,£20k+ (2028),None,No,Not done,No,🟡 Medium,,Phase 3 - low priority for now
