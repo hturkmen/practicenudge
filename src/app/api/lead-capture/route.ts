@@ -5,7 +5,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Google Sheet link for the MTD Client Readiness Tracker Template
 const TRACKER_SHEET_URL =
-  "https://docs.google.com/spreadsheets/d/PLACEHOLDER/copy";
+  process.env.MTD_TRACKER_SHEET_URL ||
+  "https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms/copy";
 
 // Simple in-memory rate limiter (resets on cold start)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();

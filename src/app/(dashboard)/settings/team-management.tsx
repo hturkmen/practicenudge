@@ -70,20 +70,43 @@ export function TeamManagement({ firmId }: TeamManagementProps) {
     if (!firmId || !inviteEmail.trim()) return;
     setInviting(true);
 
-    // Check if user exists in auth.users (we can't query auth.users from client)
-    // Instead, we'll create a placeholder entry and the user will be linked when they sign up
-    // For now, show a message that the user needs to register first
+    try {
+      // Get current user info for the invite email
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: firmData } = await supabase
+        .from("firms")
+        .select("name")
+        .eq("id", firmId)
+        .maybeSingle();
 
-    // Check if already a member
-    const existing = members.find(
-      (m: any) => m.user_id === inviteEmail // This won't work directly
-    );
+      const res = await fetch("/api/team/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: inviteEmail.trim(),
+          role: inviteRole,
+          firmId,
+          firmName: firmData?.name || "Your firm",
+          inviterName: user?.user_metadata?.full_name || user?.email,
+        }),
+      });
 
-    // For MVP: invite by creating a firm_users entry when the user registers
-    // For now, show instructions
-    toast.info(
-      `To add a team member: Ask them to register at ${window.location.origin}/register, then share their user ID with you. We'll add proper email invitations soon.`
-    );
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Failed to send invitation");
+      } else if (data.status === "added") {
+        toast.success(`${inviteEmail} has been added to your team`);
+        setInviteEmail("");
+        fetchMembers();
+      } else {
+        toast.success(`Invitation sent to ${inviteEmail}. They'll need to register first.`);
+        setInviteEmail("");
+      }
+    } catch {
+      toast.error("Failed to send invitation");
+    }
+
     setInviting(false);
   };
 
@@ -218,9 +241,9 @@ export function TeamManagement({ firmId }: TeamManagementProps) {
 
         {/* Invite */}
         <div className="border-t pt-4">
-          <Label className="text-sm font-medium">Add team member</Label>
+          <Label className="text-sm font-medium">Invite team member</Label>
           <p className="text-xs text-muted-foreground mb-3">
-            Ask your team member to register first, then add them here
+            Enter their email address. If they already have an account, they&apos;ll be added immediately. Otherwise, they&apos;ll receive an invitation to register.
           </p>
           <div className="flex gap-2">
             <Input

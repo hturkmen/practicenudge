@@ -1,0 +1,14 @@
+- generic [ref=e2]:
+  - heading "Web Page Blocked" [level=1] [ref=e3]
+  - paragraph [ref=e4]: Access to the web page you were trying to visit has been blocked in accordance with TUI UK&I policy.
+  - paragraph [ref=e5]:
+    - text: You can
+    - link "click here" [ref=e6] [cursor=pointer]:
+      - /url: https://urlfiltering.paloaltonetworks.com/
+    - text: to suggest a new category for this site if you believe it's been blocked in error.
+  - paragraph [ref=e7]: "For further assistance, please contact the help desk:"
+  - paragraph [ref=e8]: "E-mail : help.desk@tui.co.uk"
+  - paragraph [ref=e9]: "Phone : 0800-072-1054"
+  - paragraph [ref=e10]: "User: tuiad\\halil.turkmen"
+  - paragraph [ref=e11]: "URL: mtdnudge.com/"
+  - paragraph [ref=e12]: "Category: unknown"

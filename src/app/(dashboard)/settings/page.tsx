@@ -78,6 +78,10 @@ Thanks,
           email: f.email || "",
           phone: f.phone || "",
         });
+        // Load saved email templates if they exist
+        if (f.email_templates) {
+          setEmailTemplate((prev: any) => ({ ...prev, ...f.email_templates }));
+        }
       }
       setLoading(false);
     }
@@ -102,6 +106,23 @@ Thanks,
       toast.success("Settings saved");
     }
     setSaving(false);
+  };
+
+  const handleSaveEmailTemplates = async () => {
+    if (!firm) return;
+
+    const { error } = await supabase
+      .from("firms")
+      .update({
+        email_templates: emailTemplate,
+      })
+      .eq("id", firm.id);
+
+    if (error) {
+      toast.error("Failed to save email templates: " + error.message);
+    } else {
+      toast.success("Email templates saved");
+    }
   };
 
   if (loading) {
@@ -292,7 +313,7 @@ Thanks,
           </Card>
 
           <div className="flex justify-end">
-            <Button onClick={() => toast.success("Email templates saved")}>
+            <Button onClick={handleSaveEmailTemplates}>
               <Save className="mr-2 h-4 w-4" />
               Save templates
             </Button>

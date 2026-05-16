@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,9 @@ export default function RegisterPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteFirmId = searchParams.get("invite");
+  const inviteRole = searchParams.get("role") || "member";
   const supabase = createClient();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -52,6 +55,8 @@ export default function RegisterPage() {
       options: {
         data: {
           firm_name: firmName,
+          invite_firm_id: inviteFirmId || undefined,
+          invite_role: inviteFirmId ? inviteRole : undefined,
         },
       },
     });
