@@ -312,7 +312,8 @@
     "needHelpText": "Jeśli masz pytania lub problemy, skontaktuj się bezpośrednio z {firmName}.",
     "fileTooLarge": "Rozmiar pliku musi być mniejszy niż 50MB",
     "fileTypeNotAllowed": "Typ pliku niedozwolony. Proszę przesłać pliki PDF, obrazy, Word, Excel lub CSV.",
-    "uploadFailed": "Przesyłanie nie powiodło się. Spróbuj ponownie."
+    "uploadFailed": "Przesyłanie nie powiodło się. Spróbuj ponownie.",
+    "manageSubscriptions": "Preferencje powiadomień"
   },
   "activity": {
     "request_created": "Wniosek utworzony",

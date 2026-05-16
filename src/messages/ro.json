@@ -312,7 +312,8 @@
     "needHelpText": "Dacă ai întrebări sau probleme, contactează direct {firmName}.",
     "fileTooLarge": "Dimensiunea fișierului trebuie să fie mai mică de 50MB",
     "fileTypeNotAllowed": "Tip de fișier nepermis. Te rugăm să încarci fișiere PDF, imagini, Word, Excel sau CSV.",
-    "uploadFailed": "Încărcarea a eșuat. Te rugăm să încerci din nou."
+    "uploadFailed": "Încărcarea a eșuat. Te rugăm să încerci din nou.",
+    "manageSubscriptions": "Preferințe notificări"
   },
   "activity": {
     "request_created": "Cerere creată",

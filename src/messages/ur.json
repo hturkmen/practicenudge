@@ -312,7 +312,8 @@
     "needHelpText": "If you have any questions or issues, please contact {firmName} directly.",
     "fileTooLarge": "File size must be less than 50MB",
     "fileTypeNotAllowed": "File type not allowed. Please upload PDF, images, Word, Excel, or CSV files.",
-    "uploadFailed": "Upload failed. Please try again."
+    "uploadFailed": "Upload failed. Please try again.",
+    "manageSubscriptions": "Notification Preferences"
   },
   "activity": {
     "request_created": "Request created",

@@ -15,6 +15,7 @@ import {
   FileCheck,
   CreditCard,
   Shield,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/requests", label: "Requests", icon: FileText },
   { href: "/templates", label: "Templates", icon: FolderOpen },
+  { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/settings", label: "Settings", icon: Settings },
   { href: "/billing", label: "Billing", icon: CreditCard },
 ];

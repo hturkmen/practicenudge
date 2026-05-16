@@ -103,7 +103,8 @@
     "needHelpText": "Si tienes preguntas o problemas, contacta directamente con {firmName}.",
     "fileTooLarge": "El tamaño del archivo debe ser menor a 50MB",
     "fileTypeNotAllowed": "Tipo de archivo no permitido. Por favor sube archivos PDF, imágenes, Word, Excel o CSV.",
-    "uploadFailed": "Error al subir. Por favor inténtalo de nuevo."
+    "uploadFailed": "Error al subir. Por favor inténtalo de nuevo.",
+    "manageSubscriptions": "Preferencias de notificación"
   },
   "activity": {
     "request_created": "Solicitud creada",

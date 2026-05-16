@@ -17,6 +17,7 @@ import {
   Clock,
   CheckCircle2,
   ArrowRight,
+  Bell,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,11 @@ export default function DashboardPage() {
   const [overdueRequests, setOverdueRequests] = useState<any[]>([]);
   const [upcomingDeadlines, setUpcomingDeadlines] = useState<any[]>([]);
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [notificationStats, setNotificationStats] = useState<{
+    total: number;
+    delivered: number;
+    failed: number;
+  }>({ total: 0, delivered: 0, failed: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -73,6 +79,22 @@ export default function DashboardPage() {
       setOverdueRequests(overdueRes.data || []);
       setUpcomingDeadlines(upcomingRes.data || []);
       setRecentActivity(activityRes.data || []);
+
+      // Fetch notification stats
+      try {
+        const statsResponse = await fetch("/api/notifications/stats");
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setNotificationStats({
+            total: statsData.totals?.total ?? 0,
+            delivered: statsData.totals?.delivered ?? 0,
+            failed: statsData.totals?.failed ?? 0,
+          });
+        }
+      } catch {
+        // Silently fail - widget will show zeros
+      }
+
       setLoading(false);
     }
     fetchData();
@@ -147,6 +169,40 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
+        {/* Notification Summary */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Bell className="h-5 w-5 text-muted-foreground" />
+                Notifications
+              </CardTitle>
+              <CardDescription>Communication summary</CardDescription>
+            </div>
+            <Link href="/notifications">
+              <Button variant="ghost" size="sm" className="gap-1">
+                View All <ArrowRight className="h-3 w-3" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold">{notificationStats.total}</p>
+                <p className="text-xs text-muted-foreground">Total Sent</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-600">{notificationStats.delivered}</p>
+                <p className="text-xs text-muted-foreground">Delivered</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-destructive">{notificationStats.failed}</p>
+                <p className="text-xs text-muted-foreground">Failed</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Overdue */}
         <Card>
           <CardHeader>

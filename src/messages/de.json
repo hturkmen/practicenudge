@@ -103,7 +103,8 @@
     "needHelpText": "Bei Fragen oder Problemen wenden Sie sich bitte direkt an {firmName}.",
     "fileTooLarge": "Dateigröße muss unter 50MB liegen",
     "fileTypeNotAllowed": "Dateityp nicht erlaubt. Bitte laden Sie PDF, Bilder, Word, Excel oder CSV-Dateien hoch.",
-    "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut."
+    "uploadFailed": "Upload fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "manageSubscriptions": "Benachrichtigungseinstellungen"
   },
   "activity": {
     "request_created": "Anfrage erstellt",

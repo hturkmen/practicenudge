@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { sendReminderEmail } from "@/lib/email/resend";
+import { createNotificationLog } from "@/lib/notifications/logger";
 
 export async function POST(request: Request) {
   const supabase = createClient();
@@ -66,6 +67,24 @@ export async function POST(request: Request) {
   const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "https://www.practicenudge.com";
   const uploadLink = `${appUrl}/upload/${docRequest.magic_token}`;
 
+  // Look up the 'document_reminder' notification type ID for dual-write
+  let documentReminderTypeId: string | null = null;
+  try {
+    const { data: notificationType } = await supabase
+      .from("notification_types")
+      .select("id")
+      .eq("name", "document_reminder")
+      .single();
+    documentReminderTypeId = notificationType?.id ?? null;
+  } catch {
+    // If lookup fails, skip notification_logs write but continue with reminder
+    console.warn("Failed to look up document_reminder notification type");
+  }
+
+  const emailSubject = isOverdue
+    ? `OVERDUE: Documents needed for ${docRequest.title}`
+    : `Reminder for ${docRequest.title}`;
+
   try {
     await sendReminderEmail({
       to: docRequest.clients.email,
@@ -90,10 +109,29 @@ export async function POST(request: Request) {
       client_id: docRequest.clients.id,
       channel: "email",
       status: "sent",
-      message_preview: isOverdue
-        ? `OVERDUE: Documents needed for ${docRequest.title}`
-        : `Reminder for ${docRequest.title}`,
+      message_preview: emailSubject,
     });
+
+    // Dual-write to notification_logs
+    if (documentReminderTypeId && docRequest.firms?.id) {
+      try {
+        await createNotificationLog({
+          firm_id: docRequest.firms.id,
+          client_id: docRequest.clients.id,
+          notification_type_id: documentReminderTypeId,
+          channel: "email",
+          recipient_address: docRequest.clients.email,
+          subject: emailSubject,
+          content_preview: emailSubject.substring(0, 200),
+          status: "sent",
+          triggered_by: user.id,
+          metadata: { request_id: docRequest.id, is_overdue: isOverdue },
+        });
+      } catch (notifError) {
+        // Don't break existing reminder functionality if notification log fails
+        console.error("Failed to write notification log:", notifError);
+      }
+    }
 
     // Update request
     await supabase
@@ -115,6 +153,30 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    // Dual-write failure to notification_logs
+    if (documentReminderTypeId && docRequest.firms?.id) {
+      try {
+        await createNotificationLog({
+          firm_id: docRequest.firms.id,
+          client_id: docRequest.clients.id,
+          notification_type_id: documentReminderTypeId,
+          channel: "email",
+          recipient_address: docRequest.clients.email,
+          subject: emailSubject,
+          content_preview: `Failed: ${error.message}`.substring(0, 200),
+          status: "failed",
+          triggered_by: user.id,
+          metadata: {
+            request_id: docRequest.id,
+            is_overdue: isOverdue,
+            failure_reason: error.message,
+          },
+        });
+      } catch (notifError) {
+        console.error("Failed to write notification log for failure:", notifError);
+      }
+    }
+
     return NextResponse.json(
       { error: "Failed to send email: " + error.message },
       { status: 500 }

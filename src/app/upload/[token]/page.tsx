@@ -21,8 +21,10 @@ import {
   Loader2,
   AlertCircle,
   HelpCircle,
+  Bell,
   X,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function UploadPage() {
   const params = useParams();
@@ -234,6 +236,13 @@ export default function UploadPage() {
             </div>
           )}
           <span className="font-semibold flex-1">{firm?.name}</span>
+          <Link
+            href={`/upload/${token}/subscriptions`}
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Bell className="h-4 w-4" />
+            <span className="hidden sm:inline">{t("manageSubscriptions")}</span>
+          </Link>
           <LanguageSwitcher />
         </div>
       </header>

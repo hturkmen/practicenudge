@@ -312,7 +312,8 @@
     "needHelpText": "Sorularınız veya sorunlarınız varsa lütfen doğrudan {firmName} ile iletişime geçin.",
     "fileTooLarge": "Dosya boyutu 50MB'den küçük olmalıdır",
     "fileTypeNotAllowed": "Dosya türüne izin verilmiyor. Lütfen PDF, resim, Word, Excel veya CSV dosyaları yükleyin.",
-    "uploadFailed": "Yükleme başarısız oldu. Lütfen tekrar deneyin."
+    "uploadFailed": "Yükleme başarısız oldu. Lütfen tekrar deneyin.",
+    "manageSubscriptions": "Bildirim Tercihleri"
   },
   "activity": {
     "request_created": "Talep oluşturuldu",

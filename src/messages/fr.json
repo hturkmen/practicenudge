@@ -103,7 +103,8 @@
     "needHelpText": "Si vous avez des questions, veuillez contacter directement {firmName}.",
     "fileTooLarge": "La taille du fichier doit être inférieure à 50 Mo",
     "fileTypeNotAllowed": "Type de fichier non autorisé. Veuillez télécharger des fichiers PDF, images, Word, Excel ou CSV.",
-    "uploadFailed": "Échec du téléchargement. Veuillez réessayer."
+    "uploadFailed": "Échec du téléchargement. Veuillez réessayer.",
+    "manageSubscriptions": "Préférences de notification"
   },
   "activity": {
     "request_created": "Demande créée",

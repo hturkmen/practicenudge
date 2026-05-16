@@ -49,7 +49,201 @@ This design describes the technical implementation of the notification logging a
 5. **Client Subscribes** → Subscription Manager creates/updates subscription record
 6. **Cron Runs** → Scheduler checks subscriptions, batches notifications by frequency, sends and logs
 
-## Database Schema
+## Components and Interfaces
+
+### Notification Service Layer
+
+The core service layer is composed of four modules:
+
+#### Logger Module (`src/lib/notifications/logger.ts`)
+
+Responsible for creating and updating notification log records.
+
+```typescript
+interface NotificationLogger {
+  createLog(params: CreateLogParams): Promise<NotificationLog>;
+  updateStatus(logId: string, status: NotificationStatus, metadata?: Record<string, unknown>): Promise<void>;
+  markDelivered(logId: string): Promise<void>;
+  markFailed(logId: string, reason: string): Promise<void>;
+}
+```
+
+#### Action Handler (`src/lib/notifications/service.ts`)
+
+Processes admin actions on notification logs.
+
+```typescript
+interface NotificationActionHandler {
+  retry(logId: string, userId: string): Promise<NotificationLog>;
+  delete(logId: string, userId: string): Promise<void>;
+  stop(logId: string, userId: string): Promise<void>;
+  trigger(params: TriggerParams, userId: string): Promise<NotificationLog>;
+  edit(logId: string, updates: EditUpdates, userId: string): Promise<NotificationLog>;
+}
+```
+
+#### Subscription Manager (`src/lib/notifications/service.ts`)
+
+Manages client notification subscriptions.
+
+```typescript
+interface SubscriptionManager {
+  subscribe(clientId: string, typeId: string, frequency: NotificationFrequency): Promise<Subscription>;
+  unsubscribe(subscriptionId: string): Promise<void>;
+  updateFrequency(subscriptionId: string, frequency: NotificationFrequency): Promise<Subscription>;
+  getSubscriptions(clientId: string): Promise<Subscription[]>;
+  getAvailableTypes(): Promise<NotificationType[]>;
+}
+```
+
+#### Scheduler (`src/lib/notifications/scheduler.ts`)
+
+Handles frequency-based batching and queue processing.
+
+```typescript
+interface NotificationScheduler {
+  shouldSendNow(clientId: string, typeId: string): Promise<boolean>;
+  enqueue(params: EnqueueParams): Promise<QueueItem>;
+  processBatch(): Promise<ProcessResult>;
+  getNextDeliveryWindow(frequency: NotificationFrequency, lastDelivered: Date | null): Date;
+}
+```
+
+### API Routes
+
+#### GET /api/notifications/logs
+
+Query parameters:
+- `client_id` (optional): Filter by client
+- `notification_type_id` (optional): Filter by type
+- `channel` (optional): Filter by channel
+- `status` (optional): Filter by status
+- `date_from` (optional): Start date
+- `date_to` (optional): End date
+- `firm_id` (optional, master admin only): Filter by firm
+- `triggered_by` (optional, master admin only): Filter by triggering user
+- `page` (optional): Pagination page number
+- `page_size` (optional): Items per page (default 25)
+
+Response: Paginated list of notification logs with client and type details.
+
+#### POST /api/notifications/actions
+
+Body:
+```json
+{
+  "action": "retry" | "delete" | "stop" | "trigger" | "edit",
+  "notification_log_id": "uuid",
+  "updates": {
+    "content": "string (for edit)",
+    "recipient_address": "string (for edit)",
+    "channel": "string (for edit)"
+  },
+  "trigger_params": {
+    "client_id": "uuid",
+    "notification_type_id": "uuid",
+    "channel": "email | sms"
+  }
+}
+```
+
+#### GET /api/notifications/subscriptions
+
+Query parameters:
+- `client_id` (required): Client to fetch subscriptions for
+
+Response: List of subscriptions with notification type details.
+
+#### POST /api/notifications/subscriptions
+
+Body:
+```json
+{
+  "client_id": "uuid",
+  "notification_type_id": "uuid",
+  "frequency": "daily" | "weekly" | "monthly"
+}
+```
+
+#### PATCH /api/notifications/subscriptions/[id]
+
+Body:
+```json
+{
+  "frequency": "daily" | "weekly" | "monthly",
+  "is_active": true | false
+}
+```
+
+#### GET /api/notifications/stats
+
+Query parameters:
+- `notification_type_id` (optional): Filter by type
+- `firm_id` (optional, master admin only): Filter by firm
+- `date_from` (optional): Start date
+- `date_to` (optional): End date
+
+Response:
+```json
+{
+  "by_type": [
+    {
+      "notification_type_id": "uuid",
+      "type_name": "string",
+      "total": 100,
+      "sent": 45,
+      "delivered": 40,
+      "failed": 10,
+      "queued": 5,
+      "stopped": 0
+    }
+  ],
+  "totals": { "total": 100, "sent": 45, "delivered": 40, "failed": 10, "queued": 5, "stopped": 0 }
+}
+```
+
+#### GET /api/cron/notifications
+
+Cron endpoint for processing notification queue:
+1. Fetch all pending queue items where `scheduled_for <= now()`
+2. Group by client + frequency
+3. Send batched notifications
+4. Create individual `notification_logs` entries
+5. Update `last_delivered_at` on subscriptions
+
+### Frontend Components
+
+#### Firm Admin: Notification Logs Page
+
+**Path:** `/notifications`
+
+Components:
+- `NotificationLogsPage` — Main page with filters and table
+- `NotificationLogFilters` — Filter bar (client, type, channel, status, date range)
+- `NotificationLogTable` — Data table with sortable columns
+- `NotificationActionMenu` — Dropdown with retry/delete/trigger/update actions
+- `NotificationEditDialog` — Dialog for editing notification before re-send
+- `NotificationStatsCards` — Summary cards showing counts by status
+
+#### Master Admin: Notification Logs Page
+
+**Path:** `/admin/notifications`
+
+Components:
+- `AdminNotificationLogsPage` — Extended page with firm filter
+- `AdminNotificationFilters` — Includes firm and user filters
+- Uses same table/action components as firm admin with additional "stop" and "edit" actions
+
+#### Client: Subscription Management
+
+**Path:** `/upload/[token]/subscriptions` (accessible via magic token)
+
+Components:
+- `SubscriptionManagementPage` — List of available notification types
+- `SubscriptionCard` — Toggle subscription on/off with frequency selector
+- `FrequencySelector` — Daily/Weekly/Monthly radio group
+
+## Data Models
 
 ### Table: `notification_types`
 
@@ -120,139 +314,224 @@ This design describes the technical implementation of the notification logging a
 - **client_notification_subscriptions**: Firm users can manage subscriptions for their firm's clients. Clients can manage their own subscriptions via magic token.
 - **notification_queue**: Firm users can view queue items for their firm. Only service role can INSERT/UPDATE.
 
-## API Design
+### TypeScript Types
 
-### GET /api/notifications/logs
+```typescript
+type NotificationStatus = 'queued' | 'sent' | 'delivered' | 'failed' | 'stopped';
+type NotificationChannel = 'email' | 'sms';
+type NotificationFrequency = 'daily' | 'weekly' | 'monthly';
+type QueueStatus = 'pending' | 'processing' | 'completed' | 'cancelled';
 
-Query parameters:
-- `client_id` (optional): Filter by client
-- `notification_type_id` (optional): Filter by type
-- `channel` (optional): Filter by channel
-- `status` (optional): Filter by status
-- `date_from` (optional): Start date
-- `date_to` (optional): End date
-- `firm_id` (optional, master admin only): Filter by firm
-- `triggered_by` (optional, master admin only): Filter by triggering user
-- `page` (optional): Pagination page number
-- `page_size` (optional): Items per page (default 25)
+interface NotificationLog {
+  id: string;
+  firm_id: string;
+  client_id: string;
+  notification_type_id: string;
+  triggered_by: string | null;
+  channel: NotificationChannel;
+  recipient_address: string;
+  subject: string | null;
+  content_preview: string | null;
+  full_content: string | null;
+  status: NotificationStatus;
+  failure_reason: string | null;
+  metadata: Record<string, unknown>;
+  scheduled_at: string | null;
+  sent_at: string | null;
+  delivered_at: string | null;
+  created_at: string;
+}
 
-Response: Paginated list of notification logs with client and type details.
+interface Subscription {
+  id: string;
+  client_id: string;
+  firm_id: string;
+  notification_type_id: string;
+  frequency: NotificationFrequency;
+  is_active: boolean;
+  last_delivered_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
-### POST /api/notifications/actions
-
-Body:
-```json
-{
-  "action": "retry" | "delete" | "stop" | "trigger" | "edit",
-  "notification_log_id": "uuid",
-  "updates": {
-    "content": "string (for edit)",
-    "recipient_address": "string (for edit)",
-    "channel": "string (for edit)"
-  },
-  "trigger_params": {
-    "client_id": "uuid",
-    "notification_type_id": "uuid",
-    "channel": "email | sms"
-  }
+interface NotificationType {
+  id: string;
+  name: string;
+  display_name: string;
+  description: string | null;
+  category: string;
+  is_subscribable: boolean;
+  created_at: string;
 }
 ```
 
-### GET /api/notifications/subscriptions
+## Correctness Properties
 
-Query parameters:
-- `client_id` (required): Client to fetch subscriptions for
+*A property is a characteristic or behavior that should hold true across all valid executions of a system—essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
 
-Response: List of subscriptions with notification type details.
+### Property 1: Firm Isolation
 
-### POST /api/notifications/subscriptions
+*For any* notification log returned to a Firm_Admin, the log's `firm_id` must equal the requesting user's firm_id. No cross-firm data leakage is permitted.
 
-Body:
-```json
-{
-  "client_id": "uuid",
-  "notification_type_id": "uuid",
-  "frequency": "daily" | "weekly" | "monthly"
+**Validates: Requirements 2.1, 3.5**
+
+### Property 2: Log Completeness
+
+*For any* notification sent through the Notification_Service, exactly one corresponding `notification_logs` entry must exist with matching `client_id`, `channel`, `notification_type_id`, and `recipient_address`.
+
+**Validates: Requirements 1.1**
+
+### Property 3: Filter Correctness
+
+*For any* filter applied to notification logs, every returned log must satisfy all active filter predicates. Applying a filter must return a subset (≤) of the unfiltered result set.
+
+**Validates: Requirements 2.2, 6.2**
+
+### Property 4: Chronological Ordering
+
+*For any* default log listing, the results must be sorted such that for any two adjacent logs at positions i and i+1, `logs[i].created_at >= logs[i+1].created_at`.
+
+**Validates: Requirements 2.3**
+
+### Property 5: Subscription Uniqueness
+
+*For any* (client_id, firm_id, notification_type_id) tuple, at most one active subscription record may exist. Creating a duplicate subscription must update the existing record rather than creating a new one.
+
+**Validates: Requirements 5.2, 5.5**
+
+### Property 6: Frequency Enforcement
+
+*For any* client that has received a notification for a subscription within the current frequency window (day/week/month), any additional notification of the same type must be queued rather than sent immediately.
+
+**Validates: Requirements 7.4**
+
+### Property 7: Batch Log Integrity
+
+*For any* scheduled batch of N notifications that is processed, exactly N new `notification_logs` entries must be created, one per notification in the batch.
+
+**Validates: Requirements 7.5**
+
+### Property 8: Statistics Consistency
+
+*For any* notification type, the sum of (sent + delivered + failed + queued + stopped) counts must equal the total count of logs for that type.
+
+**Validates: Requirements 6.3**
+
+### Property 9: Authorization Enforcement
+
+*For any* Firm_Admin performing any action (retry, delete, trigger, update) on a notification_log where `firm_id != user's firm_id`, the system must return an authorization error. A Master_Admin must be able to perform actions on any notification_log regardless of firm_id.
+
+**Validates: Requirements 3.5, 4.1**
+
+### Property 10: Retry Creates New Log
+
+*For any* retry action performed on a notification_log, a new notification_log entry must be created (the original log is not modified). The new log must reference the same client, type, and channel as the original.
+
+**Validates: Requirements 3.1, 4.5**
+
+## Error Handling
+
+### API Error Responses
+
+All API endpoints return consistent error responses:
+
+```typescript
+interface ApiError {
+  error: string;       // Machine-readable error code
+  message: string;     // Human-readable description
+  status: number;      // HTTP status code
 }
 ```
 
-### PATCH /api/notifications/subscriptions/[id]
+### Error Categories
 
-Body:
-```json
-{
-  "frequency": "daily" | "weekly" | "monthly",
-  "is_active": true | false
-}
+| Error Code | HTTP Status | Description |
+|------------|-------------|-------------|
+| `UNAUTHORIZED` | 401 | User is not authenticated |
+| `FORBIDDEN` | 403 | User lacks permission (e.g., firm admin accessing another firm's logs) |
+| `NOT_FOUND` | 404 | Notification log or subscription not found |
+| `VALIDATION_ERROR` | 400 | Invalid request parameters (missing fields, invalid channel/frequency) |
+| `CONFLICT` | 409 | Duplicate subscription for same client/type/firm |
+| `ACTION_NOT_ALLOWED` | 422 | Action cannot be performed on current status (e.g., retry on "delivered") |
+| `DELIVERY_FAILED` | 502 | Upstream email/SMS provider returned an error |
+| `RATE_LIMITED` | 429 | Too many notification actions in a short period |
+
+### Error Handling Strategies
+
+1. **Authentication Errors**: Redirect to login page. API returns 401.
+2. **Authorization Errors**: Display "Access Denied" message. Log the attempt for audit.
+3. **Validation Errors**: Return field-level error messages for form display.
+4. **Delivery Failures**: Mark notification as "failed" with reason, allow retry. Do not throw to the user.
+5. **Database Errors**: Return generic 500 error to client. Log full error server-side with request context.
+6. **Cron Job Failures**: Log error, skip failed item, continue processing remaining queue items. Alert admin if failure rate exceeds threshold.
+7. **Subscription Conflicts**: Upsert behavior — update existing subscription frequency instead of failing.
+
+### Retry Logic
+
+- Failed notification deliveries are eligible for manual retry by admins.
+- The cron scheduler retries queue items up to 3 times with exponential backoff (1min, 5min, 30min).
+- After 3 failed attempts, the queue item is marked as "completed" with a failed notification_log entry.
+
+## Testing Strategy
+
+### Unit Tests
+
+Unit tests cover individual service functions and business logic:
+
+- **Logger Module**: Verify log creation with correct fields, status transitions (queued → sent → delivered/failed)
+- **Action Handler**: Verify retry creates new log, delete removes record, stop updates status, edit modifies content
+- **Subscription Manager**: Verify subscribe/unsubscribe/update operations, uniqueness constraint handling
+- **Scheduler**: Verify frequency window calculations, batch grouping logic, queue processing
+- **Authorization**: Verify firm isolation checks, role-based access control
+
+### Property-Based Tests
+
+Property-based tests validate universal correctness properties using `fast-check`:
+
+- Minimum 100 iterations per property test
+- Each test references its design document property
+- Tag format: **Feature: notification-log-management, Property {number}: {property_text}**
+
+Properties to test:
+- Firm isolation (Property 1): Generate random logs and users, verify no cross-firm access
+- Filter correctness (Property 3): Generate random filter combinations, verify subset relationship
+- Chronological ordering (Property 4): Generate random log sets, verify sort invariant
+- Subscription uniqueness (Property 5): Generate random subscription attempts, verify at-most-one active
+- Frequency enforcement (Property 6): Generate random delivery histories, verify queueing behavior
+- Statistics consistency (Property 8): Generate random log distributions, verify sum invariant
+- Authorization enforcement (Property 9): Generate random user/log combinations, verify access control
+- Retry creates new log (Property 10): Generate random retry scenarios, verify new entry creation
+
+### Integration Tests
+
+Integration tests verify end-to-end flows against Supabase:
+
+- Full notification send → log → delivery callback flow
+- Admin log viewing with RLS enforcement
+- Subscription creation and frequency-based delivery
+- Cron job batch processing
+- Cross-firm access denial via RLS policies
+
+### Test File Structure
+
 ```
-
-### GET /api/notifications/stats
-
-Query parameters:
-- `notification_type_id` (optional): Filter by type
-- `firm_id` (optional, master admin only): Filter by firm
-- `date_from` (optional): Start date
-- `date_to` (optional): End date
-
-Response:
-```json
-{
-  "by_type": [
-    {
-      "notification_type_id": "uuid",
-      "type_name": "string",
-      "total": 100,
-      "sent": 45,
-      "delivered": 40,
-      "failed": 10,
-      "queued": 5,
-      "stopped": 0
-    }
-  ],
-  "totals": { "total": 100, "sent": 45, "delivered": 40, "failed": 10, "queued": 5, "stopped": 0 }
-}
+src/
+├── lib/
+│   └── notifications/
+│       └── __tests__/
+│           ├── logger.test.ts          # Unit tests for logger
+│           ├── service.test.ts         # Unit tests for action handler
+│           ├── scheduler.test.ts       # Unit tests for scheduler
+│           ├── subscriptions.test.ts   # Unit tests for subscription manager
+│           └── properties.test.ts      # Property-based tests
+├── app/
+│   └── api/
+│       └── notifications/
+│           └── __tests__/
+│               ├── logs.test.ts        # API route integration tests
+│               ├── actions.test.ts     # Action endpoint tests
+│               └── subscriptions.test.ts # Subscription endpoint tests
 ```
-
-### GET /api/cron/notifications
-
-Cron endpoint for processing notification queue:
-1. Fetch all pending queue items where `scheduled_for <= now()`
-2. Group by client + frequency
-3. Send batched notifications
-4. Create individual `notification_logs` entries
-5. Update `last_delivered_at` on subscriptions
-
-## Frontend Components
-
-### Firm Admin: Notification Logs Page
-
-**Path:** `/notifications`
-
-Components:
-- `NotificationLogsPage` — Main page with filters and table
-- `NotificationLogFilters` — Filter bar (client, type, channel, status, date range)
-- `NotificationLogTable` — Data table with sortable columns
-- `NotificationActionMenu` — Dropdown with retry/delete/trigger/update actions
-- `NotificationEditDialog` — Dialog for editing notification before re-send
-- `NotificationStatsCards` — Summary cards showing counts by status
-
-### Master Admin: Notification Logs Page
-
-**Path:** `/admin/notifications`
-
-Components:
-- `AdminNotificationLogsPage` — Extended page with firm filter
-- `AdminNotificationFilters` — Includes firm and user filters
-- Uses same table/action components as firm admin with additional "stop" and "edit" actions
-
-### Client: Subscription Management
-
-**Path:** `/upload/[token]/subscriptions` (accessible via magic token)
-
-Components:
-- `SubscriptionManagementPage` — List of available notification types
-- `SubscriptionCard` — Toggle subscription on/off with frequency selector
-- `FrequencySelector` — Daily/Weekly/Monthly radio group
 
 ## Integration with Existing System
 
@@ -280,48 +559,6 @@ async function sendNotification(params: SendNotificationParams): Promise<Notific
 ### Updated Cron Job
 
 The existing `/api/cron/reminders` will be updated to use the notification service, ensuring all reminders are logged in the new `notification_logs` table.
-
-## Correctness Properties
-
-### Property 1: Firm Isolation (Requirement 2.1, 3.5)
-
-For any notification log returned to a Firm_Admin, the log's `firm_id` must equal the requesting user's firm_id. No cross-firm data leakage is permitted.
-
-### Property 2: Log Completeness (Requirement 1.1)
-
-For every notification sent through the Notification_Service, exactly one corresponding `notification_logs` entry must exist with matching `client_id`, `channel`, `notification_type_id`, and `recipient_address`.
-
-### Property 3: Filter Correctness (Requirement 2.2, 6.2)
-
-For any filter applied to notification logs, every returned log must satisfy all active filter predicates. Applying a filter must return a subset (≤) of the unfiltered result set.
-
-### Property 4: Chronological Ordering (Requirement 2.3)
-
-The default log listing must be sorted such that for any two adjacent logs at positions i and i+1, `logs[i].created_at >= logs[i+1].created_at`.
-
-### Property 5: Subscription Uniqueness (Requirement 5.2)
-
-For any (client_id, firm_id, notification_type_id) tuple, at most one active subscription record may exist. Creating a duplicate subscription must update the existing record rather than creating a new one.
-
-### Property 6: Frequency Enforcement (Requirement 7.4)
-
-If a client has received a notification for a subscription within the current frequency window (day/week/month), any additional notification of the same type must be queued rather than sent immediately.
-
-### Property 7: Batch Log Integrity (Requirement 7.5)
-
-When a scheduled batch of N notifications is processed, exactly N new `notification_logs` entries must be created, one per notification in the batch.
-
-### Property 8: Statistics Consistency (Requirement 6.3)
-
-For any notification type, the sum of (sent + delivered + failed + queued + stopped) counts must equal the total count of logs for that type.
-
-### Property 9: Authorization Enforcement (Requirement 3.5, 4.1)
-
-A Firm_Admin performing any action (retry, delete, trigger, update) on a notification_log where `firm_id != user's firm_id` must receive an authorization error. A Master_Admin must be able to perform actions on any notification_log regardless of firm_id.
-
-### Property 10: Retry Creates New Log (Requirement 3.1, 4.5)
-
-When a retry action is performed on a notification_log, a new notification_log entry must be created (the original log is not modified). The new log must reference the same client, type, and channel as the original.
 
 ## File Structure
 

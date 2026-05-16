@@ -35,7 +35,9 @@ import {
   FileText,
   Activity,
   Loader2,
+  Bell,
 } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 
 export default function AdminPage() {
@@ -200,6 +202,15 @@ export default function AdminPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="flex items-center gap-3 mb-4">
+        <Link href="/admin/notifications">
+          <Button variant="outline" className="gap-2">
+            <Bell className="h-4 w-4" />
+            Notifications
+          </Button>
+        </Link>
       </div>
 
       <Tabs defaultValue="firms">
