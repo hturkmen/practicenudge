@@ -27,13 +27,13 @@ export function LandingLanguageSwitcher() {
 
   return (
     <Select value={locale} onValueChange={handleChange} disabled={isPending}>
-      <SelectTrigger className="w-[120px] h-8 text-xs border-none bg-transparent">
-        <Globe className="h-3.5 w-3.5 mr-1" />
+      <SelectTrigger className="w-[130px] h-9 text-sm border border-border bg-white hover:bg-gray-50 rounded-md gap-2">
+        <Globe className="h-4 w-4 text-muted-foreground" />
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {locales.map((loc) => (
-          <SelectItem key={loc} value={loc} className="text-xs">
+          <SelectItem key={loc} value={loc} className="text-sm">
             {localeNames[loc]}
           </SelectItem>
         ))}
