@@ -66,9 +66,11 @@ export function Sidebar() {
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-slate-900 text-white flex flex-col">
       {/* Logo */}
       <div className="flex items-center gap-2 px-6 py-5">
-        <span className="text-lg font-bold tracking-tight text-white">
-          PracticeNudge
-        </span>
+        <Link href="/">
+          <span className="text-lg font-bold tracking-tight text-white cursor-pointer">
+            PracticeNudge
+          </span>
+        </Link>
       </div>
 
       <Separator className="bg-white/10" />

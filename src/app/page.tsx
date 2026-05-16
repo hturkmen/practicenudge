@@ -32,7 +32,9 @@ export default async function LandingPage() {
       <nav className="border-b sticky top-0 bg-white/95 backdrop-blur z-50">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="PracticeNudge" className="h-7" />
+            <Link href="/">
+              <img src="/logo.svg" alt="PracticeNudge" className="h-7 cursor-pointer" />
+            </Link>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
             <a href="#problem" className="hover:text-foreground transition-colors">{t("navProblem")}</a>
@@ -240,7 +242,9 @@ export default async function LandingPage() {
       <footer className="border-t py-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-primary">PracticeNudge</span>
+            <Link href="/">
+              <span className="font-semibold text-primary cursor-pointer">PracticeNudge</span>
+            </Link>
           </div>
           <p className="text-xs text-muted-foreground text-center max-w-2xl">
             {t("footerDisclaimer")}

@@ -94,9 +94,11 @@ export default function RegisterPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="flex items-center gap-2 text-primary">
-                <span className="text-xl font-bold">PracticeNudge</span>
-              </div>
+              <Link href="/">
+                <div className="flex items-center gap-2 text-primary cursor-pointer">
+                  <span className="text-xl font-bold">PracticeNudge</span>
+                </div>
+              </Link>
             </div>
             <CardTitle className="text-2xl">Check your email</CardTitle>
             <CardDescription>
@@ -119,9 +121,11 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="flex items-center gap-2 text-primary">
-              <span className="text-xl font-bold">PracticeNudge</span>
-            </div>
+            <Link href="/">
+              <div className="flex items-center gap-2 text-primary cursor-pointer">
+                <span className="text-xl font-bold">PracticeNudge</span>
+              </div>
+            </Link>
           </div>
           <CardTitle className="text-2xl">Start your free trial</CardTitle>
           <CardDescription>
