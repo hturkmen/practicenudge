@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   }
 
   const now = new Date();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mtd-client-chaser.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.practicenudge.com";
 
   // Fetch all active requests with deadlines
   const { data: requests, error } = await supabase

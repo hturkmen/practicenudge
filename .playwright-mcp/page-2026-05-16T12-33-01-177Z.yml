@@ -1,0 +1,138 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "PracticeNudge" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "PracticeNudge" [ref=e7]
+        - generic [ref=e8]:
+          - link "Problem" [ref=e9] [cursor=pointer]:
+            - /url: "#problem"
+          - link "Rozwiązanie" [ref=e10] [cursor=pointer]:
+            - /url: "#solution"
+          - link "Jak to działa" [ref=e11] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "Cennik" [ref=e12] [cursor=pointer]:
+            - /url: "#pricing"
+          - link "FAQ" [ref=e13] [cursor=pointer]:
+            - /url: "#faq"
+        - generic [ref=e14]:
+          - combobox [ref=e15] [cursor=pointer]:
+            - img [ref=e16]
+            - generic: Polski
+            - img [ref=e19]
+          - link "Zaloguj się" [ref=e21] [cursor=pointer]:
+            - /url: /login
+            - button "Zaloguj się" [ref=e22]
+          - link "Dołącz do programu pilotażowego" [ref=e23] [cursor=pointer]:
+            - /url: "#pricing"
+            - button "Dołącz do programu pilotażowego" [ref=e24]
+    - generic [ref=e26]:
+      - generic [ref=e27]: 🇬🇧 Stworzone dla małych brytyjskich firm
+      - heading "Przestań gonić klientów za informacjami MTD." [level=1] [ref=e28]:
+        - generic [ref=e29]: Przestań gonić klientów
+        - text: za informacjami MTD.
+      - paragraph [ref=e30]: PracticeNudge pokazuje, którzy klienci są gotowi na MTD, czego brakuje i kto potrzebuje przypomnienia — wszystko w jednym panelu stworzonym dla małych brytyjskich firm.
+      - link "Dołącz do programu pilotażowego" [ref=e32] [cursor=pointer]:
+        - /url: "#pricing"
+        - button "Dołącz do programu pilotażowego" [ref=e33]:
+          - text: Dołącz do programu pilotażowego
+          - img [ref=e34]
+      - paragraph [ref=e36]: Bezpłatnie w okresie pilotażowym · Karta kredytowa nie jest wymagana
+    - generic [ref=e38]:
+      - heading "Brzmi znajomo?" [level=2] [ref=e39]
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: Spędzasz godziny każdego tygodnia, goniąc klientów za brakującymi dokumentami. Arkusze kalkulacyjne są nieaktualne. Nie wiesz, którzy klienci są gotowi na MTD, a którzy będą problemem w ostatniej chwili.
+        - paragraph [ref=e42]: Tymczasem terminy HMRC zbliżają się coraz bardziej.
+        - paragraph [ref=e43]: Dla małych firm bez dedykowanego zespołu operacyjnego, śledzenie gotowości MTD 50–200 klientów to ręczna, powtarzalna udręka.
+    - generic [ref=e45]:
+      - heading "Jeden panel. Każdy klient. Koniec z zgadywaniem." [level=2] [ref=e46]
+      - paragraph [ref=e47]: PracticeNudge daje ci jasny obraz statusu gotowości MTD każdego klienta, brakujących informacji i harmonogramu przypomnień.
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e54]: Zobacz, kto jest gotowy, kto jest zagrożony i kto potrzebuje przypomnienia
+        - generic [ref=e55]:
+          - img [ref=e57]
+          - generic [ref=e61]: Śledź brakujące dokumenty i informacje dla każdego klienta
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic [ref=e67]: Ustaw przypomnienia, aby nic nie umknęło
+        - generic [ref=e68]:
+          - img [ref=e70]
+          - generic [ref=e75]: Stworzone specjalnie dla małych brytyjskich księgowych korzystających z Xero, QuickBooks lub FreeAgent
+    - generic [ref=e77]:
+      - heading "Trzy kroki, aby przestać gonić" [level=2] [ref=e78]
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - img [ref=e82]
+          - heading "1. Połącz swoją firmę" [level=3] [ref=e87]
+          - paragraph [ref=e88]: Zaimportuj listę klientów lub dodaj ich ręcznie. Zajmuje 5 minut.
+        - generic [ref=e89]:
+          - img [ref=e91]
+          - heading "2. Zobacz pełny obraz" [level=3] [ref=e93]
+          - paragraph [ref=e94]: Natychmiast zobacz status gotowości MTD, brakujące informacje i poziomy ryzyka dla każdego klienta.
+        - generic [ref=e95]:
+          - img [ref=e97]
+          - heading "3. Przypomnij i śledź" [level=3] [ref=e100]
+          - paragraph [ref=e101]: Ustaw przypomnienia, wysyłaj powiadomienia i obserwuj, jak klienci przechodzą z "zagrożonych" do "gotowych".
+    - generic [ref=e103]:
+      - heading "Program pilotażowy" [level=2] [ref=e104]
+      - paragraph [ref=e105]: Szukamy 10 małych brytyjskich firm do przetestowania PracticeNudge i kształtowania produktu.
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]: Ograniczone do 10 firm
+          - heading "Program Pilotażowy" [level=3] [ref=e109]
+          - generic [ref=e110]: Bezpłatniew okresie pilotażowym
+        - generic [ref=e111]:
+          - list [ref=e112]:
+            - listitem [ref=e113]:
+              - img [ref=e114]
+              - text: Pełny dostęp do panelu w okresie pilotażowym
+            - listitem [ref=e116]:
+              - img [ref=e117]
+              - text: Bezpośredni wpływ na funkcje i priorytety
+            - listitem [ref=e119]:
+              - img [ref=e120]
+              - text: Cena dla założycieli po uruchomieniu (zablokowana na stałe)
+            - listitem [ref=e122]:
+              - img [ref=e123]
+              - text: Bez zobowiązań — odejdź w dowolnym momencie
+          - paragraph [ref=e125]: "Cena po uruchomieniu: od £29/miesiąc (członkowie pilotażu otrzymują 50% zniżki na zawsze)"
+          - link "Aplikuj do programu pilotażowego" [ref=e126] [cursor=pointer]:
+            - /url: /register
+            - button "Aplikuj do programu pilotażowego" [ref=e127]:
+              - text: Aplikuj do programu pilotażowego
+              - img [ref=e128]
+    - generic [ref=e131]:
+      - heading "Często zadawane pytania" [level=2] [ref=e132]
+      - generic [ref=e133]:
+        - generic [ref=e134]:
+          - heading "Czy to oprogramowanie do składania deklaracji podatkowych?" [level=3] [ref=e135]
+          - paragraph [ref=e136]: Nie. PracticeNudge nie składa deklaracji podatkowych ani nie przesyła niczego do HMRC. To narzędzie do śledzenia i przypominania, które działa obok istniejącego oprogramowania.
+        - generic [ref=e137]:
+          - heading "Czy zastępuje Xero / QuickBooks / FreeAgent?" [level=3] [ref=e138]
+          - paragraph [ref=e139]: Nie. PracticeNudge współpracuje z istniejącym oprogramowaniem księgowym. Śledzi gotowość klientów i przypomnienia — oprogramowanie księgowe zajmuje się liczbami.
+        - generic [ref=e140]:
+          - heading "Czym to się różni od arkusza kalkulacyjnego?" [level=3] [ref=e141]
+          - paragraph [ref=e142]: Arkusze kalkulacyjne stają się nieaktualne. PracticeNudge zapewnia śledzenie statusu na żywo, automatyczne przypomnienia i jasny widok bez ręcznych aktualizacji.
+        - generic [ref=e143]:
+          - heading "Czy moje dane są bezpieczne?" [level=3] [ref=e144]
+          - paragraph [ref=e145]: Tak. Wszystkie dane są szyfrowane podczas przesyłania i przechowywania. Przestrzegamy brytyjskich standardów ochrony danych i nigdy nie udostępniamy informacji o klientach.
+        - generic [ref=e146]:
+          - heading "Dla jakiej wielkości firmy jest to przeznaczone?" [level=3] [ref=e147]
+          - paragraph [ref=e148]: PracticeNudge jest stworzony dla jednoosobowych praktyków i małych firm z 20–200 klientami. Jeśli jesteś za mały na narzędzia korporacyjne, ale za zajęty na arkusze kalkulacyjne, to jest dla ciebie.
+    - generic [ref=e150]:
+      - heading "Gotowy, aby przestać gonić?" [level=2] [ref=e151]
+      - paragraph [ref=e152]: Dołącz do pilotażu i pomóż kształtować narzędzie, którego naprawdę potrzebują małe brytyjskie firmy.
+      - link "Aplikuj o wczesny dostęp" [ref=e153] [cursor=pointer]:
+        - /url: /register
+        - button "Aplikuj o wczesny dostęp" [ref=e154]:
+          - text: Aplikuj o wczesny dostęp
+          - img [ref=e155]
+    - contentinfo [ref=e157]:
+      - generic [ref=e158]:
+        - link "PracticeNudge" [ref=e160] [cursor=pointer]:
+          - /url: /
+        - paragraph [ref=e161]: PracticeNudge to narzędzie do śledzenia gotowości klientów i przypomnień. Nie jest oprogramowaniem do składania deklaracji podatkowych, nie przesyła danych do HMRC i nie udziela porad podatkowych, prawnych ani finansowych. W sprawach podatkowych zawsze konsultuj się z wykwalifikowanym specjalistą.
+  - alert [ref=e162]

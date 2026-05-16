@@ -1,0 +1,133 @@
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - generic [ref=e4]:
+      - generic:
+        - link "PracticeNudge":
+          - /url: /
+          - img "PracticeNudge"
+      - generic [ref=e5]:
+        - link "Problem" [ref=e6] [cursor=pointer]:
+          - /url: "#problem"
+        - link "Solution" [ref=e7] [cursor=pointer]:
+          - /url: "#solution"
+        - link "How It Works" [ref=e8] [cursor=pointer]:
+          - /url: "#how-it-works"
+        - link "Pricing" [ref=e9] [cursor=pointer]:
+          - /url: "#pricing"
+        - link "FAQ" [ref=e10] [cursor=pointer]:
+          - /url: "#faq"
+      - generic [ref=e11]:
+        - combobox [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+          - img [ref=e16]
+        - combobox [ref=e18]
+        - link "Sign in" [ref=e19] [cursor=pointer]:
+          - /url: /login
+          - button "Sign in" [ref=e20]
+        - link "Join the Early Access Pilot" [ref=e21] [cursor=pointer]:
+          - /url: "#pricing"
+          - button "Join the Early Access Pilot" [ref=e22]
+  - generic [ref=e24]:
+    - generic [ref=e25]: 🇬🇧 Built for small UK practices
+    - heading "Stop chasing clients for MTD information." [level=1] [ref=e26]:
+      - generic [ref=e27]: Stop chasing clients
+      - text: for MTD information.
+    - paragraph [ref=e28]: PracticeNudge shows you which clients are MTD-ready, what's missing, and who needs a nudge — all in one dashboard built for small UK practices.
+    - link "Join the Early Access Pilot" [ref=e30] [cursor=pointer]:
+      - /url: "#pricing"
+      - button "Join the Early Access Pilot" [ref=e31]:
+        - text: Join the Early Access Pilot
+        - img [ref=e32]
+    - paragraph [ref=e34]: Free during pilot · No credit card required
+  - generic [ref=e36]:
+    - heading "Sound familiar?" [level=2] [ref=e37]
+    - generic [ref=e38]:
+      - paragraph [ref=e39]: You're spending hours every week chasing clients for missing records. Spreadsheets are out of date. You don't know which clients are MTD-ready and which are going to be a last-minute scramble.
+      - paragraph [ref=e40]: Meanwhile, HMRC deadlines keep moving closer.
+      - paragraph [ref=e41]: For small practices without a dedicated ops team, keeping track of 50–200 clients' MTD readiness is a manual, repetitive headache.
+  - generic [ref=e43]:
+    - heading "One dashboard. Every client. No more guessing." [level=2] [ref=e44]
+    - paragraph [ref=e45]: PracticeNudge gives you a clear view of every client's MTD readiness status, missing information, and follow-up schedule.
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - img [ref=e49]
+        - generic [ref=e52]: See who's ready, who's at risk, and who needs chasing
+      - generic [ref=e53]:
+        - img [ref=e55]
+        - generic [ref=e59]: Track missing documents and information per client
+      - generic [ref=e60]:
+        - img [ref=e62]
+        - generic [ref=e65]: Set follow-up reminders so nothing slips through
+      - generic [ref=e66]:
+        - img [ref=e68]
+        - generic [ref=e73]: Built specifically for small UK accountants and bookkeepers using Xero, QuickBooks, or FreeAgent
+  - generic [ref=e75]:
+    - heading "Three steps to stop the chase" [level=2] [ref=e76]
+    - generic [ref=e77]:
+      - generic [ref=e78]:
+        - img [ref=e80]
+        - heading "1. Connect your practice" [level=3] [ref=e85]
+        - paragraph [ref=e86]: Import your client list or add clients manually. Takes 5 minutes.
+      - generic [ref=e87]:
+        - img [ref=e89]
+        - heading "2. See the full picture" [level=3] [ref=e91]
+        - paragraph [ref=e92]: Instantly see MTD readiness status, missing info, and risk levels for every client.
+      - generic [ref=e93]:
+        - img [ref=e95]
+        - heading "3. Nudge and track" [level=3] [ref=e98]
+        - paragraph [ref=e99]: Set follow-up reminders, send nudges, and watch clients move from "at risk" to "ready."
+  - generic [ref=e101]:
+    - heading "Early Access Pilot" [level=2] [ref=e102]
+    - paragraph [ref=e103]: We're looking for 10 small UK practices to test PracticeNudge and shape the product.
+    - generic [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]: Limited to 10 practices
+        - heading "Pilot Programme" [level=3] [ref=e107]
+        - generic [ref=e108]: Freeduring pilot
+      - generic [ref=e109]:
+        - list [ref=e110]:
+          - listitem [ref=e111]:
+            - img [ref=e112]
+            - text: Full dashboard access during the pilot period
+          - listitem [ref=e114]:
+            - img [ref=e115]
+            - text: Direct input into features and priorities
+          - listitem [ref=e117]:
+            - img [ref=e118]
+            - text: Founding member pricing when we launch (locked in permanently)
+          - listitem [ref=e120]:
+            - img [ref=e121]
+            - text: No commitment — leave anytime
+        - paragraph [ref=e123]: "Price at launch: From £29/month (pilot members get 50% off forever)"
+        - link "Apply for the Pilot" [ref=e124] [cursor=pointer]:
+          - /url: /register
+          - button "Apply for the Pilot" [ref=e125]:
+            - text: Apply for the Pilot
+            - img [ref=e126]
+  - generic [ref=e129]:
+    - heading "Frequently Asked Questions" [level=2] [ref=e130]
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - heading "Is this tax filing software?" [level=3] [ref=e133]
+        - paragraph [ref=e134]: No. PracticeNudge does not file taxes or submit anything to HMRC. It's a tracking and chasing tool that sits alongside your existing software.
+      - generic [ref=e135]:
+        - heading "Does it replace Xero / QuickBooks / FreeAgent?" [level=3] [ref=e136]
+        - paragraph [ref=e137]: No. PracticeNudge works with your existing accounting software. It tracks client readiness and follow-ups — your accounting software handles the numbers.
+      - generic [ref=e138]:
+        - heading "How is this different from a spreadsheet?" [level=3] [ref=e139]
+        - paragraph [ref=e140]: Spreadsheets go stale. PracticeNudge gives you live status tracking, automated reminders, and a clear view without manual updates.
+      - generic [ref=e141]:
+        - heading "Is my data safe?" [level=3] [ref=e142]
+        - paragraph [ref=e143]: Yes. All data is encrypted in transit and at rest. We follow UK data protection standards and never share your client information.
+      - generic [ref=e144]:
+        - heading "What size practice is this for?" [level=3] [ref=e145]
+        - paragraph [ref=e146]: PracticeNudge is built for sole practitioners and small practices with 20–200 clients. If you're too small for enterprise tools but too busy for spreadsheets, this is for you.
+  - generic [ref=e148]:
+    - heading "Ready to stop chasing?" [level=2] [ref=e149]
+    - paragraph [ref=e150]: Join the pilot and help shape the tool that small UK practices actually need.
+    - link "Apply for Early Access" [ref=e151] [cursor=pointer]:
+      - /url: /register
+      - button "Apply for Early Access" [ref=e152]:
+        - text: Apply for Early Access
+        - img [ref=e153]
+  - contentinfo [ref=e155]

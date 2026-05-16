@@ -13,11 +13,8 @@ import {
   Bell,
   Check,
   ArrowRight,
-  Shield,
   BarChart3,
-  Clock,
   FileCheck,
-  AlertTriangle,
 } from "lucide-react";
 import { LandingLanguageSwitcher } from "@/components/landing-language-switcher";
 import { WebsiteStructuredData } from "@/components/structured-data";
