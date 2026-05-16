@@ -10,40 +10,53 @@ interface AdminGuardProps {
 }
 
 export function AdminGuard({ children }: AdminGuardProps) {
-  const supabase = createClient();
   const router = useRouter();
   const [verified, setVerified] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const supabase = createClient();
+
     async function verifyAdmin() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-      if (!user) {
-        router.push("/login");
-        return;
-      }
+        if (!user) {
+          router.push("/login");
+          return;
+        }
 
-      // Check if super admin
-      const { data: adminRecord } = await supabase
-        .from("super_admins")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle();
+        // Check if super admin
+        const { data: adminRecord, error } = await supabase
+          .from("super_admins")
+          .select("id")
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-      if (!adminRecord) {
+        if (error) {
+          console.error("Admin guard error:", error);
+          router.push("/dashboard");
+          return;
+        }
+
+        if (!adminRecord) {
+          router.push("/dashboard");
+          return;
+        }
+
+        setVerified(true);
+      } catch (err) {
+        console.error("Admin guard exception:", err);
         router.push("/dashboard");
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      setVerified(true);
-      setLoading(false);
     }
 
     verifyAdmin();
-  }, []);
+  }, [router]);
 
   if (loading) {
     return (
