@@ -24,6 +24,7 @@ import {
   Mail,
   FileText,
   Download,
+  Pencil,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -183,6 +184,12 @@ export default function RequestDetailPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Link href={`/requests/${requestId}/edit`}>
+            <Button variant="outline" size="sm">
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit
+            </Button>
+          </Link>
           <Button variant="outline" size="sm" onClick={copyMagicLink}>
             <Copy className="mr-2 h-4 w-4" />
             Copy link

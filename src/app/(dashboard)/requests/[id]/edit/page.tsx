@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Client, Template, TemplateItem } from "@/lib/types/database";
+import { Client } from "@/lib/types/database";
+import { EditableItem, ExistingItem, reconcileItems } from "@/lib/utils/item-reconciliation";
 import {
   validateTitle,
   validateItems,
@@ -12,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -32,61 +34,89 @@ import {
   Trash2,
   GripVertical,
   Loader2,
-  Send,
+  Save,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
-export default function NewRequestPage() {
+export default function EditRequestPage() {
+  const params = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const preselectedClient = searchParams.get("client");
+  const requestId = params.id as string;
   const supabase = createClient();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [request, setRequest] = useState<any>(null);
   const [clients, setClients] = useState<Client[]>([]);
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [selectedClientId, setSelectedClientId] = useState(
-    preselectedClient || ""
-  );
   const [title, setTitle] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [selectedTemplateId, setSelectedTemplateId] = useState("");
-  const [items, setItems] = useState<TemplateItem[]>([
-    { label: "", description: "", required: true },
-  ]);
+  const [selectedClientId, setSelectedClientId] = useState("");
+  const [items, setItems] = useState<EditableItem[]>([]);
+  const [existingItems, setExistingItems] = useState<ExistingItem[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      const [clientsRes, templatesRes] = await Promise.all([
+      const [reqRes, itemsRes, clientsRes] = await Promise.all([
+        supabase
+          .from("document_requests")
+          .select("*, clients(id, name, email)")
+          .eq("id", requestId)
+          .single(),
+        supabase
+          .from("request_items")
+          .select("*")
+          .eq("request_id", requestId)
+          .order("sort_order"),
         supabase
           .from("clients")
           .select("*")
           .eq("status", "active")
           .order("name"),
-        supabase.from("templates").select("*").order("name"),
       ]);
-      setClients(clientsRes.data || []);
-      setTemplates(templatesRes.data || []);
-    }
-    fetchData();
-  }, [supabase]);
 
-  const handleTemplateSelect = (templateId: string) => {
-    setSelectedTemplateId(templateId);
-    if (templateId === "blank") {
-      setItems([{ label: "", description: "", required: true }]);
-      return;
+      if (reqRes.data) {
+        setRequest(reqRes.data);
+        setTitle(reqRes.data.title);
+        setDeadline(reqRes.data.deadline || "");
+        setSelectedClientId(reqRes.data.client_id);
+      }
+
+      const fetchedItems: EditableItem[] = (itemsRes.data || []).map(
+        (item: any) => ({
+          id: item.id,
+          label: item.label,
+          description: item.description || "",
+          required: item.required,
+          status: item.status,
+        })
+      );
+      setItems(fetchedItems);
+
+      const fetchedExistingItems: ExistingItem[] = (itemsRes.data || []).map(
+        (item: any) => ({
+          id: item.id,
+          label: item.label,
+          description: item.description || null,
+          required: item.required,
+          sort_order: item.sort_order,
+          status: item.status,
+        })
+      );
+      setExistingItems(fetchedExistingItems);
+
+      setClients(clientsRes.data || []);
+      setLoading(false);
     }
-    const template = templates.find((t) => t.id === templateId);
-    if (template) {
-      setItems(template.items);
-      if (!title) setTitle(template.name);
-    }
-  };
+
+    fetchData();
+  }, [requestId]);
 
   const addItem = () => {
-    setItems([...items, { label: "", description: "", required: true }]);
+    setItems([
+      ...items,
+      { label: "", description: "", required: true, isNew: true },
+    ]);
   };
 
   const removeItem = (index: number) => {
@@ -95,7 +125,7 @@ export default function NewRequestPage() {
 
   const updateItem = (
     index: number,
-    field: keyof TemplateItem,
+    field: keyof EditableItem,
     value: string | boolean
   ) => {
     const updated = [...items];
@@ -114,94 +144,152 @@ export default function NewRequestPage() {
       toast.error("Please enter a title");
       return;
     }
-
-    const validItems = items.filter((item) => item.label.trim());
     if (!validateItems(items)) {
       toast.error("Add at least one checklist item");
       return;
     }
 
-    setLoading(true);
+    setSubmitting(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data: firmUser } = await supabase
-      .from("firm_users")
-      .select("firm_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (!firmUser) return;
-
-    // Create document request
-    const { data: request, error: reqError } = await supabase
+    // Update the document request
+    const { error: updateError } = await supabase
       .from("document_requests")
-      .insert({
-        firm_id: firmUser.firm_id,
-        client_id: selectedClientId,
+      .update({
         title: title.trim(),
-        template_id: selectedTemplateId !== "blank" ? selectedTemplateId : null,
         deadline: deadline || null,
-        status: "pending",
+        client_id: selectedClientId,
       })
-      .select()
-      .single();
+      .eq("id", requestId);
 
-    if (reqError || !request) {
-      toast.error("Failed to create request: " + reqError?.message);
-      setLoading(false);
+    if (updateError) {
+      toast.error("Failed to update request: " + updateError.message);
+      setSubmitting(false);
       return;
     }
 
-    // Create request items
-    const requestItems = validItems.map((item, index) => ({
-      request_id: request.id,
-      label: item.label.trim(),
-      description: item.description || null,
-      required: item.required,
-      sort_order: index,
-    }));
+    // Reconcile items
+    const { toUpdate, toInsert, toDelete } = reconcileItems(
+      existingItems,
+      items
+    );
 
-    const { error: itemsError } = await supabase
-      .from("request_items")
-      .insert(requestItems);
+    // Perform item updates
+    for (const item of toUpdate) {
+      const { error } = await supabase
+        .from("request_items")
+        .update({
+          label: item.label,
+          description: item.description,
+          required: item.required,
+          sort_order: item.sort_order,
+        })
+        .eq("id", item.id);
 
-    if (itemsError) {
-      toast.error("Failed to create checklist items: " + itemsError.message);
-      setLoading(false);
-      return;
+      if (error) {
+        toast.error("Failed to update item: " + error.message);
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    // Insert new items
+    if (toInsert.length > 0) {
+      const insertPayload = toInsert.map((item) => ({
+        request_id: requestId,
+        label: item.label,
+        description: item.description,
+        required: item.required,
+        sort_order: item.sort_order,
+      }));
+
+      const { error } = await supabase
+        .from("request_items")
+        .insert(insertPayload);
+
+      if (error) {
+        toast.error("Failed to add new items: " + error.message);
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    // Delete removed items
+    if (toDelete.length > 0) {
+      const deleteIds = toDelete.map((item) => item.id);
+      const { error } = await supabase
+        .from("request_items")
+        .delete()
+        .in("id", deleteIds);
+
+      if (error) {
+        toast.error("Failed to remove items: " + error.message);
+        setSubmitting(false);
+        return;
+      }
     }
 
     // Log activity
-    await supabase.from("activity_logs").insert({
-      firm_id: firmUser.firm_id,
-      client_id: selectedClientId,
-      request_id: request.id,
-      action: "request_created",
-      details: { title: title.trim() },
-    });
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const { data: firmUser } = await supabase
+        .from("firm_users")
+        .select("firm_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-    toast.success("Document request created");
-    router.push(`/requests/${request.id}`);
+      if (firmUser) {
+        await supabase.from("activity_logs").insert({
+          firm_id: firmUser.firm_id,
+          client_id: selectedClientId,
+          request_id: requestId,
+          action: "request_updated",
+          details: { title: title.trim() },
+        });
+      }
+    }
+
+    toast.success("Request updated successfully");
+    router.push(`/requests/${requestId}`);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!request) {
+    return (
+      <div className="text-center py-20">
+        <p>Request not found</p>
+        <Link href="/requests">
+          <Button variant="outline" className="mt-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to requests
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-4">
-        <Link href="/requests">
+        <Link href={`/requests/${requestId}`}>
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
-            New Document Request
+            Edit Document Request
           </h1>
           <p className="text-muted-foreground">
-            Create a document collection request for a client
+            Modify the request details and checklist items
           </p>
         </div>
       </div>
@@ -251,26 +339,6 @@ export default function NewRequestPage() {
                 />
               </div>
             </div>
-
-            <div className="grid gap-2">
-              <Label>Start from template</Label>
-              <Select
-                value={selectedTemplateId}
-                onValueChange={handleTemplateSelect}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a template or start blank..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="blank">Start blank</SelectItem>
-                  {templates.map((template) => (
-                    <SelectItem key={template.id} value={template.id}>
-                      {template.name} ({template.items.length} items)
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
           </CardContent>
         </Card>
 
@@ -283,7 +351,12 @@ export default function NewRequestPage() {
                   Documents your client needs to provide
                 </CardDescription>
               </div>
-              <Button type="button" variant="outline" size="sm" onClick={addItem}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addItem}
+              >
                 <Plus className="mr-1 h-3 w-3" />
                 Add item
               </Button>
@@ -292,16 +365,26 @@ export default function NewRequestPage() {
           <CardContent className="space-y-3">
             {items.map((item, index) => (
               <div
-                key={index}
+                key={item.id || `new-${index}`}
                 className="flex items-start gap-2 p-3 border rounded-lg"
               >
                 <GripVertical className="h-4 w-4 text-muted-foreground mt-2.5 shrink-0" />
                 <div className="flex-1 space-y-2">
-                  <Input
-                    value={item.label}
-                    onChange={(e) => updateItem(index, "label", e.target.value)}
-                    placeholder="Document name (e.g. P60 2024/25)"
-                  />
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={item.label}
+                      onChange={(e) =>
+                        updateItem(index, "label", e.target.value)
+                      }
+                      placeholder="Document name (e.g. P60 2024/25)"
+                    />
+                    {(item.status === "uploaded" ||
+                      item.status === "approved") && (
+                      <Badge variant="secondary" className="shrink-0">
+                        Has submissions
+                      </Badge>
+                    )}
+                  </div>
                   <Input
                     value={item.description || ""}
                     onChange={(e) =>
@@ -339,18 +422,18 @@ export default function NewRequestPage() {
         </Card>
 
         <div className="flex justify-end gap-3">
-          <Link href="/requests">
+          <Link href={`/requests/${requestId}`}>
             <Button type="button" variant="outline">
               Cancel
             </Button>
           </Link>
-          <Button type="submit" disabled={loading}>
-            {loading ? (
+          <Button type="submit" disabled={submitting}>
+            {submitting ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              <Send className="mr-2 h-4 w-4" />
+              <Save className="mr-2 h-4 w-4" />
             )}
-            Create Request
+            Save Changes
           </Button>
         </div>
       </form>
