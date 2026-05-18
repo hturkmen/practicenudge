@@ -16,6 +16,8 @@ import {
   CreditCard,
   Shield,
   Bell,
+  Menu,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -35,6 +37,7 @@ export function Sidebar() {
   const router = useRouter();
   const supabase = createClient();
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     async function checkAdmin() {
@@ -54,6 +57,11 @@ export function Sidebar() {
     checkAdmin();
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push("/login");
@@ -64,21 +72,29 @@ export function Sidebar() {
     ? [...navItems, { href: "/admin", label: "Super Admin", icon: Shield }]
     : navItems;
 
-  return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-slate-900 text-white flex flex-col">
+  const sidebarContent = (
+    <>
       {/* Logo */}
-      <div className="flex items-center gap-2 px-6 py-5">
-        <Link href="/dashboard">
+      <div className="flex items-center justify-between px-6 py-5">
+        <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
           <span className="text-lg font-bold tracking-tight text-white cursor-pointer">
             PracticeNudge
           </span>
         </Link>
+        {/* Close button - mobile only */}
+        <button
+          className="lg:hidden text-white/70 hover:text-white p-1"
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
 
       <Separator className="bg-white/10" />
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {allNavItems.map((item) => {
           const isActive =
             pathname === item.href || pathname.startsWith(item.href + "/");
@@ -86,6 +102,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setMobileOpen(false)}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
                 isActive
@@ -114,6 +131,42 @@ export function Sidebar() {
           Sign out
         </Button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar - always visible on lg+ */}
+      <aside className="hidden lg:flex fixed left-0 top-0 z-40 h-screen w-64 bg-slate-900 text-white flex-col">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-50 bg-black/50"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile sidebar - slides in from left */}
+      <aside
+        className={cn(
+          "lg:hidden fixed left-0 top-0 z-50 h-screen w-64 bg-slate-900 text-white flex flex-col transition-transform duration-200 ease-in-out",
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile hamburger button - rendered in header area */}
+      <button
+        className="lg:hidden fixed top-4 left-4 z-40 p-2 rounded-md bg-slate-900 text-white shadow-lg"
+        onClick={() => setMobileOpen(true)}
+        aria-label="Open menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+    </>
   );
 }
