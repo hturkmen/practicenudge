@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { AdminGuard } from "@/components/admin/admin-guard";
 import { StatCard } from "@/components/admin/stat-card";
-import { computeCompletionRate, computeMonthOverMonth } from "@/lib/admin/metrics";
+import { computeCompletionRate } from "@/lib/admin/metrics";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,7 +67,6 @@ interface GrowthMetrics {
 }
 
 export default function AdminPage() {
-  const supabase = createClient();
   const [loading, setLoading] = useState(true);
   const [timedOut, setTimedOut] = useState(false);
   const [stats, setStats] = useState<DashboardStats>({
@@ -98,139 +96,17 @@ export default function AdminPage() {
     }, 5000);
 
     try {
-      // Fetch summary stats
-      const [firmsRes, membersRes, clientsRes, requestsRes, completedRes] =
-        await Promise.all([
-          supabase.from("firms").select("id, name, plan, created_at", { count: "exact" }),
-          supabase.from("firm_users").select("id, user_id, role, firm_id, created_at, firms(name)", { count: "exact" }),
-          supabase.from("clients").select("id", { count: "exact", head: true }),
-          supabase.from("document_requests").select("id", { count: "exact", head: true }),
-          supabase
-            .from("document_requests")
-            .select("id", { count: "exact", head: true })
-            .eq("status", "completed"),
-        ]);
-
-      const totalFirms = firmsRes.count || 0;
-      const totalMembers = membersRes.count || 0;
-      const totalClients = clientsRes.count || 0;
-      const totalRequests = requestsRes.count || 0;
-      const totalCompleted = completedRes.count || 0;
-
-      setStats({
-        totalFirms,
-        totalMembers,
-        totalClients,
-        totalRequests,
-        totalCompleted,
-      });
-
-      // Recent firms (up to 5, sorted by creation date DESC)
-      const { data: recentFirmsData } = await supabase
-        .from("firms")
-        .select("id, name, plan, created_at")
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      // Get member counts for recent firms
-      const recentFirmIds = (recentFirmsData || []).map((f: any) => f.id);
-      const { data: firmMemberCounts } = await supabase
-        .from("firm_users")
-        .select("firm_id")
-        .in("firm_id", recentFirmIds);
-
-      const memberCountMap: Record<string, number> = {};
-      for (const m of firmMemberCounts || []) {
-        memberCountMap[m.firm_id] = (memberCountMap[m.firm_id] || 0) + 1;
+      const response = await fetch("/api/admin/dashboard");
+      if (!response.ok) {
+        throw new Error("Failed to fetch dashboard data");
       }
 
-      setRecentFirms(
-        (recentFirmsData || []).map((f: any) => ({
-          id: f.id,
-          name: f.name,
-          plan: f.plan,
-          member_count: memberCountMap[f.id] || 0,
-          created_at: f.created_at,
-        }))
-      );
+      const data = await response.json();
 
-      // Recent members (up to 5, sorted by registration date DESC)
-      const { data: recentMembersData } = await supabase
-        .from("firm_users")
-        .select("id, user_id, role, created_at, firms(name)")
-        .order("created_at", { ascending: false })
-        .limit(5);
-
-      // Get user names for recent members
-      const recentMemberUserIds = (recentMembersData || []).map((m: any) => m.user_id);
-      let userNameMap: Record<string, string> = {};
-
-      if (recentMemberUserIds.length > 0) {
-        const { data: usersData } = await supabase.auth.admin.listUsers({
-          perPage: recentMemberUserIds.length,
-        });
-
-        if (usersData?.users) {
-          for (const u of usersData.users) {
-            if (recentMemberUserIds.includes(u.id)) {
-              userNameMap[u.id] =
-                (u.user_metadata?.full_name as string) ||
-                u.email?.split("@")[0] ||
-                "Unknown";
-            }
-          }
-        }
-      }
-
-      setRecentMembers(
-        (recentMembersData || []).map((m: any) => ({
-          id: m.id,
-          name: userNameMap[m.user_id] || "Unknown",
-          firm_name: (m.firms as any)?.name || "—",
-          role: m.role,
-          created_at: m.created_at,
-        }))
-      );
-
-      // Growth metrics: new firms/members this month and MoM
-      const now = new Date();
-      const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
-      const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59).toISOString();
-
-      const [newFirmsThisMonthRes, newFirmsPrevMonthRes, newMembersThisMonthRes, newMembersPrevMonthRes] =
-        await Promise.all([
-          supabase
-            .from("firms")
-            .select("id", { count: "exact", head: true })
-            .gte("created_at", currentMonthStart),
-          supabase
-            .from("firms")
-            .select("id", { count: "exact", head: true })
-            .gte("created_at", previousMonthStart)
-            .lte("created_at", previousMonthEnd),
-          supabase
-            .from("firm_users")
-            .select("id", { count: "exact", head: true })
-            .gte("created_at", currentMonthStart),
-          supabase
-            .from("firm_users")
-            .select("id", { count: "exact", head: true })
-            .gte("created_at", previousMonthStart)
-            .lte("created_at", previousMonthEnd),
-        ]);
-
-      const newFirmsThisMonth = newFirmsThisMonthRes.count || 0;
-      const newFirmsPrevMonth = newFirmsPrevMonthRes.count || 0;
-      const newMembersThisMonth = newMembersThisMonthRes.count || 0;
-      const newMembersPrevMonth = newMembersPrevMonthRes.count || 0;
-
-      setGrowth({
-        newFirmsThisMonth,
-        newMembersThisMonth,
-        firmsMoM: computeMonthOverMonth(newFirmsThisMonth, newFirmsPrevMonth),
-        membersMoM: computeMonthOverMonth(newMembersThisMonth, newMembersPrevMonth),
-      });
+      setStats(data.stats);
+      setRecentFirms(data.recentFirms);
+      setRecentMembers(data.recentMembers);
+      setGrowth(data.growth);
 
       clearTimeout(timeoutId);
       setLoading(false);
@@ -239,7 +115,7 @@ export default function AdminPage() {
       setLoading(false);
       toast.error("Failed to load dashboard data");
     }
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     fetchDashboardData();
