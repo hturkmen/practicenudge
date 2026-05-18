@@ -32,7 +32,7 @@
   "landing": {
     "badge": "🇬🇧 Küçük İngiliz muhasebe firmaları için tasarlandı",
     "heroTitle": "MTD bilgileri için müşterilerin\npeşinden koşmayı bırakın.",
-    "heroSubtitle": "PracticeNudge, hangi müşterilerin MTD'ye hazır olduğunu, nelerin eksik olduğunu ve kimin hatırlatmaya ihtiyacı olduğunu gösterir — küçük İngiliz firmaları için tek bir panelde.",
+    "heroSubtitle": "PracticeNudge, hangi müşterilerin MTD'ye hazır olduğunu, nelerin eksik olduğunu ve kimin hatırlatmaya ihtiyacı olduğunu gösterir. Küçük İngiliz firmaları için tek bir panel.",
     "ctaPrimary": "Erken Erişim Pilotuna Katılın",
     "ctaSubtext": "Pilot süresince ücretsiz · Kredi kartı gerekmez",
     "navProblem": "Sorun",
@@ -59,13 +59,13 @@
     "solutionFeature3": "Hiçbir şeyin gözden kaçmaması için hatırlatıcılar ayarlayın",
     "solutionFeature4": "Xero, QuickBooks veya FreeAgent kullanan küçük İngiliz muhasebeciler için özel olarak tasarlandı",
     "feature1Title": "Her müşterinin hazırlığını etiketleyin",
-    "feature1Body": "Yedi sade durum — Değerlendirilmedi'den MTD hazır'a — ilerleme bir bakışta görünür.",
+    "feature1Body": "Yedi sade durum: Değerlendirilmedi'den MTD hazır'a. İlerleme bir bakışta görünür.",
     "feature2Title": "Eksikleri ortaya çıkarın",
-    "feature2Body": "Her müşterinin bir kontrol listesi var. Eksik gelir bandı, yazılım, kayıtlar — hepsi tek yerde.",
+    "feature2Body": "Her müşterinin bir kontrol listesi var. Eksik gelir bandı, yazılım, kayıtlar... Hepsi tek yerde.",
     "feature3Title": "Garip hissettirmeyen hatırlatmalar",
     "feature3Body": "Markanızla yeniden kullanılabilir şablonlar. Gönderin, yanıtları takip edin, çözüldü olarak işaretleyin.",
     "feature4Title": "Riski bir bakışta görün",
-    "feature4Body": "İnce renk kodlu risk seviyeleri hangi müşterilerin kaymak üzere olduğunu gösterir — olmadan önce.",
+    "feature4Body": "İnce renk kodlu risk seviyeleri hangi müşterilerin kaymak üzere olduğunu gösterir. Daha olmadan önce.",
     "feature5Title": "Haftayı tek görünümle planlayın",
     "feature5Body": "Yaklaşan takipler, tarihe, müşteriye, duruma göre. Her Pazartesi yeniden oluşturulan görev listeleri yok.",
     "feature6Title": "Sizin, HMRC'nin değil",
@@ -80,7 +80,7 @@
     "step4Title": "MTD hazır'a kadar takip edin",
     "step4Text": "Her müşteri MTD hazır'a doğru ilerler. Sırada ne olduğunu her zaman bilirsiniz.",
     "pricingTitle": "Küçük firmalar için dürüst fiyatlandırma",
-    "pricingSubtitle": "Firma başına — müşteri başına değil. İstediğiniz zaman iptal edin.",
+    "pricingSubtitle": "Firma başına, müşteri başına değil. İstediğiniz zaman iptal edin.",
     "planPilotName": "Pilot",
     "planPilotPrice": "£0",
     "planPilotPer": "/ ilk 3 ay",
@@ -114,7 +114,7 @@
     "faq1q": "Bu bir vergi beyannamesi yazılımı mı?",
     "faq1a": "Hayır. PracticeNudge vergi beyannamesi vermez veya HMRC'ye herhangi bir şey göndermez. Mevcut yazılımınızın yanında çalışan bir takip ve hatırlatma aracıdır.",
     "faq2q": "Xero / QuickBooks / FreeAgent'ın yerini mi alıyor?",
-    "faq2a": "Hayır. PracticeNudge mevcut muhasebe yazılımınızla birlikte çalışır. Müşteri hazırlığını ve takipleri izler — muhasebe yazılımınız rakamlarla ilgilenir.",
+    "faq2a": "Hayır. PracticeNudge mevcut muhasebe yazılımınızla birlikte çalışır. Müşteri hazırlığını ve takipleri izler, muhasebe yazılımınız rakamlarla ilgilenir.",
     "faq3q": "Bir tablodan farkı ne?",
     "faq3a": "Tablolar hızla eskir. PracticeNudge canlı durum takibi, otomatik hatırlatıcılar ve manuel güncelleme gerektirmeyen net bir görünüm sunar.",
     "faq4q": "Verilerim güvende mi?",
@@ -264,7 +264,7 @@
       "reminderSent": "{email} adresine hatırlatma gönderildi",
       "noClientEmail": "Müşterinin e-posta adresi yok",
       "itemApproved": "Öğe onaylandı",
-      "itemRejected": "Öğe reddedildi — müşterinin yeniden yüklemesi gerekecek"
+      "itemRejected": "Öğe reddedildi, müşterinin yeniden yüklemesi gerekecek"
     }
   },
   "templates": {

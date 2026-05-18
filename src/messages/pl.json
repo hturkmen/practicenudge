@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Zaloguj się",
@@ -32,7 +32,7 @@
   "landing": {
     "badge": "🇬🇧 Stworzone dla małych brytyjskich firm",
     "heroTitle": "Przestań gonić klientów\nza informacjami MTD.",
-    "heroSubtitle": "PracticeNudge pokazuje, którzy klienci są gotowi na MTD, czego brakuje i kto potrzebuje przypomnienia — wszystko w jednym panelu stworzonym dla małych brytyjskich firm.",
+    "heroSubtitle": "PracticeNudge pokazuje, którzy klienci są gotowi na MTD, czego brakuje i kto potrzebuje przypomnienia. wszystko w jednym panelu stworzonym dla małych brytyjskich firm.",
     "ctaPrimary": "Dołącz do programu pilotażowego",
     "ctaSubtext": "Bezpłatnie w okresie pilotażowym · Karta kredytowa nie jest wymagana",
     "navProblem": "Problem",
@@ -66,14 +66,14 @@
     "pilotFeature1": "Pełny dostęp do panelu w okresie pilotażowym",
     "pilotFeature2": "Bezpośredni wpływ na funkcje i priorytety",
     "pilotFeature3": "Cena dla założycieli po uruchomieniu (zablokowana na stałe)",
-    "pilotFeature4": "Bez zobowiązań — odejdź w dowolnym momencie",
+    "pilotFeature4": "Bez zobowiązań. odejdź w dowolnym momencie",
     "pilotNote": "Cena po uruchomieniu: od £29/miesiąc (członkowie pilotażu otrzymują 50% zniżki na zawsze)",
     "pilotCta": "Aplikuj do programu pilotażowego",
     "faqTitle": "Często zadawane pytania",
     "faq1q": "Czy to oprogramowanie do składania deklaracji podatkowych?",
     "faq1a": "Nie. PracticeNudge nie składa deklaracji podatkowych ani nie przesyła niczego do HMRC. To narzędzie do śledzenia i przypominania, które działa obok istniejącego oprogramowania.",
     "faq2q": "Czy zastępuje Xero / QuickBooks / FreeAgent?",
-    "faq2a": "Nie. PracticeNudge współpracuje z istniejącym oprogramowaniem księgowym. Śledzi gotowość klientów i przypomnienia — oprogramowanie księgowe zajmuje się liczbami.",
+    "faq2a": "Nie. PracticeNudge współpracuje z istniejącym oprogramowaniem księgowym. Śledzi gotowość klientów i przypomnienia. oprogramowanie księgowe zajmuje się liczbami.",
     "faq3q": "Czym to się różni od arkusza kalkulacyjnego?",
     "faq3a": "Arkusze kalkulacyjne stają się nieaktualne. PracticeNudge zapewnia śledzenie statusu na żywo, automatyczne przypomnienia i jasny widok bez ręcznych aktualizacji.",
     "faq4q": "Czy moje dane są bezpieczne?",
@@ -223,7 +223,7 @@
       "reminderSent": "Przypomnienie wysłane do {email}",
       "noClientEmail": "Klient nie ma adresu e-mail",
       "itemApproved": "Element zatwierdzony",
-      "itemRejected": "Element odrzucony — klient będzie musiał przesłać ponownie"
+      "itemRejected": "Element odrzucony. klient będzie musiał przesłać ponownie"
     }
   },
   "templates": {

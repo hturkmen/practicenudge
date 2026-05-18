@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Se connecter",
@@ -32,7 +32,7 @@
   "landing": {
     "badge": "🇬🇧 Conçu pour les petits cabinets britanniques",
     "heroTitle": "Arrêtez de courir après vos clients\npour les informations MTD.",
-    "heroSubtitle": "PracticeNudge vous montre quels clients sont prêts pour le MTD, ce qui manque et qui a besoin d'un rappel — le tout dans un tableau de bord conçu pour les petits cabinets britanniques.",
+    "heroSubtitle": "PracticeNudge vous montre quels clients sont prêts pour le MTD, ce qui manque et qui a besoin d'un rappel. le tout dans un tableau de bord conçu pour les petits cabinets britanniques.",
     "ctaPrimary": "Rejoindre le programme pilote",
     "ctaSubtext": "Gratuit pendant le pilote · Pas de carte de crédit requise",
     "navProblem": "Problème",

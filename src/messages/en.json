@@ -32,7 +32,7 @@
   "landing": {
     "badge": "🇬🇧 Built for small UK practices",
     "heroTitle": "Stop chasing clients\nfor MTD information.",
-    "heroSubtitle": "PracticeNudge shows you which clients are MTD-ready, what's missing, and who needs a nudge — all in one dashboard built for small UK practices.",
+    "heroSubtitle": "PracticeNudge shows you which clients are MTD-ready, what's missing, and who needs a nudge. All in one dashboard built for small UK practices.",
     "ctaPrimary": "Join the Early Access Pilot",
     "ctaSubtext": "Free during pilot · No credit card required",
     "navProblem": "Problem",
@@ -59,13 +59,13 @@
     "solutionFeature3": "Set follow-up reminders so nothing slips through",
     "solutionFeature4": "Built specifically for small UK accountants and bookkeepers using Xero, QuickBooks, or FreeAgent",
     "feature1Title": "Tag every client's readiness",
-    "feature1Body": "Seven plain-English statuses — from Not assessed to MTD ready — so progress is visible at a glance.",
+    "feature1Body": "Seven plain-English statuses, from Not assessed to MTD ready, so progress is visible at a glance.",
     "feature2Title": "Surface what's missing",
-    "feature2Body": "Each client has a checklist. Missing income band, software, records — all flagged in one place.",
+    "feature2Body": "Each client has a checklist. Missing income band, software, records... all flagged in one place.",
     "feature3Title": "Reminders that don't feel awkward",
     "feature3Body": "Reusable templates with your branding. Send, track replies, mark resolved.",
     "feature4Title": "See risk at a glance",
-    "feature4Body": "Subtle colour-coded risk levels show which clients are about to slip — before they do.",
+    "feature4Body": "Subtle colour-coded risk levels show which clients are about to slip, before they do.",
     "feature5Title": "Plan the week with one view",
     "feature5Body": "Upcoming follow-ups, by date, by client, by status. No more rebuilt task lists every Monday.",
     "feature6Title": "Yours, not HMRC's",
@@ -80,7 +80,7 @@
     "step4Title": "Track to MTD ready",
     "step4Text": "Every client moves toward MTD ready. You always know what's next.",
     "pricingTitle": "Honest pricing for small practices",
-    "pricingSubtitle": "Per practice — not per client. Cancel any time.",
+    "pricingSubtitle": "Per practice, not per client. Cancel any time.",
     "planPilotName": "Pilot",
     "planPilotPrice": "£0",
     "planPilotPer": "/ first 3 months",
@@ -114,7 +114,7 @@
     "faq1q": "Is this tax filing software?",
     "faq1a": "No. PracticeNudge does not file taxes or submit anything to HMRC. It's a tracking and chasing tool that sits alongside your existing software.",
     "faq2q": "Does it replace Xero / QuickBooks / FreeAgent?",
-    "faq2a": "No. PracticeNudge works with your existing accounting software. It tracks client readiness and follow-ups — your accounting software handles the numbers.",
+    "faq2a": "No. PracticeNudge works with your existing accounting software. It tracks client readiness and follow-ups; your accounting software handles the numbers.",
     "faq3q": "How is this different from a spreadsheet?",
     "faq3a": "Spreadsheets go stale. PracticeNudge gives you live status tracking, automated reminders, and a clear view without manual updates.",
     "faq4q": "Is my data safe?",
@@ -264,7 +264,7 @@
       "reminderSent": "Reminder sent to {email}",
       "noClientEmail": "Client has no email address",
       "itemApproved": "Item approved",
-      "itemRejected": "Item rejected — client will need to re-upload"
+      "itemRejected": "Item rejected. Client will need to re-upload."
     }
   },
   "templates": {

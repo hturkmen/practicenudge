@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Anmelden",
@@ -32,7 +32,7 @@
   "landing": {
     "badge": "🇬🇧 Für kleine britische Kanzleien entwickelt",
     "heroTitle": "Hören Sie auf, Mandanten\nwegen MTD-Informationen hinterherzulaufen.",
-    "heroSubtitle": "PracticeNudge zeigt Ihnen, welche Mandanten MTD-bereit sind, was fehlt und wer eine Erinnerung braucht — alles in einem Dashboard für kleine britische Kanzleien.",
+    "heroSubtitle": "PracticeNudge zeigt Ihnen, welche Mandanten MTD-bereit sind, was fehlt und wer eine Erinnerung braucht. alles in einem Dashboard für kleine britische Kanzleien.",
     "ctaPrimary": "Am Early-Access-Pilot teilnehmen",
     "ctaSubtext": "Während des Pilots kostenlos · Keine Kreditkarte erforderlich",
     "navProblem": "Problem",

@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "PracticeNudge",
     "signIn": "সাইন ইন",
@@ -66,14 +66,14 @@
     "pilotFeature1": "Full dashboard access during the pilot period",
     "pilotFeature2": "Direct input into features and priorities",
     "pilotFeature3": "Founding member pricing when we launch (locked in permanently)",
-    "pilotFeature4": "No commitment — leave anytime",
+    "pilotFeature4": "No commitment. leave anytime",
     "pilotNote": "Price at launch: From £29/month (pilot members get 50% off forever)",
     "pilotCta": "Apply for the Pilot",
     "faqTitle": "Frequently Asked Questions",
     "faq1q": "Is this tax filing software?",
     "faq1a": "No. PracticeNudge does not file taxes or submit anything to HMRC. It's a tracking and chasing tool that sits alongside your existing software.",
     "faq2q": "Does it replace Xero / QuickBooks / FreeAgent?",
-    "faq2a": "No. PracticeNudge works with your existing accounting software. It tracks client readiness and follow-ups — your accounting software handles the numbers.",
+    "faq2a": "No. PracticeNudge works with your existing accounting software. It tracks client readiness and follow-ups. your accounting software handles the numbers.",
     "faq3q": "How is this different from a spreadsheet?",
     "faq3a": "Spreadsheets go stale. PracticeNudge gives you live status tracking, automated reminders, and a clear view without manual updates.",
     "faq4q": "Is my data safe?",
@@ -223,7 +223,7 @@
       "reminderSent": "Reminder sent to {email}",
       "noClientEmail": "Client has no email address",
       "itemApproved": "Item approved",
-      "itemRejected": "Item rejected — client will need to re-upload"
+      "itemRejected": "Item rejected. client will need to re-upload"
     }
   },
   "templates": {

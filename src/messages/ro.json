@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Conectare",
@@ -32,7 +32,7 @@
   "landing": {
     "badge": "🇬🇧 Creat pentru firmele mici din UK",
     "heroTitle": "Nu mai alerga după clienți\npentru informații MTD.",
-    "heroSubtitle": "PracticeNudge îți arată care clienți sunt pregătiți pentru MTD, ce lipsește și cine are nevoie de un memento — totul într-un singur panou creat pentru firmele mici din UK.",
+    "heroSubtitle": "PracticeNudge îți arată care clienți sunt pregătiți pentru MTD, ce lipsește și cine are nevoie de un memento. totul într-un singur panou creat pentru firmele mici din UK.",
     "ctaPrimary": "Alătură-te programului pilot",
     "ctaSubtext": "Gratuit în perioada pilot · Nu este necesar card de credit",
     "navProblem": "Problema",
@@ -66,14 +66,14 @@
     "pilotFeature1": "Acces complet la panou în perioada pilot",
     "pilotFeature2": "Contribuție directă la funcționalități și priorități",
     "pilotFeature3": "Preț de fondator la lansare (blocat permanent)",
-    "pilotFeature4": "Fără angajament — pleacă oricând",
+    "pilotFeature4": "Fără angajament. pleacă oricând",
     "pilotNote": "Preț la lansare: de la £29/lună (membrii pilot primesc 50% reducere pentru totdeauna)",
     "pilotCta": "Aplică pentru programul pilot",
     "faqTitle": "Întrebări frecvente",
     "faq1q": "Este un software de depunere a declarațiilor fiscale?",
     "faq1a": "Nu. PracticeNudge nu depune declarații fiscale și nu trimite nimic la HMRC. Este un instrument de urmărire și reamintire care funcționează alături de software-ul tău existent.",
     "faq2q": "Înlocuiește Xero / QuickBooks / FreeAgent?",
-    "faq2a": "Nu. PracticeNudge funcționează cu software-ul tău contabil existent. Urmărește pregătirea clienților și mementourile — software-ul contabil se ocupă de cifre.",
+    "faq2a": "Nu. PracticeNudge funcționează cu software-ul tău contabil existent. Urmărește pregătirea clienților și mementourile. software-ul contabil se ocupă de cifre.",
     "faq3q": "Cum diferă de un tabel de calcul?",
     "faq3a": "Tabelele de calcul devin depășite. PracticeNudge oferă urmărirea statusului în timp real, mementouri automate și o imagine clară fără actualizări manuale.",
     "faq4q": "Sunt datele mele în siguranță?",
@@ -223,7 +223,7 @@
       "reminderSent": "Memento trimis la {email}",
       "noClientEmail": "Clientul nu are adresă de e-mail",
       "itemApproved": "Element aprobat",
-      "itemRejected": "Element respins — clientul va trebui să reîncarce"
+      "itemRejected": "Element respins. clientul va trebui să reîncarce"
     }
   },
   "templates": {
