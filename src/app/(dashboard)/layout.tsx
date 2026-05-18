@@ -94,11 +94,24 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Sidebar />
-      <div className="ml-64">
+      <div className="ml-64 flex flex-col flex-1">
         <Header firmName={firmName} userEmail={firmEmail} />
-        <main className="p-6">{children}</main>
+        <main className="p-6 flex-1">{children}</main>
+        <footer className="border-t px-6 py-3 text-center">
+          <p className="text-xs text-muted-foreground">
+            Developed by{" "}
+            <a
+              href="https://hermesyazilim.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-medium"
+            >
+              Hermes Yazılım
+            </a>
+          </p>
+        </footer>
       </div>
       <Toaster />
     </div>

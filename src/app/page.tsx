@@ -250,6 +250,17 @@ export default async function LandingPage() {
           <p className="text-xs text-muted-foreground text-center max-w-2xl">
             {t("footerDisclaimer")}
           </p>
+          <p className="text-xs text-muted-foreground">
+            Developed by{" "}
+            <a
+              href="https://hermesyazilim.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#1e3a5f] hover:underline font-medium"
+            >
+              Hermes Yazılım
+            </a>
+          </p>
         </div>
       </footer>
     </div>
