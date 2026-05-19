@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
   const { data: docRequest, error: reqError } = await supabase
     .from("document_requests")
-    .select("*, clients(id, name, email, phone), firms(id, name, email)")
+    .select("*, clients(id, name, email, phone, status), firms(id, name, email)")
     .eq("id", requestId)
     .eq("firm_id", firmUser.firm_id)
     .single();
@@ -51,6 +51,14 @@ export async function POST(request: Request) {
   if (!docRequest.clients?.email) {
     return NextResponse.json(
       { error: "Client has no email address" },
+      { status: 400 }
+    );
+  }
+
+  // Block reminders for on_hold clients
+  if (docRequest.clients?.status === "on_hold") {
+    return NextResponse.json(
+      { error: "Client is on hold. No reminders can be sent." },
       { status: 400 }
     );
   }

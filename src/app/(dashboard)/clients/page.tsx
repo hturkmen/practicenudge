@@ -28,10 +28,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, Upload, Users } from "lucide-react";
+import { Plus, Search, Upload, Users, MoreHorizontal, PauseCircle, PlayCircle, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { AddClientDialog } from "./add-client-dialog";
 import { CsvImportDialog } from "./csv-import-dialog";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -41,6 +58,7 @@ export default function ClientsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("active");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showCsvDialog, setShowCsvDialog] = useState(false);
+  const [deleteClientId, setDeleteClientId] = useState<string | null>(null);
   const supabase = createClient();
 
   const fetchClients = useCallback(async () => {
@@ -80,6 +98,36 @@ export default function ClientsPage() {
     active: "bg-green-100 text-green-700",
     inactive: "bg-gray-100 text-gray-700",
     archived: "bg-red-100 text-red-700",
+    on_hold: "bg-orange-100 text-orange-700",
+  };
+
+  const updateClientStatus = async (clientId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("clients")
+      .update({ status: newStatus })
+      .eq("id", clientId);
+
+    if (error) {
+      toast.error("Failed to update client status");
+      return;
+    }
+    toast.success(`Client ${newStatus === "on_hold" ? "put on hold" : "activated"}`);
+    fetchClients();
+  };
+
+  const deleteClient = async (clientId: string) => {
+    const { error } = await supabase
+      .from("clients")
+      .delete()
+      .eq("id", clientId);
+
+    if (error) {
+      toast.error("Failed to delete client: " + error.message);
+      return;
+    }
+    toast.success("Client deleted");
+    setDeleteClientId(null);
+    fetchClients();
   };
 
   return (
@@ -135,6 +183,7 @@ export default function ClientsPage() {
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="on_hold">On Hold</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
                 <SelectItem value="archived">Archived</SelectItem>
               </SelectContent>
@@ -186,6 +235,7 @@ export default function ClientsPage() {
                   <TableHead>Type</TableHead>
                   <TableHead>MTD Threshold</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -222,8 +272,38 @@ export default function ClientsPage() {
                           (statusColors[client.status] || "") + " text-xs"
                         }
                       >
-                        {client.status}
+                        {client.status === "on_hold" ? "on hold" : client.status}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreHorizontal className="h-3.5 w-3.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {client.status !== "on_hold" && (
+                            <DropdownMenuItem onClick={() => updateClientStatus(client.id, "on_hold")}>
+                              <PauseCircle className="mr-2 h-4 w-4 text-orange-600" />
+                              Put on Hold
+                            </DropdownMenuItem>
+                          )}
+                          {client.status === "on_hold" && (
+                            <DropdownMenuItem onClick={() => updateClientStatus(client.id, "active")}>
+                              <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
+                              Activate
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem
+                            onClick={() => setDeleteClientId(client.id)}
+                            className="text-red-600 focus:text-red-600"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -243,6 +323,27 @@ export default function ClientsPage() {
         onOpenChange={setShowCsvDialog}
         onSuccess={fetchClients}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteClientId} onOpenChange={() => setDeleteClientId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Client</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this client and all their associated document requests. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => deleteClientId && deleteClient(deleteClientId)}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

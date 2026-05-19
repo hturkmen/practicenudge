@@ -30,6 +30,9 @@ import {
   FileText,
   Mail,
   MessageSquare,
+  PauseCircle,
+  PlayCircle,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -122,6 +125,37 @@ export default function ClientDetailPage() {
     in_progress: "bg-yellow-100 text-yellow-700",
     completed: "bg-green-100 text-green-700",
     overdue: "bg-red-100 text-red-700",
+    on_hold: "bg-orange-100 text-orange-700",
+    cancelled: "bg-red-50 text-red-600",
+  };
+
+  const handleHoldToggle = async () => {
+    const newStatus = form.status === "on_hold" ? "active" : "on_hold";
+    const { error } = await supabase
+      .from("clients")
+      .update({ status: newStatus })
+      .eq("id", clientId);
+
+    if (error) {
+      toast.error("Failed to update status");
+      return;
+    }
+    setForm({ ...form, status: newStatus });
+    toast.success(newStatus === "on_hold" ? "Client put on hold" : "Client activated");
+  };
+
+  const handleDelete = async () => {
+    const { error } = await supabase
+      .from("clients")
+      .delete()
+      .eq("id", clientId);
+
+    if (error) {
+      toast.error("Failed to delete client: " + error.message);
+      return;
+    }
+    toast.success("Client deleted");
+    router.push("/clients");
   };
 
   if (loading) {
@@ -157,14 +191,31 @@ export default function ClientDetailPage() {
           <h1 className="text-2xl font-bold tracking-tight">{client.name}</h1>
           <p className="text-muted-foreground">Client details and history</p>
         </div>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        <div className="flex gap-2 flex-wrap">
+          {form.status !== "on_hold" ? (
+            <Button variant="outline" size="sm" className="text-orange-600 border-orange-200 hover:bg-orange-50" onClick={handleHoldToggle}>
+              <PauseCircle className="mr-2 h-4 w-4" />
+              Put on Hold
+            </Button>
           ) : (
-            <Save className="mr-2 h-4 w-4" />
+            <Button variant="outline" size="sm" className="text-green-600 border-green-200 hover:bg-green-50" onClick={handleHoldToggle}>
+              <PlayCircle className="mr-2 h-4 w-4" />
+              Activate
+            </Button>
           )}
-          Save changes
-        </Button>
+          <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50" onClick={handleDelete}>
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete
+          </Button>
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="mr-2 h-4 w-4" />
+            )}
+            Save changes
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -268,6 +319,7 @@ export default function ClientDetailPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="on_hold">On Hold</SelectItem>
                       <SelectItem value="inactive">Inactive</SelectItem>
                       <SelectItem value="archived">Archived</SelectItem>
                     </SelectContent>
