@@ -59,7 +59,7 @@ export default async function LandingPage() {
               <Button variant="outline" size="sm" className="text-[13.5px] shadow-sm">{tc("signIn")}</Button>
             </Link>
             <Link href="#pricing">
-              <Button size="sm" className="text-[13.5px] bg-slate-900 hover:bg-slate-800">
+              <Button size="sm" className="text-[13.5px] bg-slate-900 hover:bg-slate-800 text-white">
                 {t("ctaPrimary")}
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Button>
@@ -103,7 +103,7 @@ export default async function LandingPage() {
 
               <div className="flex gap-2.5 flex-wrap">
                 <Link href="#pricing">
-                  <Button size="lg" className="text-[14.5px] px-5 bg-slate-900 hover:bg-slate-800 h-12 rounded-lg shadow-lg shadow-slate-900/20">
+                  <Button size="lg" className="text-[14.5px] px-5 bg-slate-900 hover:bg-slate-800 text-white h-12 rounded-lg shadow-lg shadow-slate-900/20">
                     {t("ctaPrimary")}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
