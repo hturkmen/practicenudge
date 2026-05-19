@@ -102,17 +102,31 @@ export default function ClientsPage() {
   };
 
   const updateClientStatus = async (clientId: string, newStatus: string) => {
-    const { error } = await supabase
-      .from("clients")
-      .update({ status: newStatus })
-      .eq("id", clientId);
+    try {
+      const res = await fetch("/api/clients/update-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId, newStatus }),
+      });
 
-    if (error) {
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || "Failed to update client status");
+        return;
+      }
+
+      toast.success(
+        newStatus === "on_hold"
+          ? "Client put on hold. All active requests paused."
+          : newStatus === "active"
+          ? "Client activated. Requests restored."
+          : `Client status updated to ${newStatus}`
+      );
+      fetchClients();
+    } catch {
       toast.error("Failed to update client status");
-      return;
     }
-    toast.success(`Client ${newStatus === "on_hold" ? "put on hold" : "activated"}`);
-    fetchClients();
+  };
   };
 
   const deleteClient = async (clientId: string) => {

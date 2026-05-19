@@ -88,6 +88,23 @@ export default function RequestsPage() {
   };
 
   const updateRequestStatus = async (requestId: string, newStatus: string) => {
+    // Block resuming if client is not active
+    if (newStatus === "pending") {
+      const req = requests.find((r) => r.id === requestId);
+      if (req?.clients) {
+        const { data: clientData } = await supabase
+          .from("clients")
+          .select("status")
+          .eq("id", req.clients.id)
+          .single();
+
+        if (clientData && clientData.status !== "active") {
+          toast.error("Cannot resume. Client is " + clientData.status.replace("_", " ") + ". Activate the client first.");
+          return;
+        }
+      }
+    }
+
     const { error } = await supabase
       .from("document_requests")
       .update({ status: newStatus })

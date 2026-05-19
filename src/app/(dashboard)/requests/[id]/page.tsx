@@ -126,6 +126,21 @@ export default function RequestDetailPage() {
 
   const updateStatus = async (newStatus: string) => {
     if (!request) return;
+
+    // Block resuming a request if the client is not active
+    if (newStatus === "pending" && request.clients) {
+      const { data: clientData } = await supabase
+        .from("clients")
+        .select("status")
+        .eq("id", request.clients.id)
+        .single();
+
+      if (clientData && clientData.status !== "active") {
+        toast.error("Cannot resume request. Client is " + clientData.status.replace("_", " ") + ". Activate the client first.");
+        return;
+      }
+    }
+
     const { error } = await supabase
       .from("document_requests")
       .update({ status: newStatus })

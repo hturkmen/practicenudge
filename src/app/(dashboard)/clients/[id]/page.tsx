@@ -98,6 +98,23 @@ export default function ClientDetailPage() {
 
   const handleSave = async () => {
     setSaving(true);
+
+    // If status changed, use the cascade API
+    if (client && form.status !== client.status) {
+      const res = await fetch("/api/clients/update-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId, newStatus: form.status }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || "Failed to update status");
+        setSaving(false);
+        return;
+      }
+    }
+
+    // Update other fields
     const { error } = await supabase
       .from("clients")
       .update({
@@ -108,7 +125,6 @@ export default function ClientDetailPage() {
         mtd_threshold: form.mtd_threshold || null,
         tax_reference: form.tax_reference || null,
         notes: form.notes || null,
-        status: form.status,
       })
       .eq("id", clientId);
 
@@ -131,17 +147,28 @@ export default function ClientDetailPage() {
 
   const handleHoldToggle = async () => {
     const newStatus = form.status === "on_hold" ? "active" : "on_hold";
-    const { error } = await supabase
-      .from("clients")
-      .update({ status: newStatus })
-      .eq("id", clientId);
+    try {
+      const res = await fetch("/api/clients/update-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId, newStatus }),
+      });
 
-    if (error) {
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || "Failed to update status");
+        return;
+      }
+
+      setForm({ ...form, status: newStatus });
+      toast.success(
+        newStatus === "on_hold"
+          ? "Client put on hold. All active requests paused."
+          : "Client activated. Requests restored."
+      );
+    } catch {
       toast.error("Failed to update status");
-      return;
     }
-    setForm({ ...form, status: newStatus });
-    toast.success(newStatus === "on_hold" ? "Client put on hold" : "Client activated");
   };
 
   const handleDelete = async () => {
