@@ -113,6 +113,7 @@ export type FirmListItem = {
   plan: "free" | "starter" | "pro";
   member_count: number;
   client_count: number;
+  is_suspended?: boolean;
   created_at: string;
 };
 

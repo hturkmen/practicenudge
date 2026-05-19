@@ -48,6 +48,7 @@ interface FirmListItem {
   plan: "free" | "starter" | "pro";
   member_count: number;
   client_count: number;
+  is_suspended?: boolean;
   created_at: string;
 }
 
@@ -245,10 +246,10 @@ export default function FirmsListPage() {
                     <TableRow>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
                       <TableHead>Plan</TableHead>
                       <TableHead>Members</TableHead>
                       <TableHead>Clients</TableHead>
+                      <TableHead>Status</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
@@ -267,9 +268,6 @@ export default function FirmsListPage() {
                         <TableCell className="text-muted-foreground">
                           {firm.email}
                         </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {firm.phone || "—"}
-                        </TableCell>
                         <TableCell>
                           <Badge
                             className={
@@ -281,6 +279,11 @@ export default function FirmsListPage() {
                         </TableCell>
                         <TableCell>{firm.member_count}</TableCell>
                         <TableCell>{firm.client_count}</TableCell>
+                        <TableCell>
+                          <Badge className={firm.is_suspended ? "bg-red-100 text-red-700 text-xs" : "bg-green-100 text-green-700 text-xs"}>
+                            {firm.is_suspended ? "suspended" : "active"}
+                          </Badge>
+                        </TableCell>
                         <TableCell className="text-muted-foreground">
                           {new Date(firm.created_at).toLocaleDateString("en-GB")}
                         </TableCell>
@@ -292,14 +295,18 @@ export default function FirmsListPage() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "suspend_firm")}>
-                                <PauseCircle className="mr-2 h-4 w-4 text-orange-600" />
-                                Suspend (Hold All)
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "reactivate_firm")}>
-                                <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
-                                Reactivate
-                              </DropdownMenuItem>
+                              {!firm.is_suspended && (
+                                <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "suspend_firm")}>
+                                  <PauseCircle className="mr-2 h-4 w-4 text-orange-600" />
+                                  Suspend
+                                </DropdownMenuItem>
+                              )}
+                              {firm.is_suspended && (
+                                <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "reactivate_firm")}>
+                                  <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
+                                  Reactivate
+                                </DropdownMenuItem>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>

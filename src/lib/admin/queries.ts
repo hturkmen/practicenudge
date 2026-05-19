@@ -236,10 +236,10 @@ export async function getFirms(
   // For each firm, get member count and client count
   const firmIds = (firmsData || []).map((f: any) => f.id);
 
-  // Fetch member counts per firm
+  // Fetch member counts per firm (with status)
   const { data: memberCounts } = await supabase
     .from("firm_users")
-    .select("firm_id")
+    .select("firm_id, status")
     .in("firm_id", firmIds);
 
   // Fetch client counts per firm
@@ -248,12 +248,16 @@ export async function getFirms(
     .select("firm_id")
     .in("firm_id", firmIds);
 
-  // Build count maps
+  // Build count maps and suspended status
   const memberCountMap: Record<string, number> = {};
   const clientCountMap: Record<string, number> = {};
+  const firmSuspendedMap: Record<string, boolean> = {};
 
   for (const m of memberCounts || []) {
     memberCountMap[m.firm_id] = (memberCountMap[m.firm_id] || 0) + 1;
+    if (m.status === "suspended") {
+      firmSuspendedMap[m.firm_id] = true;
+    }
   }
   for (const c of clientCounts || []) {
     clientCountMap[c.firm_id] = (clientCountMap[c.firm_id] || 0) + 1;
@@ -267,6 +271,7 @@ export async function getFirms(
     plan: f.plan,
     member_count: memberCountMap[f.id] || 0,
     client_count: clientCountMap[f.id] || 0,
+    is_suspended: !!firmSuspendedMap[f.id],
     created_at: f.created_at,
   }));
 
