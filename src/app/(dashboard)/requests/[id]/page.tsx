@@ -25,6 +25,9 @@ import {
   FileText,
   Download,
   Pencil,
+  PauseCircle,
+  PlayCircle,
+  Ban,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -121,11 +124,29 @@ export default function RequestDetailPage() {
     }
   };
 
+  const updateStatus = async (newStatus: string) => {
+    if (!request) return;
+    const { error } = await supabase
+      .from("document_requests")
+      .update({ status: newStatus })
+      .eq("id", request.id);
+
+    if (error) {
+      toast.error("Failed to update status");
+      return;
+    }
+
+    toast.success(`Request ${newStatus.replace("_", " ")}`);
+    fetchData();
+  };
+
   const statusColors: Record<string, string> = {
     pending: "bg-gray-100 text-gray-700",
     in_progress: "bg-yellow-100 text-yellow-700",
     completed: "bg-green-100 text-green-700",
     overdue: "bg-red-100 text-red-700",
+    on_hold: "bg-orange-100 text-orange-700",
+    cancelled: "bg-red-50 text-red-600",
   };
 
   const itemStatusIcons: Record<string, React.ReactNode> = {
@@ -183,7 +204,7 @@ export default function RequestDetailPage() {
             {request.clients?.email && ` • ${request.clients.email}`}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Link href={`/requests/${requestId}/edit`}>
             <Button variant="outline" size="sm">
               <Pencil className="mr-2 h-4 w-4" />
@@ -204,6 +225,24 @@ export default function RequestDetailPage() {
             <Mail className="mr-2 h-4 w-4" />
             Send Reminder
           </Button>
+          {request.status !== "on_hold" && request.status !== "cancelled" && request.status !== "completed" && (
+            <Button variant="outline" size="sm" className="text-orange-600 border-orange-200 hover:bg-orange-50" onClick={() => updateStatus("on_hold")}>
+              <PauseCircle className="mr-2 h-4 w-4" />
+              Put on Hold
+            </Button>
+          )}
+          {request.status === "on_hold" && (
+            <Button variant="outline" size="sm" className="text-green-600 border-green-200 hover:bg-green-50" onClick={() => updateStatus("pending")}>
+              <PlayCircle className="mr-2 h-4 w-4" />
+              Resume
+            </Button>
+          )}
+          {request.status !== "cancelled" && request.status !== "completed" && (
+            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => updateStatus("cancelled")}>
+              <Ban className="mr-2 h-4 w-4" />
+              Cancel
+            </Button>
+          )}
         </div>
       </div>
 

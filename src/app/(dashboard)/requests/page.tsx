@@ -24,9 +24,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, FileText, ExternalLink, Copy } from "lucide-react";
+import { Plus, Search, FileText, ExternalLink, Copy, PauseCircle, XCircle, PlayCircle, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function RequestsPage() {
   const [requests, setRequests] = useState<any[]>([]);
@@ -71,12 +77,29 @@ export default function RequestsPage() {
     in_progress: "bg-yellow-100 text-yellow-700",
     completed: "bg-green-100 text-green-700",
     overdue: "bg-red-100 text-red-700",
+    on_hold: "bg-orange-100 text-orange-700",
+    cancelled: "bg-red-50 text-red-600",
   };
 
   const copyMagicLink = (token: string) => {
     const url = `${window.location.origin}/upload/${token}`;
     navigator.clipboard.writeText(url);
     toast.success("Upload link copied to clipboard");
+  };
+
+  const updateRequestStatus = async (requestId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("document_requests")
+      .update({ status: newStatus })
+      .eq("id", requestId);
+
+    if (error) {
+      toast.error("Failed to update status");
+      return;
+    }
+
+    toast.success(`Request ${newStatus.replace("_", " ")}`);
+    fetchRequests();
   };
 
   return (
@@ -121,6 +144,8 @@ export default function RequestsPage() {
                 <SelectItem value="in_progress">In Progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="overdue">Overdue</SelectItem>
+                <SelectItem value="on_hold">On Hold</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -219,6 +244,36 @@ export default function RequestsPage() {
                             <ExternalLink className="h-3.5 w-3.5" />
                           </Button>
                         </Link>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="h-3.5 w-3.5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {req.status !== "on_hold" && req.status !== "cancelled" && req.status !== "completed" && (
+                              <DropdownMenuItem onClick={() => updateRequestStatus(req.id, "on_hold")}>
+                                <PauseCircle className="mr-2 h-4 w-4 text-orange-600" />
+                                Put on Hold
+                              </DropdownMenuItem>
+                            )}
+                            {req.status === "on_hold" && (
+                              <DropdownMenuItem onClick={() => updateRequestStatus(req.id, "pending")}>
+                                <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
+                                Resume
+                              </DropdownMenuItem>
+                            )}
+                            {req.status !== "cancelled" && req.status !== "completed" && (
+                              <DropdownMenuItem
+                                onClick={() => updateRequestStatus(req.id, "cancelled")}
+                                className="text-red-600 focus:text-red-600"
+                              >
+                                <XCircle className="mr-2 h-4 w-4" />
+                                Cancel Request
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </TableCell>
                   </TableRow>
