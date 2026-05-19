@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   // Verify firm has suspended members (i.e. firm is suspended)
   const { data: suspendedMembers } = await serviceSupabase
     .from("firm_users")
-    .select("id, status")
+    .select("id, user_id, status")
     .eq("firm_id", firmId)
     .eq("status", "suspended");
 
@@ -54,6 +54,14 @@ export async function POST(request: Request) {
     );
   }
 
+  // Get all user IDs for this firm (to delete auth users)
+  const { data: allFirmUsers } = await serviceSupabase
+    .from("firm_users")
+    .select("user_id")
+    .eq("firm_id", firmId);
+
+  const userIds = (allFirmUsers || []).map((u: any) => u.user_id);
+
   // Delete firm (CASCADE will handle clients, requests, firm_users, etc.)
   const { error } = await serviceSupabase
     .from("firms")
@@ -62,6 +70,13 @@ export async function POST(request: Request) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // Delete auth users (so they can't log back in and recreate)
+  for (const userId of userIds) {
+    // Don't delete the super admin's own account
+    if (userId === user.id) continue;
+    await serviceSupabase.auth.admin.deleteUser(userId);
   }
 
   return NextResponse.json({ success: true, message: "Firm and all associated data deleted." });

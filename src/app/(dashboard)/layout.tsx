@@ -45,33 +45,44 @@ export default function DashboardLayout({
           .eq("user_id", user.id)
           .maybeSingle();
 
-        // If no firm exists (e.g. Google OAuth user), create one
+        // If no firm exists, check if this is a new user or a deleted one
         if (!firmUser) {
-          const displayName =
-            user.user_metadata?.firm_name ||
-            user.user_metadata?.full_name ||
-            user.email?.split("@")[0] + "'s Firm";
+          const userCreatedAt = new Date(user.created_at);
+          const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
-          const { data: newFirm } = await supabase
-            .from("firms")
-            .insert({ name: displayName, email: user.email! })
-            .select()
-            .single();
+          // Only auto-create firm for genuinely new users (created in last 5 minutes)
+          if (userCreatedAt > fiveMinutesAgo) {
+            const displayName =
+              user.user_metadata?.firm_name ||
+              user.user_metadata?.full_name ||
+              user.email?.split("@")[0] + "'s Firm";
 
-          if (newFirm) {
-            await supabase.from("firm_users").insert({
-              firm_id: newFirm.id,
-              user_id: user.id,
-              role: "owner",
-            });
-            firmUser = { firm_id: newFirm.id, role: "owner", status: "active" };
+            const { data: newFirm } = await supabase
+              .from("firms")
+              .insert({ name: displayName, email: user.email! })
+              .select()
+              .single();
 
-            // Notify super admin about new registration
-            fetch("/api/admin/notify-new-firm", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ firmName: displayName, email: user.email }),
-            }).catch(() => {});
+            if (newFirm) {
+              await supabase.from("firm_users").insert({
+                firm_id: newFirm.id,
+                user_id: user.id,
+                role: "owner",
+              });
+              firmUser = { firm_id: newFirm.id, role: "owner", status: "active" };
+
+              // Notify super admin about new registration
+              fetch("/api/admin/notify-new-firm", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ firmName: displayName, email: user.email }),
+              }).catch(() => {});
+            }
+          } else {
+            // User exists but has no firm — account was deleted
+            await supabase.auth.signOut();
+            router.push("/login?error=account_deleted");
+            return;
           }
         }
 

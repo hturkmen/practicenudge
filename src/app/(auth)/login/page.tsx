@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  const urlError = searchParams.get("error");
+  const accountDeleted = urlError === "account_deleted";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +84,12 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {accountDeleted && (
+            <div className="bg-red-100 text-red-700 text-sm p-3 rounded-md">
+              Your account has been removed. Please contact the administrator if you believe this is an error.
+            </div>
+          )}
+
           {error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
               {error}
