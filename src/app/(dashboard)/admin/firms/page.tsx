@@ -30,8 +30,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building2, Loader2 } from "lucide-react";
+import { Building2, Loader2, MoreHorizontal, PauseCircle, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface FirmListItem {
   id: string;
@@ -121,6 +128,28 @@ export default function FirmsListPage() {
 
   const handlePlanFilterChange = (value: string) => {
     setPlanFilter(value === "all" ? "" : value);
+  };
+
+  const handleFirmAction = async (firmId: string, action: "suspend_firm" | "reactivate_firm") => {
+    try {
+      const response = await fetch("/api/admin/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, target_id: firmId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Action failed");
+      }
+
+      const data = await response.json();
+      toast.success(data.message);
+      fetchFirms(pagination.page);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Action failed";
+      toast.error(message);
+    }
   };
 
   return (
@@ -221,6 +250,7 @@ export default function FirmsListPage() {
                       <TableHead>Members</TableHead>
                       <TableHead>Clients</TableHead>
                       <TableHead>Created</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -253,6 +283,25 @@ export default function FirmsListPage() {
                         <TableCell>{firm.client_count}</TableCell>
                         <TableCell className="text-muted-foreground">
                           {new Date(firm.created_at).toLocaleDateString("en-GB")}
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreHorizontal className="h-3.5 w-3.5" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "suspend_firm")}>
+                                <PauseCircle className="mr-2 h-4 w-4 text-orange-600" />
+                                Suspend (Hold All)
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "reactivate_firm")}>
+                                <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
+                                Reactivate
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     ))}

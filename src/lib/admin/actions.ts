@@ -223,3 +223,78 @@ export async function reactivateMember(
     }
   );
 }
+
+
+/**
+ * Suspends a firm by setting its status to 'suspended' and puts all active
+ * document requests on hold.
+ */
+export async function suspendFirm(
+  supabase: SupabaseClient,
+  firmId: string,
+  adminUserId: string
+): Promise<void> {
+  // Update firm plan to indicate suspended (we use a metadata approach)
+  // Put all active document requests on hold
+  const { error: requestsError } = await supabase
+    .from("document_requests")
+    .update({ status: "on_hold" })
+    .eq("firm_id", firmId)
+    .in("status", ["pending", "in_progress", "overdue"]);
+
+  if (requestsError) {
+    throw new Error(`Failed to hold firm requests: ${requestsError.message}`);
+  }
+
+  // Put all active clients on hold
+  const { error: clientsError } = await supabase
+    .from("clients")
+    .update({ status: "on_hold" })
+    .eq("firm_id", firmId)
+    .eq("status", "active");
+
+  if (clientsError) {
+    throw new Error(`Failed to hold firm clients: ${clientsError.message}`);
+  }
+
+  // Log the audit entry
+  await logAdminAction(supabase, adminUserId, firmId, "firm", "suspend", {
+    action: "firm_suspended",
+  });
+}
+
+/**
+ * Reactivates a suspended firm by restoring clients and requests.
+ */
+export async function reactivateFirm(
+  supabase: SupabaseClient,
+  firmId: string,
+  adminUserId: string
+): Promise<void> {
+  // Reactivate on_hold clients
+  const { error: clientsError } = await supabase
+    .from("clients")
+    .update({ status: "active" })
+    .eq("firm_id", firmId)
+    .eq("status", "on_hold");
+
+  if (clientsError) {
+    throw new Error(`Failed to reactivate firm clients: ${clientsError.message}`);
+  }
+
+  // Restore on_hold requests to pending
+  const { error: requestsError } = await supabase
+    .from("document_requests")
+    .update({ status: "pending" })
+    .eq("firm_id", firmId)
+    .eq("status", "on_hold");
+
+  if (requestsError) {
+    throw new Error(`Failed to reactivate firm requests: ${requestsError.message}`);
+  }
+
+  // Log the audit entry
+  await logAdminAction(supabase, adminUserId, firmId, "firm", "reactivate", {
+    action: "firm_reactivated",
+  });
+}

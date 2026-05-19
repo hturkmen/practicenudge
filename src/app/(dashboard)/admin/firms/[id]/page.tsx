@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Building2, Loader2, Users, FileText, History } from "lucide-react";
+import { ArrowLeft, Building2, Loader2, Users, FileText, History, PauseCircle, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 import type { FirmDetailResponse } from "@/lib/types/admin";
 
@@ -86,6 +86,28 @@ export default function FirmDetailPage() {
     if (newPlan === selectedPlan) return;
     setPendingPlan(newPlan);
     setConfirmDialogOpen(true);
+  };
+
+  const handleFirmAction = async (action: "suspend_firm" | "reactivate_firm") => {
+    try {
+      const response = await fetch("/api/admin/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, target_id: firmId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Action failed");
+      }
+
+      const data = await response.json();
+      toast.success(data.message);
+      fetchFirmDetail();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Action failed";
+      toast.error(message);
+    }
   };
 
   const confirmPlanChange = async () => {
@@ -147,7 +169,7 @@ export default function FirmDetailPage() {
             </Button>
           </Link>
           <Building2 className="h-6 w-6 text-primary" />
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl font-bold tracking-tight">
               {loading ? "Loading..." : firmData?.firm.name || "Firm Detail"}
             </h1>
@@ -155,6 +177,28 @@ export default function FirmDetailPage() {
               Firm details and management
             </p>
           </div>
+          {!loading && firmData && (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                onClick={() => handleFirmAction("suspend_firm")}
+              >
+                <PauseCircle className="mr-2 h-4 w-4" />
+                Suspend
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-green-600 border-green-200 hover:bg-green-50"
+                onClick={() => handleFirmAction("reactivate_firm")}
+              >
+                <PlayCircle className="mr-2 h-4 w-4" />
+                Reactivate
+              </Button>
+            </div>
+          )}
         </div>
 
         {loading ? (

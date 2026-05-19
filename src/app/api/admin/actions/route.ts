@@ -5,6 +5,8 @@ import {
   updateFirmPlan,
   suspendMember,
   reactivateMember,
+  suspendFirm,
+  reactivateFirm,
 } from "@/lib/admin/actions";
 import type { AdminActionRequest, AdminActionResponse } from "@/lib/types/admin";
 
@@ -48,7 +50,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const validActions = ["update_role", "update_plan", "suspend_member", "reactivate_member"];
+  const validActions = ["update_role", "update_plan", "suspend_member", "reactivate_member", "suspend_firm", "reactivate_firm"];
 
   if (!body.action || !validActions.includes(body.action)) {
     return NextResponse.json(
@@ -115,6 +117,18 @@ export async function POST(request: Request) {
       case "reactivate_member": {
         await reactivateMember(supabase, body.target_id, user.id);
         response = { success: true, message: "Member reactivated successfully" };
+        break;
+      }
+
+      case "suspend_firm": {
+        await suspendFirm(supabase, body.target_id, user.id);
+        response = { success: true, message: "Firm suspended. All active requests put on hold." };
+        break;
+      }
+
+      case "reactivate_firm": {
+        await reactivateFirm(supabase, body.target_id, user.id);
+        response = { success: true, message: "Firm reactivated. Clients and requests restored." };
         break;
       }
 
