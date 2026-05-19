@@ -296,25 +296,27 @@ export default function ClientsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          {client.status !== "on_hold" && (
+                          {client.status !== "on_hold" && client.status !== "inactive" && client.status !== "archived" && (
                             <DropdownMenuItem onClick={() => updateClientStatus(client.id, "on_hold")}>
                               <PauseCircle className="mr-2 h-4 w-4 text-orange-600" />
                               Put on Hold
                             </DropdownMenuItem>
                           )}
-                          {client.status === "on_hold" && (
+                          {(client.status === "on_hold" || client.status === "inactive" || client.status === "archived") && (
                             <DropdownMenuItem onClick={() => updateClientStatus(client.id, "active")}>
                               <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
                               Activate
                             </DropdownMenuItem>
                           )}
-                          <DropdownMenuItem
-                            onClick={() => setDeleteClientId(client.id)}
-                            className="text-red-600 focus:text-red-600"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
+                          {client.status !== "active" && (
+                            <DropdownMenuItem
+                              onClick={() => setDeleteClientId(client.id)}
+                              className="text-red-600 focus:text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

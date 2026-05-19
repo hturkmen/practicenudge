@@ -24,21 +24,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, FileText, ExternalLink, Copy, PauseCircle, XCircle, PlayCircle, MoreHorizontal } from "lucide-react";
+import { Plus, Search, FileText, ExternalLink, Copy, PauseCircle, XCircle, PlayCircle, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function RequestsPage() {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [deleteRequestId, setDeleteRequestId] = useState<string | null>(null);
   const supabase = createClient();
 
   const fetchRequests = useCallback(async () => {
@@ -116,6 +128,21 @@ export default function RequestsPage() {
     }
 
     toast.success(`Request ${newStatus.replace("_", " ")}`);
+    fetchRequests();
+  };
+
+  const deleteRequest = async (requestId: string) => {
+    const { error } = await supabase
+      .from("document_requests")
+      .delete()
+      .eq("id", requestId);
+
+    if (error) {
+      toast.error("Failed to delete request: " + error.message);
+      return;
+    }
+    toast.success("Request deleted");
+    setDeleteRequestId(null);
     fetchRequests();
   };
 
@@ -289,6 +316,18 @@ export default function RequestsPage() {
                                 Cancel Request
                               </DropdownMenuItem>
                             )}
+                            {(req.status === "on_hold" || req.status === "cancelled") && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => setDeleteRequestId(req.id)}
+                                  className="text-red-600 focus:text-red-600"
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete Permanently
+                                </DropdownMenuItem>
+                              </>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -300,6 +339,27 @@ export default function RequestsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteRequestId} onOpenChange={() => setDeleteRequestId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Request</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this document request and all its checklist items. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => deleteRequestId && deleteRequest(deleteRequestId)}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

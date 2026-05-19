@@ -30,15 +30,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building2, Loader2, MoreHorizontal, PauseCircle, PlayCircle } from "lucide-react";
+import { Building2, Loader2, MoreHorizontal, PauseCircle, PlayCircle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface FirmListItem {
   id: string;
@@ -80,6 +91,7 @@ export default function FirmsListPage() {
   const [planFilter, setPlanFilter] = useState<string>("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [deleteFirmId, setDeleteFirmId] = useState<string | null>(null);
 
   const fetchFirms = useCallback(
     async (page: number) => {
@@ -149,6 +161,28 @@ export default function FirmsListPage() {
       fetchFirms(pagination.page);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Action failed";
+      toast.error(message);
+    }
+  };
+
+  const handleDeleteFirm = async (firmId: string) => {
+    try {
+      const response = await fetch("/api/admin/delete-firm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firmId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || errorData.error || "Delete failed");
+      }
+
+      toast.success("Firm deleted permanently.");
+      setDeleteFirmId(null);
+      fetchFirms(pagination.page);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Delete failed";
       toast.error(message);
     }
   };
@@ -302,10 +336,20 @@ export default function FirmsListPage() {
                                 </DropdownMenuItem>
                               )}
                               {firm.is_suspended && (
-                                <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "reactivate_firm")}>
-                                  <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
-                                  Reactivate
-                                </DropdownMenuItem>
+                                <>
+                                  <DropdownMenuItem onClick={() => handleFirmAction(firm.id, "reactivate_firm")}>
+                                    <PlayCircle className="mr-2 h-4 w-4 text-green-600" />
+                                    Reactivate
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    onClick={() => setDeleteFirmId(firm.id)}
+                                    className="text-red-600 focus:text-red-600"
+                                  >
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete Permanently
+                                  </DropdownMenuItem>
+                                </>
                               )}
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -326,6 +370,27 @@ export default function FirmsListPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteFirmId} onOpenChange={() => setDeleteFirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Firm Permanently</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this firm, all its members, clients, and document requests. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => deleteFirmId && handleDeleteFirm(deleteFirmId)}
+            >
+              Delete Permanently
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminGuard>
   );
 }
