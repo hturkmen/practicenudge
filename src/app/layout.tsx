@@ -81,6 +81,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://www.practicenudge.com",
+    languages: {
+      "en-GB": "https://www.practicenudge.com",
+      "tr": "https://www.practicenudge.com",
+      "x-default": "https://www.practicenudge.com",
+    },
   },
   icons: {
     icon: "/favicon.svg",
@@ -99,7 +104,10 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning className={cn("font-sans", geistSans.variable)}>
-      <head />
+      <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+      </head>
       <body className="antialiased">
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-B8P1PZSHZ9"

@@ -27,13 +27,28 @@ export function WebsiteStructuredData() {
     "@type": "Organization",
     name: "PracticeNudge",
     url: "https://www.practicenudge.com",
+    logo: "https://www.practicenudge.com/logo.svg",
     description:
       "MTD client readiness tracking tool built for small UK accounting practices.",
     foundingDate: "2025",
+    sameAs: [],
     areaServed: {
       "@type": "Country",
       name: "United Kingdom",
     },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.practicenudge.com",
+      },
+    ],
   };
 
   const faqJsonLd = {
@@ -92,6 +107,10 @@ export function WebsiteStructuredData() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <script
         type="application/ld+json"

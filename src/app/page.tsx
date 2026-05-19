@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -39,11 +40,12 @@ export default async function LandingPage() {
       <WebsiteStructuredData />
 
       {/* Nav — glassmorphism style */}
-      <nav className="border-b sticky top-0 bg-white/85 backdrop-blur-xl saturate-[1.4] z-50">
+      <header>
+      <nav aria-label="Main navigation" className="border-b sticky top-0 bg-white/85 backdrop-blur-xl saturate-[1.4] z-50">
         <div className="max-w-[1180px] mx-auto px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/">
-              <img src="/logo.svg" alt="PracticeNudge" className="h-7 cursor-pointer" />
+              <Image src="/logo.svg" alt="PracticeNudge - MTD Client Tracking Tool" width={112} height={28} priority />
             </Link>
           </div>
           <div className="hidden md:flex items-center gap-6 text-[13.5px] font-medium text-slate-600">
@@ -67,6 +69,7 @@ export default async function LandingPage() {
           </div>
         </div>
       </nav>
+      </header>
 
       {/* Hero — split layout */}
       <section className="py-16 md:py-20 px-6" style={{ background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(15,118,110,0.07), transparent 60%), #F8FAFC" }}>
@@ -462,17 +465,22 @@ export default async function LandingPage() {
             </Link>
             <span>· Built for UK accountancy practices</span>
           </div>
-          <p className="text-xs text-white/50">
-            Developed by{" "}
-            <a
-              href="https://hermesyazilim.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-teal-400 hover:underline font-medium"
-            >
-              Hermes Yazılım
-            </a>
-          </p>
+          <div className="flex items-center gap-4">
+            <Link href="/blog" className="text-white/60 hover:text-white transition-colors">
+              Blog
+            </Link>
+            <p className="text-xs text-white/50">
+              Developed by{" "}
+              <a
+                href="https://hermesyazilim.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal-400 hover:underline font-medium"
+              >
+                Hermes Yazılım
+              </a>
+            </p>
+          </div>
         </div>
       </footer>
     </div>

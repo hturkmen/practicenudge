@@ -1,0 +1,973 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "u uktürk.community" [ref=e4] [cursor=pointer]:
+        - /url: /tr
+        - generic [ref=e5]: u
+        - generic [ref=e6]: uktürk.community
+      - generic [ref=e7]:
+        - link "WhatsApp Grupları" [ref=e8] [cursor=pointer]:
+          - /url: /tr/groups
+        - link "Firmalar" [active] [ref=e9] [cursor=pointer]:
+          - /url: /tr/businesses
+        - link "Faydalı Bilgiler" [ref=e10] [cursor=pointer]:
+          - /url: /tr/info
+      - generic [ref=e11]:
+        - button "TR" [ref=e12]
+        - button "EN" [ref=e13]
+      - generic [ref=e14]:
+        - link "Giriş Yap" [ref=e15] [cursor=pointer]:
+          - /url: /tr/auth/login
+        - link "Topluluk Ekle" [ref=e16] [cursor=pointer]:
+          - /url: /tr/auth/register
+          - img [ref=e17]
+          - text: Topluluk Ekle
+  - main [ref=e18]:
+    - generic [ref=e296]:
+      - generic [ref=e297]:
+        - generic [ref=e298]:
+          - heading "Firmalar & İş İlanları" [level=1] [ref=e299]
+          - paragraph [ref=e300]: İngiltere'deki Türk firmalar ve hizmetler
+        - link "Firma Ekle" [ref=e301] [cursor=pointer]:
+          - /url: /tr/businesses/new
+          - img [ref=e302]
+          - text: Firma Ekle
+      - generic [ref=e304]:
+        - img [ref=e306]
+        - generic [ref=e311]:
+          - paragraph [ref=e312]: 📣 33+ Türk işletmesi burada — müşterileriniz sizi arıyor!
+          - paragraph [ref=e313]: Bölgenizdeki Türk işletmeleri listeleniyor. Ücretsiz kayıt olun ve firmanızı ekleyin. Erken eklenen işletmeler listede üstte gösterilir!
+          - generic [ref=e314]:
+            - link "Ücretsiz Kayıt Ol & Ekle" [ref=e315] [cursor=pointer]:
+              - /url: /tr/auth/register
+              - img [ref=e316]
+              - text: Ücretsiz Kayıt Ol & Ekle
+            - generic [ref=e319]:
+              - img [ref=e320]
+              - text: 2 dakikada tamamla
+        - generic [ref=e323]:
+          - generic [ref=e324]: "+5"
+          - generic [ref=e325]: bu ay
+      - generic [ref=e326]:
+        - generic [ref=e327]:
+          - img [ref=e328]
+          - textbox "Firma ara..." [ref=e331]
+        - button "Filtreler" [ref=e332]:
+          - img [ref=e333]
+          - text: Filtreler
+      - generic [ref=e334]:
+        - generic [ref=e335]:
+          - generic [ref=e336]: Kategori
+          - combobox [ref=e337]:
+            - option "Tüm Kategoriler" [selected]
+            - option "Restoran"
+            - option "Mağaza"
+            - option "Hizmet"
+            - option "İş İlanı"
+            - option "Diğer"
+        - generic [ref=e338]:
+          - generic [ref=e339]: Bölge
+          - combobox [ref=e340]:
+            - option "Tüm Bölgeler" [selected]
+            - option "England"
+            - option "Scotland"
+            - option "Wales"
+            - option "N. Ireland"
+        - generic [ref=e341]:
+          - generic [ref=e342]: Şehir
+          - combobox [disabled] [ref=e343]:
+            - option "Tüm Şehirler" [selected]
+        - generic [ref=e344]:
+          - generic [ref=e345]: Sırala
+          - combobox [ref=e346]:
+            - option "En Yüksek Puan"
+            - option "En Çok Beğenilen"
+            - option "En Yeni" [selected]
+      - generic [ref=e349]: 33 firma bulundu
+      - generic [ref=e350]:
+        - article [ref=e351]:
+          - generic [ref=e352]:
+            - generic [ref=e356]: F
+            - button [ref=e357]:
+              - img [ref=e358]
+          - generic [ref=e360]:
+            - generic [ref=e361]:
+              - generic [ref=e362]: Hizmet
+              - generic [ref=e363]:
+                - img [ref=e364]
+                - strong [ref=e366]: "0"
+            - link "F.L" [ref=e367] [cursor=pointer]:
+              - /url: /tr/businesses/702d8471-2ae8-499e-a67e-7291daeabe9d
+              - heading "F.L" [level=3] [ref=e368]
+            - paragraph [ref=e369]: Evinizi yeniliyoruz, yaşam alanlarınıza değer katıyoruz. 🎨 Boya 🪵 Laminant Parke 🧱 Fayans 🍽️ Mutfak 🚿 Banyo & WC *Renovasyon Profesyonel işçilik • Uygun fiyat • Temiz ve güvenilir hizmet
+            - generic [ref=e370]:
+              - img [ref=e371]
+              - text: London
+            - generic [ref=e374]:
+              - link [ref=e375] [cursor=pointer]:
+                - /url: tel:+44 7570 055634
+                - img [ref=e376]
+              - link "Detay" [ref=e378] [cursor=pointer]:
+                - /url: /tr/businesses/702d8471-2ae8-499e-a67e-7291daeabe9d
+                - text: Detay
+                - img [ref=e379]
+        - article [ref=e382]:
+          - generic [ref=e383]:
+            - generic [ref=e387]: CP
+            - button [ref=e388]:
+              - img [ref=e389]
+          - generic [ref=e391]:
+            - generic [ref=e392]:
+              - generic [ref=e393]: Hizmet
+              - generic [ref=e394]:
+                - img [ref=e395]
+                - strong [ref=e397]: "2.5"
+            - link "Cemile's Pastry" [ref=e398] [cursor=pointer]:
+              - /url: /tr/businesses/2a87ad48-f471-4a3f-8672-8e5bb672a573
+              - heading "Cemile's Pastry" [level=3] [ref=e399]
+            - paragraph [ref=e400]: Cemile's Pastry in Milton Keynes
+            - generic [ref=e401]:
+              - img [ref=e402]
+              - text: Milton Keynes
+            - generic [ref=e405]:
+              - link [ref=e406] [cursor=pointer]:
+                - /url: https://instagram.com/cemilespastry
+                - img [ref=e407]
+              - link "Detay" [ref=e409] [cursor=pointer]:
+                - /url: /tr/businesses/2a87ad48-f471-4a3f-8672-8e5bb672a573
+                - text: Detay
+                - img [ref=e410]
+        - article [ref=e413]:
+          - generic [ref=e414]:
+            - generic [ref=e418]: AT
+            - button [ref=e419]:
+              - img [ref=e420]
+          - generic [ref=e422]:
+            - generic [ref=e423]:
+              - generic [ref=e424]: Hizmet
+              - generic [ref=e425]:
+                - img [ref=e426]
+                - strong [ref=e428]: "0"
+            - link "Akademi Türkçe Türk Okulu / Usta Tuition" [ref=e429] [cursor=pointer]:
+              - /url: /tr/businesses/182eb0bc-fe35-4728-a868-d3ff6f88fb8f
+              - heading "Akademi Türkçe Türk Okulu / Usta Tuition" [level=3] [ref=e430]
+            - paragraph [ref=e431]: 5 yaşından yetişkinlere kadar her yaş grubuna yönelik Türkçe okuma, yazma ve konuşma dersleri sunuyoruz. Derslerimiz, Türkiye’de öğretmenlik deneyimine sahip ve İngiltere’de son 9 yıldır çift dilli çocuklarla çalışan deneyimli öğretmenler tarafından verilmektedir. Online ve yüz yüze eğitim seçeneklerimiz sayesinde öğrencilerimiz ihtiyaçlarına en uygun şekilde eğitim alabilmektedir. Online derslerimiz sayesinde İngiltere’nin her yerinden öğrenciler bize kolaylıkla ulaşabilmektedir. Özellikle GCSE Türkçe ve A Level Türkçe alanlarında uzmanlaşmış ekibimizle, öğrencilerimizi sınavlara profesyonel ve sistemli bir şekilde hazırlıyoruz. Dil öğrenimini sadece akademik başarıyla sınırlamıyor; öğrencilerimizin Türkçeyi özgüvenli ve etkili bir şekilde kullanmalarını hedefliyoruz. GCSE Türkçe, A Level Türkçe veya genel Türkçe eğitimi hakkında detaylı bilgi almak için bizimle iletişime geçebilirsiniz.
+            - generic [ref=e432]:
+              - img [ref=e433]
+              - text: Kent
+            - generic [ref=e436]:
+              - link [ref=e437] [cursor=pointer]:
+                - /url: tel:+447395756713
+                - img [ref=e438]
+              - link [ref=e440] [cursor=pointer]:
+                - /url: https://instagram.com/ustatuition
+                - img [ref=e441]
+              - link "Detay" [ref=e443] [cursor=pointer]:
+                - /url: /tr/businesses/182eb0bc-fe35-4728-a868-d3ff6f88fb8f
+                - text: Detay
+                - img [ref=e444]
+        - article [ref=e447]:
+          - generic [ref=e448]:
+            - generic [ref=e452]: UP
+            - button [ref=e453]:
+              - img [ref=e454]
+          - generic [ref=e456]:
+            - generic [ref=e457]:
+              - generic [ref=e458]: Hizmet
+              - generic [ref=e459]:
+                - img [ref=e460]
+                - strong [ref=e462]: "0"
+            - link "Uslu painting end plastering ltd." [ref=e463] [cursor=pointer]:
+              - /url: /tr/businesses/0eb7e429-a959-410f-a320-400a02d7b95f
+              - heading "Uslu painting end plastering ltd." [level=3] [ref=e464]
+            - paragraph [ref=e465]: Boya ve sıva işleri.
+            - generic [ref=e466]:
+              - img [ref=e467]
+              - text: London
+            - generic [ref=e470]:
+              - link [ref=e471] [cursor=pointer]:
+                - /url: tel:04407898360604
+                - img [ref=e472]
+              - link "Detay" [ref=e474] [cursor=pointer]:
+                - /url: /tr/businesses/0eb7e429-a959-410f-a320-400a02d7b95f
+                - text: Detay
+                - img [ref=e475]
+        - article [ref=e478]:
+          - generic [ref=e479]:
+            - generic [ref=e483]: TB
+            - button [ref=e484]:
+              - img [ref=e485]
+          - generic [ref=e487]:
+            - generic [ref=e488]:
+              - generic [ref=e489]: Hizmet
+              - generic [ref=e490]:
+                - img [ref=e491]
+                - strong [ref=e493]: "0"
+            - link "Thames Blinds&Shutters" [ref=e494] [cursor=pointer]:
+              - /url: /tr/businesses/3ecb3f43-c093-4350-97f0-1404f826b0f9
+              - heading "Thames Blinds&Shutters" [level=3] [ref=e495]
+            - paragraph [ref=e496]: We are a family-run business specializing in bespoke shutters, blinds, windows, and doors, dedicated to enhancing your home's appearance with quality and innovation in London and surrounding areas.
+            - generic [ref=e497]:
+              - img [ref=e498]
+              - text: London
+            - generic [ref=e501]:
+              - link [ref=e502] [cursor=pointer]:
+                - /url: tel:+447494244711
+                - img [ref=e503]
+              - link "Detay" [ref=e505] [cursor=pointer]:
+                - /url: /tr/businesses/3ecb3f43-c093-4350-97f0-1404f826b0f9
+                - text: Detay
+                - img [ref=e506]
+        - article [ref=e509]:
+          - generic [ref=e510]:
+            - generic [ref=e514]: MO
+            - button [ref=e515]:
+              - img [ref=e516]
+          - generic [ref=e518]:
+            - generic [ref=e519]:
+              - generic [ref=e520]: İş İlanları
+              - generic [ref=e521]:
+                - img [ref=e522]
+                - strong [ref=e524]: "0.5"
+            - link "Matematik Ogretmeni" [ref=e525] [cursor=pointer]:
+              - /url: /tr/businesses/1057f019-0acf-4425-88a8-27ef3cb4d310
+              - heading "Matematik Ogretmeni" [level=3] [ref=e526]
+            - paragraph [ref=e527]: Matematik ozel dersi verilir, SAT, GCSE, 11 +, Ozel okul hazirlik ve UK Junier Matematik Olimpiyat.
+            - generic [ref=e528]:
+              - img [ref=e529]
+              - text: London
+            - generic [ref=e532]:
+              - link [ref=e533] [cursor=pointer]:
+                - /url: tel:+447484796341
+                - img [ref=e534]
+              - link "Detay" [ref=e536] [cursor=pointer]:
+                - /url: /tr/businesses/1057f019-0acf-4425-88a8-27ef3cb4d310
+                - text: Detay
+                - img [ref=e537]
+        - article [ref=e540]:
+          - generic [ref=e541]:
+            - generic [ref=e545]: WI
+            - button [ref=e546]:
+              - img [ref=e547]
+          - generic [ref=e549]:
+            - generic [ref=e550]:
+              - generic [ref=e551]: Diğer
+              - generic [ref=e552]:
+                - img [ref=e553]
+                - strong [ref=e555]: "0"
+            - link "Wisebros Industrial Solutions Limited" [ref=e556] [cursor=pointer]:
+              - /url: /tr/businesses/17c8f6a9-fda8-4758-b34e-82f0a1f1e65c
+              - heading "Wisebros Industrial Solutions Limited" [level=3] [ref=e557]
+            - paragraph [ref=e558]: Petrol, gaz, enerji sektörlerinde faaliyet gösteren firmalara, Ex-proof Heater, Chemical Injection Skid gibi endüstriyel ürünler sağlamanı yanı sıra, Uzakdoğu’da kuvvetli partnerleriyle farklı endüstriler için imalatlar yaptıran nitelikli bir mühendislik çözüm firmasıdır.
+            - generic [ref=e559]:
+              - img [ref=e560]
+              - text: London
+            - generic [ref=e563]:
+              - link [ref=e564] [cursor=pointer]:
+                - /url: tel:7503419771
+                - img [ref=e565]
+              - link "Detay" [ref=e567] [cursor=pointer]:
+                - /url: /tr/businesses/17c8f6a9-fda8-4758-b34e-82f0a1f1e65c
+                - text: Detay
+                - img [ref=e568]
+        - article [ref=e571]:
+          - generic [ref=e572]:
+            - generic [ref=e576]: BI
+            - button [ref=e577]:
+              - img [ref=e578]
+          - generic [ref=e580]:
+            - generic [ref=e581]:
+              - generic [ref=e582]: Hizmet
+              - generic [ref=e583]:
+                - img [ref=e584]
+                - strong [ref=e586]: "0"
+            - link "Bold Innovate Image" [ref=e587] [cursor=pointer]:
+              - /url: /tr/businesses/d417fd7f-9b6f-4427-aaa3-ce27e7fd0369
+              - heading "Bold Innovate Image" [level=3] [ref=e588]
+            - paragraph [ref=e589]: Photo & Video content for food + product brands.
+            - generic [ref=e590]:
+              - img [ref=e591]
+              - text: London
+            - generic [ref=e594]:
+              - link [ref=e595] [cursor=pointer]:
+                - /url: tel:+44 7547 541433
+                - img [ref=e596]
+              - link [ref=e598] [cursor=pointer]:
+                - /url: https://instagram.com/bi.image
+                - img [ref=e599]
+              - link "Detay" [ref=e601] [cursor=pointer]:
+                - /url: /tr/businesses/d417fd7f-9b6f-4427-aaa3-ce27e7fd0369
+                - text: Detay
+                - img [ref=e602]
+        - article [ref=e605]:
+          - generic [ref=e606]:
+            - generic [ref=e610]: TA
+            - button [ref=e611]:
+              - img [ref=e612]
+          - generic [ref=e614]:
+            - generic [ref=e615]:
+              - generic [ref=e616]: Hizmet
+              - generic [ref=e617]:
+                - img [ref=e618]
+                - strong [ref=e620]: "0"
+            - link "Turko Adora Ltd" [ref=e621] [cursor=pointer]:
+              - /url: /tr/businesses/18865be1-fece-46ce-860e-5dd23c608254
+              - heading "Turko Adora Ltd" [level=3] [ref=e622]
+            - paragraph [ref=e623]: Kozmetik markaları için UK Responsible Person (RP) hizmeti, marketplace yönetimi ve marka geliştirme alanlarında destek sağlayan bir şirkettir. Ayrıca Kore’de geliştirilen Seoulera adlı K-beauty skincare markasının sahibidir ve markanın İngiltere ve Avrupa’daki satış ve dağıtım faaliyetlerini yürütmektedir. A UK-based company providing UK Responsible Person (RP) services, marketplace management, and brand support for cosmetic businesses. The company is also the owner of Seoulera, a Korean-developed K-beauty skincare brand, managing its sales and growth across the UK and European markets.
+            - generic [ref=e624]:
+              - img [ref=e625]
+              - text: London
+            - generic [ref=e628]:
+              - link [ref=e629] [cursor=pointer]:
+                - /url: https://instagram.com/seouleraofficial
+                - img [ref=e630]
+              - link "Detay" [ref=e632] [cursor=pointer]:
+                - /url: /tr/businesses/18865be1-fece-46ce-860e-5dd23c608254
+                - text: Detay
+                - img [ref=e633]
+        - article [ref=e636]:
+          - generic [ref=e637]:
+            - generic [ref=e641]: FE
+            - button [ref=e642]:
+              - img [ref=e643]
+          - generic [ref=e645]:
+            - generic [ref=e646]:
+              - generic [ref=e647]: Hizmet
+              - generic [ref=e648]:
+                - img [ref=e649]
+                - strong [ref=e651]: "0"
+            - link "Futureminds educational consultants" [ref=e652] [cursor=pointer]:
+              - /url: /tr/businesses/ce1e81b0-bd07-48be-a33e-79907621c87d
+              - heading "Futureminds educational consultants" [level=3] [ref=e653]
+            - paragraph [ref=e654]: Kişiye özel eğitim mentorluğu . İngiltere 4-18 yaş ve üniversite yerleştirme , master müracaatları , akademik Mentorluk
+            - generic [ref=e655]:
+              - img [ref=e656]
+              - text: London
+            - generic [ref=e659]:
+              - link [ref=e660] [cursor=pointer]:
+                - /url: tel:00447802419781
+                - img [ref=e661]
+              - link [ref=e663] [cursor=pointer]:
+                - /url: https://instagram.com/Omur_yeginsu
+                - img [ref=e664]
+              - link "Detay" [ref=e666] [cursor=pointer]:
+                - /url: /tr/businesses/ce1e81b0-bd07-48be-a33e-79907621c87d
+                - text: Detay
+                - img [ref=e667]
+        - article [ref=e670]:
+          - generic [ref=e671]:
+            - generic [ref=e675]: FI
+            - button [ref=e676]:
+              - img [ref=e677]
+          - generic [ref=e679]:
+            - generic [ref=e680]:
+              - generic [ref=e681]: Hizmet
+              - generic [ref=e682]:
+                - img [ref=e683]
+                - strong [ref=e685]: "0"
+            - link "FDL Immigration & Legal Consultancy" [ref=e686] [cursor=pointer]:
+              - /url: /tr/businesses/121933a4-a6bb-494d-ada5-339b4745cdde
+              - heading "FDL Immigration & Legal Consultancy" [level=3] [ref=e687]
+            - paragraph [ref=e688]: "Başlıca odaklandığım alanlar: Skilled Worker Vizeleri, Global Business Mobility, UK Expansion Worker ve Health & Care Worker kategorileri için Sponsor Lisansı başvuruları (sponsor lisansı alındıktan sonra çalışanların vize başvuruları dahil) Sponsor Lisansı olan firmaların, lisanslarının yönetimine asiste etmek Bir kişi veya ekip olarak Birleşik Krallık’ta iş kurmak isteyenler için Innovator Founder Visa başvuruları Global Talent Visa kapsamında önce endorsement (onay) kurumuna başvuru, ardından Birleşik Krallık vize başvurusu Eş vizeleri, çocuk kayıt (child registration) başvuruları ve yerleşim (settlement) başvuruları Ankara Anlaşması (ECAA) uzatma başvuruları (Birleşik Krallık içinde) Naturalisation (vatandaşlık) ve Indefinite Leave to Remain (süresiz oturum) başvuruları"
+            - generic [ref=e689]:
+              - img [ref=e690]
+              - text: London
+            - generic [ref=e693]:
+              - link [ref=e694] [cursor=pointer]:
+                - /url: tel:+447587211976
+                - img [ref=e695]
+              - link "Detay" [ref=e697] [cursor=pointer]:
+                - /url: /tr/businesses/121933a4-a6bb-494d-ada5-339b4745cdde
+                - text: Detay
+                - img [ref=e698]
+        - article [ref=e701]:
+          - generic [ref=e702]:
+            - generic [ref=e706]: AG
+            - button [ref=e707]:
+              - img [ref=e708]
+          - generic [ref=e710]:
+            - generic [ref=e711]:
+              - generic [ref=e712]: Hizmet
+              - generic [ref=e713]:
+                - img [ref=e714]
+                - strong [ref=e716]: "0"
+            - link "AGS gayrimenkul İnsaat" [ref=e717] [cursor=pointer]:
+              - /url: /tr/businesses/c21779ed-93c9-4bca-af52-43b5d7bf1966
+              - heading "AGS gayrimenkul İnsaat" [level=3] [ref=e718]
+            - paragraph [ref=e719]: "AGS GAYRİMENKUL İnsaat otomotiv “Topraktan gelen kazanç… Güvenle büyüyen yatırımlar! Didim’in güçlü markası AGS Gayrimenkul İnşaat ile hayalinizdeki eve ve kazançlı yatırımlara bir adım daha yaklaşın! Kuşadası, Bodrum ve Milas’ta alım, satım ve kiralama hizmetleriyle her zaman yanınızdayız. Yurt dışından yatırım yapmak isteyenler için Londra ofisimiz: Erdem Taş – 00 44 7909 780 401 Didim ofisimiz: Fatma Gülbin KIY – 0541 817 19 69 Detaylı bilgi için www.agsemlak.com Adresimiz: Efeler Mahallesi Cumhuriyet Caddesi No:55 Didim Aydın AGS Gayrimenkul… Güvenin adresi"
+            - generic [ref=e720]:
+              - img [ref=e721]
+              - text: London
+            - generic [ref=e724]:
+              - link [ref=e725] [cursor=pointer]:
+                - /url: tel:+447909780401
+                - img [ref=e726]
+              - link [ref=e728] [cursor=pointer]:
+                - /url: https://instagram.com/agsemlakdidim
+                - img [ref=e729]
+              - link "Detay" [ref=e731] [cursor=pointer]:
+                - /url: /tr/businesses/c21779ed-93c9-4bca-af52-43b5d7bf1966
+                - text: Detay
+                - img [ref=e732]
+        - article [ref=e735]:
+          - generic [ref=e736]:
+            - generic [ref=e740]: MD
+            - button [ref=e741]:
+              - img [ref=e742]
+          - generic [ref=e744]:
+            - generic [ref=e745]:
+              - generic [ref=e746]: Diğer
+              - generic [ref=e747]:
+                - img [ref=e748]
+                - strong [ref=e750]: "0"
+            - link "Massive Design Studio" [ref=e751] [cursor=pointer]:
+              - /url: /tr/businesses/ab4644f6-6e3c-4a21-8d1a-1da6d12580c6
+              - heading "Massive Design Studio" [level=3] [ref=e752]
+            - paragraph [ref=e753]: Londra merkezli iç mimarlık ve özel üretim mobilya stüdyosudur. Sessiz lüks anlayışıyla, detay odaklı ve zamansız mekânlar tasarlar; tüm süreci konseptten uygulamaya kadar yönetir.
+            - generic [ref=e754]:
+              - img [ref=e755]
+              - text: London
+            - generic [ref=e758]:
+              - link [ref=e759] [cursor=pointer]:
+                - /url: tel:07930101165
+                - img [ref=e760]
+              - link [ref=e762] [cursor=pointer]:
+                - /url: https://instagram.com/massivedesignstudio
+                - img [ref=e763]
+              - link "Detay" [ref=e765] [cursor=pointer]:
+                - /url: /tr/businesses/ab4644f6-6e3c-4a21-8d1a-1da6d12580c6
+                - text: Detay
+                - img [ref=e766]
+        - article [ref=e769]:
+          - generic [ref=e770]:
+            - generic [ref=e774]: XD
+            - button [ref=e775]:
+              - img [ref=e776]
+          - generic [ref=e778]:
+            - generic [ref=e779]:
+              - generic [ref=e780]: Hizmet
+              - generic [ref=e781]:
+                - img [ref=e782]
+                - strong [ref=e784]: "0"
+            - link "XDem Design Ltd" [ref=e785] [cursor=pointer]:
+              - /url: /tr/businesses/d33109aa-afda-4d4c-ae1e-6d4bc79fbba0
+              - heading "XDem Design Ltd" [level=3] [ref=e786]
+            - paragraph [ref=e787]: Bespoke Kitchen Designs | Mutfak Dolabı Fitted Wardrobes | Gardırop Cloakrooms | Vestiyer TV Units | TV Ünitesi Under Stair Cabinets | Merdiven Altı Dolap Carpentry & Joinery | Marangozluk
+            - generic [ref=e788]:
+              - img [ref=e789]
+              - text: London
+            - generic [ref=e792]:
+              - link [ref=e793] [cursor=pointer]:
+                - /url: tel:07503056040
+                - img [ref=e794]
+              - link [ref=e796] [cursor=pointer]:
+                - /url: https://instagram.com/xdemdesign
+                - img [ref=e797]
+              - link "Detay" [ref=e799] [cursor=pointer]:
+                - /url: /tr/businesses/d33109aa-afda-4d4c-ae1e-6d4bc79fbba0
+                - text: Detay
+                - img [ref=e800]
+        - article [ref=e803]:
+          - generic [ref=e804]:
+            - generic [ref=e808]: M
+            - button [ref=e809]:
+              - img [ref=e810]
+          - generic [ref=e812]:
+            - generic [ref=e813]:
+              - generic [ref=e814]: Hizmet
+              - generic [ref=e815]:
+                - img [ref=e816]
+                - strong [ref=e818]: "0"
+            - link "M&I" [ref=e819] [cursor=pointer]:
+              - /url: /tr/businesses/f8c78e33-dcba-42e8-84ed-f0f96907e047
+              - heading "M&I" [level=3] [ref=e820]
+            - paragraph [ref=e821]: Tadilat, boya badana, taşıma, mutfak ve mobilya monte , dizayn, home improvement
+            - generic [ref=e822]:
+              - img [ref=e823]
+              - text: London
+            - generic [ref=e826]:
+              - link [ref=e827] [cursor=pointer]:
+                - /url: tel:+447778325085
+                - img [ref=e828]
+              - link "Detay" [ref=e830] [cursor=pointer]:
+                - /url: /tr/businesses/f8c78e33-dcba-42e8-84ed-f0f96907e047
+                - text: Detay
+                - img [ref=e831]
+        - article [ref=e834]:
+          - generic [ref=e835]:
+            - generic [ref=e839]: LY
+            - button [ref=e840]:
+              - img [ref=e841]
+          - generic [ref=e843]:
+            - generic [ref=e844]:
+              - generic [ref=e845]: Restoran
+              - generic [ref=e846]:
+                - img [ref=e847]
+                - strong [ref=e849]: "2.9"
+            - link "Londra Yemek Siparisi Insta Profili" [ref=e850] [cursor=pointer]:
+              - /url: /tr/businesses/0e4f8dd8-59dd-45e0-84a7-f414f0a16d3a
+              - heading "Londra Yemek Siparisi Insta Profili" [level=3] [ref=e851]
+            - paragraph [ref=e852]: Richmond Ev yapımı lezzetler, özel tarifler! 🍽️ Davet, organizasyon, etkinlikler için sipariş alınır.
+            - generic [ref=e853]:
+              - img [ref=e854]
+              - text: London
+            - generic [ref=e857]:
+              - link [ref=e858] [cursor=pointer]:
+                - /url: https://instagram.com/londrayemeksiparisi
+                - img [ref=e859]
+              - link "Detay" [ref=e861] [cursor=pointer]:
+                - /url: /tr/businesses/0e4f8dd8-59dd-45e0-84a7-f414f0a16d3a
+                - text: Detay
+                - img [ref=e862]
+        - article [ref=e865]:
+          - generic [ref=e866]:
+            - generic [ref=e870]: FD
+            - button [ref=e871]:
+              - img [ref=e872]
+          - generic [ref=e874]:
+            - generic [ref=e875]:
+              - generic [ref=e876]: Hizmet
+              - generic [ref=e877]:
+                - img [ref=e878]
+                - strong [ref=e880]: "4.4"
+            - link "Final Drivings School" [ref=e881] [cursor=pointer]:
+              - /url: /tr/businesses/40ca48cf-f177-44c3-9536-91f982f7dc96
+              - heading "Final Drivings School" [level=3] [ref=e882]
+            - paragraph [ref=e883]: Milton Keynes den bir arkadasimizin daha direksiyon sinavindan basariyla sonuçlanmasina ve ehliyetini almasina yardimci olduk. Eger aranizda ehliyet henùz almamis arkadaslarimiz varsa bana ulasabilirler.
+            - generic [ref=e884]:
+              - img [ref=e885]
+              - text: Milton Keynes
+            - generic [ref=e888]:
+              - link [ref=e889] [cursor=pointer]:
+                - /url: tel:07944622899
+                - img [ref=e890]
+              - link "Detay" [ref=e892] [cursor=pointer]:
+                - /url: /tr/businesses/40ca48cf-f177-44c3-9536-91f982f7dc96
+                - text: Detay
+                - img [ref=e893]
+        - article [ref=e896]:
+          - generic [ref=e897]:
+            - generic [ref=e901]: IM
+            - button [ref=e902]:
+              - img [ref=e903]
+          - generic [ref=e905]:
+            - generic [ref=e906]:
+              - generic [ref=e907]: Hizmet
+              - generic [ref=e908]:
+                - img [ref=e909]
+                - strong [ref=e911]: "3.8"
+            - link "Ingiltere Muhasebe" [ref=e912] [cursor=pointer]:
+              - /url: /tr/businesses/107b6eb9-95b5-4641-891d-8fee9fa9d641
+              - heading "Ingiltere Muhasebe" [level=3] [ref=e913]
+            - paragraph [ref=e914]: Yetkili Tolga OZBEK
+            - generic [ref=e915]:
+              - img [ref=e916]
+              - text: London
+            - generic [ref=e919]:
+              - link [ref=e920] [cursor=pointer]:
+                - /url: "tel: 0789 265 68 97"
+                - img [ref=e921]
+              - link "Detay" [ref=e923] [cursor=pointer]:
+                - /url: /tr/businesses/107b6eb9-95b5-4641-891d-8fee9fa9d641
+                - text: Detay
+                - img [ref=e924]
+        - article [ref=e927]:
+          - generic [ref=e928]:
+            - generic [ref=e932]: TS
+            - button [ref=e933]:
+              - img [ref=e934]
+          - generic [ref=e936]:
+            - generic [ref=e937]:
+              - generic [ref=e938]: Hizmet
+              - generic [ref=e939]:
+                - img [ref=e940]
+                - strong [ref=e942]: "4"
+            - link "Türk Sigorta Danismanligi" [ref=e943] [cursor=pointer]:
+              - /url: /tr/businesses/b15
+              - heading "Türk Sigorta Danismanligi" [level=3] [ref=e944]
+            - paragraph [ref=e945]: Hayat, sağlık, araç ve işyeri sigortası. Türkçe hizmet.
+            - generic [ref=e946]:
+              - img [ref=e947]
+              - text: London
+            - generic [ref=e950]:
+              - link [ref=e951] [cursor=pointer]:
+                - /url: tel:+44 20 7123 9876
+                - img [ref=e952]
+              - link "Detay" [ref=e954] [cursor=pointer]:
+                - /url: /tr/businesses/b15
+                - text: Detay
+                - img [ref=e955]
+        - article [ref=e958]:
+          - generic [ref=e959]:
+            - generic [ref=e963]: BT
+            - button [ref=e964]:
+              - img [ref=e965]
+          - generic [ref=e967]:
+            - generic [ref=e968]:
+              - generic [ref=e969]: Restoran
+              - generic [ref=e970]:
+                - img [ref=e971]
+                - strong [ref=e973]: "4.4"
+            - link "Bristol Türk Restoran" [ref=e974] [cursor=pointer]:
+              - /url: /tr/businesses/b14
+              - heading "Bristol Türk Restoran" [level=3] [ref=e975]
+            - paragraph [ref=e976]: Bristol'in kalbinde otantik Türk mutfağı deneyimi.
+            - generic [ref=e977]:
+              - img [ref=e978]
+              - text: Bristol
+            - generic [ref=e981]:
+              - link [ref=e982] [cursor=pointer]:
+                - /url: tel:+44 117 123 4567
+                - img [ref=e983]
+              - link "Detay" [ref=e985] [cursor=pointer]:
+                - /url: /tr/businesses/b14
+                - text: Detay
+                - img [ref=e986]
+        - article [ref=e989]:
+          - generic [ref=e990]:
+            - generic [ref=e994]: TI
+            - button [ref=e995]:
+              - img [ref=e996]
+          - generic [ref=e998]:
+            - generic [ref=e999]:
+              - generic [ref=e1000]: Hizmet
+              - generic [ref=e1001]:
+                - img [ref=e1002]
+                - strong [ref=e1004]: "4.2"
+            - link "Türk IT Danismanlik" [ref=e1005] [cursor=pointer]:
+              - /url: /tr/businesses/b13
+              - heading "Türk IT Danismanlik" [level=3] [ref=e1006]
+            - paragraph [ref=e1007]: Web geliştirme, mobil uygulama ve IT altyapı çözümleri.
+            - generic [ref=e1008]:
+              - img [ref=e1009]
+              - text: London
+            - generic [ref=e1012]:
+              - link [ref=e1013] [cursor=pointer]:
+                - /url: tel:+44 20 7012 3456
+                - img [ref=e1014]
+              - link "Detay" [ref=e1016] [cursor=pointer]:
+                - /url: /tr/businesses/b13
+                - text: Detay
+                - img [ref=e1017]
+        - article [ref=e1020]:
+          - generic [ref=e1021]:
+            - generic [ref=e1025]: LT
+            - button [ref=e1026]:
+              - img [ref=e1027]
+          - generic [ref=e1029]:
+            - generic [ref=e1030]:
+              - generic [ref=e1031]: Mağaza
+              - generic [ref=e1032]:
+                - img [ref=e1033]
+                - strong [ref=e1035]: "4.3"
+            - link "Leeds Türk Market" [ref=e1036] [cursor=pointer]:
+              - /url: /tr/businesses/b12
+              - heading "Leeds Türk Market" [level=3] [ref=e1037]
+            - paragraph [ref=e1038]: Türk ve Orta Doğu gıda ürünleri. Leeds bölgesinin en büyük Türk marketi.
+            - generic [ref=e1039]:
+              - img [ref=e1040]
+              - text: Leeds
+            - generic [ref=e1043]:
+              - link [ref=e1044] [cursor=pointer]:
+                - /url: tel:+44 113 123 4567
+                - img [ref=e1045]
+              - link "Detay" [ref=e1047] [cursor=pointer]:
+                - /url: /tr/businesses/b12
+                - text: Detay
+                - img [ref=e1048]
+        - article [ref=e1051]:
+          - generic [ref=e1052]:
+            - generic [ref=e1056]: MP
+            - button [ref=e1057]:
+              - img [ref=e1058]
+          - generic [ref=e1060]:
+            - generic [ref=e1061]:
+              - generic [ref=e1062]: Restoran
+              - generic [ref=e1063]:
+                - img [ref=e1064]
+                - strong [ref=e1066]: "4.8"
+            - link "Marmara Pastanesi" [ref=e1067] [cursor=pointer]:
+              - /url: /tr/businesses/b11
+              - heading "Marmara Pastanesi" [level=3] [ref=e1068]
+            - paragraph [ref=e1069]: Türk tatlıları, baklava, kadayıf ve özel sipariş pastalar.
+            - generic [ref=e1070]:
+              - img [ref=e1071]
+              - text: London
+            - generic [ref=e1074]:
+              - link [ref=e1075] [cursor=pointer]:
+                - /url: tel:+44 20 7901 2345
+                - img [ref=e1076]
+              - link "Detay" [ref=e1078] [cursor=pointer]:
+                - /url: /tr/businesses/b11
+                - text: Detay
+                - img [ref=e1079]
+        - article [ref=e1082]:
+          - generic [ref=e1083]:
+            - generic [ref=e1087]: UT
+            - button [ref=e1088]:
+              - img [ref=e1089]
+          - generic [ref=e1091]:
+            - generic [ref=e1092]:
+              - generic [ref=e1093]: Hizmet
+              - generic [ref=e1094]:
+                - img [ref=e1095]
+                - strong [ref=e1097]: "4.5"
+            - link "UK Türk Emlak" [ref=e1098] [cursor=pointer]:
+              - /url: /tr/businesses/b10
+              - heading "UK Türk Emlak" [level=3] [ref=e1099]
+            - paragraph [ref=e1100]: Londra ve çevresinde konut alım-satım ve kiralama hizmetleri.
+            - generic [ref=e1101]:
+              - img [ref=e1102]
+              - text: London
+            - generic [ref=e1105]:
+              - link [ref=e1106] [cursor=pointer]:
+                - /url: tel:+44 20 7890 1234
+                - img [ref=e1107]
+              - link "Detay" [ref=e1109] [cursor=pointer]:
+                - /url: /tr/businesses/b10
+                - text: Detay
+                - img [ref=e1110]
+        - article [ref=e1113]:
+          - generic [ref=e1114]:
+            - generic [ref=e1118]: KH
+            - button [ref=e1119]:
+              - img [ref=e1120]
+          - generic [ref=e1122]:
+            - generic [ref=e1123]:
+              - generic [ref=e1124]: Mağaza
+              - generic [ref=e1125]:
+                - img [ref=e1126]
+                - strong [ref=e1128]: "4.1"
+            - link "Kapadokya Hali & Dekorasyon" [ref=e1129] [cursor=pointer]:
+              - /url: /tr/businesses/b9
+              - heading "Kapadokya Hali & Dekorasyon" [level=3] [ref=e1130]
+            - paragraph [ref=e1131]: El yapımı Türk halıları, kilimler ve ev dekorasyon ürünleri.
+            - generic [ref=e1132]:
+              - img [ref=e1133]
+              - text: London
+            - generic [ref=e1136]:
+              - link [ref=e1137] [cursor=pointer]:
+                - /url: tel:+44 20 7789 0123
+                - img [ref=e1138]
+              - link "Detay" [ref=e1140] [cursor=pointer]:
+                - /url: /tr/businesses/b9
+                - text: Detay
+                - img [ref=e1141]
+        - article [ref=e1144]:
+          - generic [ref=e1145]:
+            - generic [ref=e1149]: RT
+            - button [ref=e1150]:
+              - img [ref=e1151]
+          - generic [ref=e1153]:
+            - generic [ref=e1154]:
+              - generic [ref=e1155]: Hizmet
+              - generic [ref=e1156]:
+                - img [ref=e1157]
+                - strong [ref=e1159]: "4.9"
+            - link "Richmond Türk Dil Okulu" [ref=e1160] [cursor=pointer]:
+              - /url: /tr/businesses/b8
+              - heading "Richmond Türk Dil Okulu" [level=3] [ref=e1161]
+            - paragraph [ref=e1162]: Çocuklar ve yetişkinler için Türkçe dil kursları. Hafta sonu dersleri.
+            - generic [ref=e1163]:
+              - img [ref=e1164]
+              - text: Richmond
+            - generic [ref=e1167]:
+              - link [ref=e1168] [cursor=pointer]:
+                - /url: tel:+44 20 7678 9012
+                - img [ref=e1169]
+              - link "Detay" [ref=e1171] [cursor=pointer]:
+                - /url: /tr/businesses/b8
+                - text: Detay
+                - img [ref=e1172]
+        - article [ref=e1175]:
+          - generic [ref=e1176]:
+            - generic [ref=e1180]: ED
+            - button [ref=e1181]:
+              - img [ref=e1182]
+          - generic [ref=e1184]:
+            - generic [ref=e1185]:
+              - generic [ref=e1186]: Restoran
+              - generic [ref=e1187]:
+                - img [ref=e1188]
+                - strong [ref=e1190]: "4.2"
+            - link "Efes Döner" [ref=e1191] [cursor=pointer]:
+              - /url: /tr/businesses/b7
+              - heading "Efes Döner" [level=3] [ref=e1192]
+            - paragraph [ref=e1193]: Geleneksel döner kebap ve lahmacun. Günlük taze malzeme.
+            - generic [ref=e1194]:
+              - img [ref=e1195]
+              - text: Birmingham
+            - generic [ref=e1198]:
+              - link [ref=e1199] [cursor=pointer]:
+                - /url: tel:+44 121 234 5678
+                - img [ref=e1200]
+              - link "Detay" [ref=e1202] [cursor=pointer]:
+                - /url: /tr/businesses/b7
+                - text: Detay
+                - img [ref=e1203]
+        - article [ref=e1206]:
+          - generic [ref=e1207]:
+            - generic [ref=e1211]: TM
+            - button [ref=e1212]:
+              - img [ref=e1213]
+          - generic [ref=e1215]:
+            - generic [ref=e1216]:
+              - generic [ref=e1217]: Hizmet
+              - generic [ref=e1218]:
+                - img [ref=e1219]
+                - strong [ref=e1221]: "4.4"
+            - link "Türk Muhasebe & Vergi" [ref=e1222] [cursor=pointer]:
+              - /url: /tr/businesses/b6
+              - heading "Türk Muhasebe & Vergi" [level=3] [ref=e1223]
+            - paragraph [ref=e1224]: Şirket kuruluşu, muhasebe, vergi beyannamesi ve mali danışmanlık.
+            - generic [ref=e1225]:
+              - img [ref=e1226]
+              - text: London
+            - generic [ref=e1229]:
+              - link [ref=e1230] [cursor=pointer]:
+                - /url: tel:+44 20 7567 8901
+                - img [ref=e1231]
+              - link "Detay" [ref=e1233] [cursor=pointer]:
+                - /url: /tr/businesses/b6
+                - text: Detay
+                - img [ref=e1234]
+        - article [ref=e1237]:
+          - generic [ref=e1238]:
+            - generic [ref=e1242]: BR
+            - button [ref=e1243]:
+              - img [ref=e1244]
+          - generic [ref=e1246]:
+            - generic [ref=e1247]:
+              - generic [ref=e1248]: Restoran
+              - generic [ref=e1249]:
+                - img [ref=e1250]
+                - strong [ref=e1252]: "4.6"
+            - link "Bosphorus Restaurant" [ref=e1253] [cursor=pointer]:
+              - /url: /tr/businesses/b5
+              - heading "Bosphorus Restaurant" [level=3] [ref=e1254]
+            - paragraph [ref=e1255]: Boğaz manzaralı atmosferde Türk mutfağının en güzel örnekleri.
+            - generic [ref=e1256]:
+              - img [ref=e1257]
+              - text: Manchester
+            - generic [ref=e1260]:
+              - link [ref=e1261] [cursor=pointer]:
+                - /url: tel:+44 161 123 4567
+                - img [ref=e1262]
+              - link "Detay" [ref=e1264] [cursor=pointer]:
+                - /url: /tr/businesses/b5
+                - text: Detay
+                - img [ref=e1265]
+        - article [ref=e1268]:
+          - generic [ref=e1269]:
+            - generic [ref=e1273]: UT
+            - button [ref=e1274]:
+              - img [ref=e1275]
+          - generic [ref=e1277]:
+            - generic [ref=e1278]:
+              - generic [ref=e1279]: Hizmet
+              - generic [ref=e1280]:
+                - img [ref=e1281]
+                - strong [ref=e1283]: "4.7"
+            - link "UK Türk Hukuk Bürosu" [ref=e1284] [cursor=pointer]:
+              - /url: /tr/businesses/b4
+              - heading "UK Türk Hukuk Bürosu" [level=3] [ref=e1285]
+            - paragraph [ref=e1286]: Göç hukuku, vize başvuruları, ILR ve vatandaşlık danışmanlığı.
+            - generic [ref=e1287]:
+              - img [ref=e1288]
+              - text: London
+            - generic [ref=e1291]:
+              - link [ref=e1292] [cursor=pointer]:
+                - /url: tel:+44 20 7456 7890
+                - img [ref=e1293]
+              - link "Detay" [ref=e1295] [cursor=pointer]:
+                - /url: /tr/businesses/b4
+                - text: Detay
+                - img [ref=e1296]
+        - article [ref=e1299]:
+          - generic [ref=e1300]:
+            - generic [ref=e1304]: AS
+            - button [ref=e1305]:
+              - img [ref=e1306]
+          - generic [ref=e1308]:
+            - generic [ref=e1309]:
+              - generic [ref=e1310]: Mağaza
+              - generic [ref=e1311]:
+                - img [ref=e1312]
+                - strong [ref=e1314]: "4.3"
+            - link "Ankara Supermarket" [ref=e1315] [cursor=pointer]:
+              - /url: /tr/businesses/b3
+              - heading "Ankara Supermarket" [level=3] [ref=e1316]
+            - paragraph [ref=e1317]: Türk ve Orta Doğu ürünleri. Taze sebze, meyve ve ithal gıdalar.
+            - generic [ref=e1318]:
+              - img [ref=e1319]
+              - text: London
+            - generic [ref=e1322]:
+              - link [ref=e1323] [cursor=pointer]:
+                - /url: tel:+44 20 7345 6789
+                - img [ref=e1324]
+              - link "Detay" [ref=e1326] [cursor=pointer]:
+                - /url: /tr/businesses/b3
+                - text: Detay
+                - img [ref=e1327]
+        - article [ref=e1330]:
+          - generic [ref=e1331]:
+            - generic [ref=e1335]: IG
+            - button [ref=e1336]:
+              - img [ref=e1337]
+          - generic [ref=e1339]:
+            - generic [ref=e1340]:
+              - generic [ref=e1341]: Restoran
+              - generic [ref=e1342]:
+                - img [ref=e1343]
+                - strong [ref=e1345]: "4.5"
+            - link "Istanbul Grill" [ref=e1346] [cursor=pointer]:
+              - /url: /tr/businesses/b2
+              - heading "Istanbul Grill" [level=3] [ref=e1347]
+            - paragraph [ref=e1348]: Otantik Türk ızgara ve kebap restoranı. Londra merkezinde.
+            - generic [ref=e1349]:
+              - img [ref=e1350]
+              - text: London
+            - generic [ref=e1353]:
+              - link [ref=e1354] [cursor=pointer]:
+                - /url: tel:+44 20 7234 5678
+                - img [ref=e1355]
+              - link "Detay" [ref=e1357] [cursor=pointer]:
+                - /url: /tr/businesses/b2
+                - text: Detay
+                - img [ref=e1358]
+        - article [ref=e1361]:
+          - generic [ref=e1362]:
+            - generic [ref=e1366]: TF
+            - button [ref=e1367]:
+              - img [ref=e1368]
+          - generic [ref=e1370]:
+            - generic [ref=e1371]:
+              - generic [ref=e1372]: Restoran
+              - generic [ref=e1373]:
+                - img [ref=e1374]
+                - strong [ref=e1376]: "4.8"
+            - link "Tas Firin" [ref=e1377] [cursor=pointer]:
+              - /url: /tr/businesses/b1
+              - heading "Tas Firin" [level=3] [ref=e1378]
+            - paragraph [ref=e1379]: Geleneksel Türk fırını. Ekmek, simit, börek ve tatlılar.
+            - generic [ref=e1380]:
+              - img [ref=e1381]
+              - text: London
+            - generic [ref=e1384]:
+              - link [ref=e1385] [cursor=pointer]:
+                - /url: tel:+44 20 7123 4567
+                - img [ref=e1386]
+              - link "Detay" [ref=e1388] [cursor=pointer]:
+                - /url: /tr/businesses/b1
+                - text: Detay
+                - img [ref=e1389]
+  - contentinfo [ref=e289]:
+    - generic [ref=e290]:
+      - generic [ref=e291]: © 2024 UK Türk Rehber · İngiltere Türk Topluluk Rehberi
+      - link "Gizlilik Politikası" [ref=e292] [cursor=pointer]:
+        - /url: /tr/privacy
+      - generic [ref=e293]:
+        - text: "Tasarım & Geliştirme:"
+        - link "Hermes Yazılım" [ref=e294] [cursor=pointer]:
+          - /url: https://www.hermesyazilim.com
+  - alert [ref=e295]
