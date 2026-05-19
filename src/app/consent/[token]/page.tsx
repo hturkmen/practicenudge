@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Loader2, ShieldCheck, XCircle } from "lucide-react";
@@ -10,7 +9,6 @@ import { CheckCircle2, Loader2, ShieldCheck, XCircle } from "lucide-react";
 export default function ConsentPage() {
   const params = useParams();
   const token = params.token as string;
-  const supabase = createClient();
 
   const [loading, setLoading] = useState(true);
   const [clientName, setClientName] = useState("");
@@ -22,25 +20,21 @@ export default function ConsentPage() {
 
   useEffect(() => {
     async function fetchConsent() {
-      const { data, error } = await supabase
-        .from("clients")
-        .select("name, gdpr_consent, firm_id, firms(name)")
-        .eq("gdpr_consent_token", token)
-        .single();
+      try {
+        const res = await fetch(`/api/consent/${token}`);
+        if (!res.ok) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
 
-      if (error || !data) {
+        const data = await res.json();
+        setClientName(data.clientName);
+        setFirmName(data.firmName);
+        setAlreadyConsented(data.alreadyConsented);
+      } catch {
         setNotFound(true);
-        setLoading(false);
-        return;
       }
-
-      setClientName(data.name);
-      setFirmName((data.firms as any)?.name || "Your accountant");
-
-      if (data.gdpr_consent) {
-        setAlreadyConsented(true);
-      }
-
       setLoading(false);
     }
     fetchConsent();
@@ -48,16 +42,13 @@ export default function ConsentPage() {
 
   const handleConsent = async () => {
     setSubmitting(true);
-    const { error } = await supabase
-      .from("clients")
-      .update({
-        gdpr_consent: true,
-        gdpr_consented_at: new Date().toISOString(),
-      })
-      .eq("gdpr_consent_token", token);
-
-    if (!error) {
-      setConsented(true);
+    try {
+      const res = await fetch(`/api/consent/${token}`, { method: "POST" });
+      if (res.ok) {
+        setConsented(true);
+      }
+    } catch {
+      // ignore
     }
     setSubmitting(false);
   };
