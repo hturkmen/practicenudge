@@ -127,7 +127,6 @@ export default function ClientsPage() {
       toast.error("Failed to update client status");
     }
   };
-  };
 
   const deleteClient = async (clientId: string) => {
     const { error } = await supabase
