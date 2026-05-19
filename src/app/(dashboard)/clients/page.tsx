@@ -6,6 +6,7 @@ import { Client } from "@/lib/types/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ShieldCheck, ShieldAlert, ShieldQuestion } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -50,8 +51,57 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+type ConsentSummary = "all_accepted" | "some_pending" | "some_rejected" | "no_records";
+
+interface ClientWithConsent extends Client {
+  consentSummary?: ConsentSummary;
+}
+
+function getConsentSummary(consents: { status: string }[]): ConsentSummary {
+  if (!consents || consents.length === 0) return "no_records";
+  const allAccepted = consents.every((c) => c.status === "accepted");
+  if (allAccepted) return "all_accepted";
+  const hasRejected = consents.some((c) => c.status === "rejected");
+  if (hasRejected) return "some_rejected";
+  return "some_pending";
+}
+
+function ConsentBadge({ summary }: { summary: ConsentSummary }) {
+  switch (summary) {
+    case "all_accepted":
+      return (
+        <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200 text-xs gap-1">
+          <ShieldCheck className="h-3 w-3" />
+          Onaylı
+        </Badge>
+      );
+    case "some_rejected":
+      return (
+        <Badge variant="outline" className="bg-red-100 text-red-700 border-red-200 text-xs gap-1">
+          <ShieldAlert className="h-3 w-3" />
+          Reddedildi
+        </Badge>
+      );
+    case "some_pending":
+      return (
+        <Badge variant="outline" className="bg-yellow-100 text-yellow-700 border-yellow-200 text-xs gap-1">
+          <ShieldQuestion className="h-3 w-3" />
+          Bekliyor
+        </Badge>
+      );
+    case "no_records":
+    default:
+      return (
+        <Badge variant="outline" className="bg-gray-100 text-gray-500 border-gray-200 text-xs gap-1">
+          <ShieldQuestion className="h-3 w-3" />
+          Bekliyor
+        </Badge>
+      );
+  }
+}
+
 export default function ClientsPage() {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<ClientWithConsent[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -65,7 +115,7 @@ export default function ClientsPage() {
     setLoading(true);
     let query = supabase
       .from("clients")
-      .select("*")
+      .select("*, client_consents(status)")
       .order("created_at", { ascending: false });
 
     if (statusFilter !== "all") {
@@ -79,7 +129,11 @@ export default function ClientsPage() {
     }
 
     const { data } = await query;
-    setClients(data || []);
+    const clientsWithConsent: ClientWithConsent[] = (data || []).map((c: any) => ({
+      ...c,
+      consentSummary: getConsentSummary(c.client_consents || []),
+    }));
+    setClients(clientsWithConsent);
     setLoading(false);
   }, [supabase, statusFilter, typeFilter, search]);
 
@@ -247,6 +301,7 @@ export default function ClientsPage() {
                   <TableHead>Phone</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>MTD Threshold</TableHead>
+                  <TableHead>Consent</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -278,6 +333,9 @@ export default function ClientsPage() {
                       {client.mtd_threshold
                         ? `£${client.mtd_threshold}`
                         : "—"}
+                    </TableCell>
+                    <TableCell>
+                      <ConsentBadge summary={client.consentSummary || "no_records"} />
                     </TableCell>
                     <TableCell>
                       <Badge

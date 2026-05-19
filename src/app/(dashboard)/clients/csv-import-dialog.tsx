@@ -202,6 +202,27 @@ export function CsvImportDialog({
         action: "client_created",
         details: { method: "csv_import", count: success },
       });
+
+      // Initialize GDPR consent records and send consent emails for imported clients
+      // Requirement 1.3: Create consent records on client creation
+      // Requirement 3.3: Auto-send consent email within 30 seconds
+      // Requirement 3.5: Only send if client has email address
+      const { data: recentClients } = await supabase
+        .from("clients")
+        .select("id")
+        .eq("firm_id", firmUser.firm_id)
+        .order("created_at", { ascending: false })
+        .limit(success);
+
+      if (recentClients) {
+        for (const client of recentClients) {
+          fetch("/api/clients/init-consent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ clientId: client.id }),
+          }).catch(() => {});
+        }
+      }
     }
   };
 

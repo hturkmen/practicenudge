@@ -6,45 +6,80 @@ function getResend() {
   return new Resend(apiKey);
 }
 
-/**
- * Sends a GDPR consent request email to a client.
- */
-export async function sendGdprConsentEmail(params: {
+export interface GdprConsentEmailParams {
   to: string;
   clientName: string;
   firmName: string;
   consentToken: string;
-}) {
+}
+
+/**
+ * Builds the consent page link from a token.
+ * Format: {baseUrl}/consent/{token}
+ */
+export function buildConsentLink(token: string): string {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.practicenudge.com";
+  return `${appUrl}/consent/${token}`;
+}
+
+/**
+ * Generates the plain-text email body for the GDPR channel consent request.
+ * Includes firm name, client name, and consent page link with token.
+ */
+export function buildConsentEmailBody(params: {
+  clientName: string;
+  firmName: string;
+  consentLink: string;
+}): string {
+  return `Hi ${params.clientName},
+
+${params.firmName} uses PracticeNudge to securely communicate with their clients.
+
+Before they can send you any notifications or reminders, we need your consent for each communication channel you'd like to use.
+
+On the consent page you can choose which channels (email, SMS) you'd like to allow ${params.firmName} to contact you through. You can accept or reject each channel independently.
+
+YOUR RIGHTS:
+- You can accept or reject each communication channel separately
+- You can change your preferences at any time using the same link
+- Your contact information is only used for communication between you and ${params.firmName}
+- No messages will be sent through channels you have not approved
+
+To manage your communication preferences, please visit:
+${params.consentLink}
+
+If you did not expect this email or do not wish to receive communications, simply ignore it. No messages will be sent without your explicit consent.
+
+This email was sent by PracticeNudge on behalf of ${params.firmName}.
+PracticeNudge is a document collection tool for UK accountants. We do not share your data with third parties.`;
+}
+
+/**
+ * Generates the email subject line for the GDPR consent request.
+ */
+export function buildConsentEmailSubject(firmName: string): string {
+  return `${firmName} would like to communicate with you via PracticeNudge`;
+}
+
+/**
+ * Sends a GDPR channel consent request email to a client.
+ * The email includes the firm name, client name, and a consent page link
+ * where the client can manage per-channel (email/sms) consent preferences.
+ */
+export async function sendGdprConsentEmail(params: GdprConsentEmailParams) {
   const resend = getResend();
   if (!resend) {
     console.warn("[gdpr-consent] RESEND_API_KEY not set, skipping");
     return;
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.practicenudge.com";
-  const consentLink = `${appUrl}/consent/${params.consentToken}`;
-
-  const subject = `${params.firmName} would like to send you documents via PracticeNudge`;
-
-  const body = `Hi ${params.clientName},
-
-${params.firmName} uses PracticeNudge to securely collect documents from their clients.
-
-Before they can send you any document requests or reminders, we need your consent to process your email address for this purpose.
-
-WHAT THIS MEANS:
-- ${params.firmName} will be able to send you secure document upload links
-- You'll receive email reminders about pending documents
-- Your email is only used for communication between you and ${params.firmName}
-- You can withdraw consent at any time
-
-To give your consent, please click the link below:
-${consentLink}
-
-If you did not expect this email or do not wish to receive communications, simply ignore it. No further emails will be sent without your consent.
-
-This email was sent by PracticeNudge on behalf of ${params.firmName}.
-PracticeNudge is a document collection tool for UK accountants. We do not share your data with third parties.`;
+  const consentLink = buildConsentLink(params.consentToken);
+  const subject = buildConsentEmailSubject(params.firmName);
+  const body = buildConsentEmailBody({
+    clientName: params.clientName,
+    firmName: params.firmName,
+    consentLink,
+  });
 
   try {
     await resend.emails.send({
@@ -55,5 +90,6 @@ PracticeNudge is a document collection tool for UK accountants. We do not share 
     });
   } catch (error) {
     console.error("[gdpr-consent] Failed to send:", error);
+    throw error;
   }
 }

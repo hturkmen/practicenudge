@@ -16,6 +16,7 @@ import type {
   TriggerParams,
   EditUpdates,
   NotificationFrequency,
+  NotificationChannel,
 } from "./types";
 
 /**
@@ -37,6 +38,91 @@ function getServiceClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
+}
+
+/**
+ * Result of a consent check before sending a notification.
+ */
+export interface ConsentCheckResult {
+  allowed: boolean;
+  reason?: "consent_not_granted" | "consent_record_missing";
+}
+
+/**
+ * Checks if a client has granted consent for the target notification channel.
+ *
+ * - If consent is accepted → returns { allowed: true }
+ * - If consent is pending or rejected → blocks and returns { allowed: false, reason: "consent_not_granted" }
+ * - If consent record is missing entirely → blocks and returns { allowed: false, reason: "consent_record_missing" }
+ *
+ * Blocked notifications are logged to the notification_logs table with status 'failed'
+ * and the blocking reason in failure_reason and metadata.
+ *
+ * @param clientId - The client ID to check consent for
+ * @param channel - The notification channel ("email" | "sms")
+ * @returns ConsentCheckResult indicating whether the notification is allowed
+ */
+export async function checkConsentBeforeSend(
+  clientId: string,
+  channel: NotificationChannel
+): Promise<ConsentCheckResult> {
+  const supabase = getServiceClient();
+
+  // Query the consent record for this client + channel
+  const { data, error } = await supabase
+    .from("client_consents")
+    .select("status")
+    .eq("client_id", clientId)
+    .eq("channel", channel)
+    .single();
+
+  // If no record found (PGRST116 = no rows), consent record is missing
+  if (error && error.code === "PGRST116") {
+    // Log the blocked notification
+    await logBlockedNotification(clientId, channel, "consent_record_missing");
+    return { allowed: false, reason: "consent_record_missing" };
+  }
+
+  if (error) {
+    // Unexpected error — treat as missing record for safety
+    await logBlockedNotification(clientId, channel, "consent_record_missing");
+    return { allowed: false, reason: "consent_record_missing" };
+  }
+
+  // If status is not "accepted", block the notification
+  if (!data || data.status !== "accepted") {
+    await logBlockedNotification(clientId, channel, "consent_not_granted");
+    return { allowed: false, reason: "consent_not_granted" };
+  }
+
+  // Consent is accepted — allow the notification
+  return { allowed: true };
+}
+
+/**
+ * Logs a blocked notification to the notification_logs table.
+ * Records the channel, client ID, and blocking reason.
+ */
+async function logBlockedNotification(
+  clientId: string,
+  channel: NotificationChannel,
+  reason: "consent_not_granted" | "consent_record_missing"
+): Promise<void> {
+  const supabase = getServiceClient();
+
+  await supabase.from("notification_logs").insert({
+    client_id: clientId,
+    channel,
+    status: "failed",
+    failure_reason: reason,
+    recipient_address: "",
+    metadata: {
+      blocked_by: "consent_check",
+      channel,
+      client_id: clientId,
+      reason,
+    },
+  });
 }
 
 /**

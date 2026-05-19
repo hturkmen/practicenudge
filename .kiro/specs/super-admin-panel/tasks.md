@@ -28,12 +28,12 @@ This plan implements a comprehensive platform management interface for super adm
     - `getRelatedEntity(actionType, metadata)` returns client name for client actions, request ID for document request actions, null otherwise
     - _Requirements: 4.4, 5.4, 7.1, 7.5_
 
-  - [ ]* 2.2 Write property tests for metrics utilities
+  - [-] 2.2 Write property tests for metrics utilities
     - **Property 21: Completion rate computation**
     - **Property 23: Month-over-month growth calculation**
     - **Validates: Requirements 7.1, 7.5**
 
-  - [ ]* 2.3 Write property test for activity log formatting
+  - [-] 2.3 Write property test for activity log formatting
     - **Property 18: Activity log entry formatting**
     - **Validates: Requirements 5.4**
 
@@ -45,7 +45,7 @@ This plan implements a comprehensive platform management interface for super adm
     - `getActivityLog` returns max 100 entries sorted by timestamp DESC, with action type and date range filters
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 3.1, 3.4, 3.5, 3.6, 4.1, 4.2, 4.3, 4.4, 4.5, 5.1, 5.3_
 
-  - [ ]* 2.5 Write property tests for member queries
+  - [-] 2.5 Write property tests for member queries
     - **Property 1: Member list pagination invariant**
     - **Property 2: Member search correctness**
     - **Property 3: Filter AND logic for members**
@@ -53,13 +53,13 @@ This plan implements a comprehensive platform management interface for super adm
     - **Property 5: Member detail completeness**
     - **Validates: Requirements 1.1, 1.2, 1.3, 1.4, 1.5, 2.1**
 
-  - [ ]* 2.6 Write property tests for firm queries
+  - [-] 2.6 Write property tests for firm queries
     - **Property 8: Firm list pagination invariant**
     - **Property 10: Firm search correctness**
     - **Property 11: Firm filter correctness**
     - **Validates: Requirements 3.1, 3.5, 3.6**
 
-  - [ ]* 2.7 Write property tests for usage and activity log queries
+  - [-] 2.7 Write property tests for usage and activity log queries
     - **Property 12: Date-range metric computation**
     - **Property 13: Per-firm usage sorting and pagination**
     - **Property 14: Trend chart data accuracy**
@@ -78,7 +78,7 @@ This plan implements a comprehensive platform management interface for super adm
     - `logAdminAction` inserts into admin_audit_logs
     - _Requirements: 2.2, 2.4, 2.5, 2.6, 3.2, 6.5_
 
-  - [ ]* 2.9 Write property tests for admin actions
+  - [-] 2.9 Write property tests for admin actions
     - **Property 6: Role update persistence**
     - **Property 7: Suspend/reactivate round-trip**
     - **Property 9: Firm plan update persistence**

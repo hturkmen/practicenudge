@@ -95,25 +95,34 @@ export function AddClientDialog({
 
     toast.success(`${form.name} has been added`);
 
-    // Send GDPR consent email if client has email
-    if (form.email) {
+    // Initialize GDPR consent records and send consent email if client has email
+    // Requirement 1.3: Create consent records on client creation
+    // Requirement 3.3: Auto-send consent email within 30 seconds
+    // Requirement 3.5: Only send if client has email address
+    {
       // Get the newly created client's ID
       const { data: newClient } = await supabase
         .from("clients")
         .select("id")
         .eq("firm_id", firmUser.firm_id)
-        .eq("email", form.email)
+        .eq("name", form.name)
         .order("created_at", { ascending: false })
         .limit(1)
         .single();
 
       if (newClient) {
-        fetch("/api/clients/send-consent", {
+        fetch("/api/clients/init-consent", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ clientId: newClient.id }),
-        }).catch(() => {});
-        toast.info("GDPR consent email sent to " + form.email);
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.emailSent) {
+              toast.info("GDPR consent email sent to " + form.email);
+            }
+          })
+          .catch(() => {});
       }
     }
     setForm({

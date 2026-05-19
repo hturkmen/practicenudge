@@ -33,9 +33,11 @@ import {
   PauseCircle,
   PlayCircle,
   Trash2,
+  Send,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { ConsentStatusSection } from "@/components/consent-status";
 
 export default function ClientDetailPage() {
   const params = useParams();
@@ -48,6 +50,7 @@ export default function ClientDetailPage() {
   const [reminders, setReminders] = useState<ReminderLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [sendingConsent, setSendingConsent] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -183,6 +186,30 @@ export default function ClientDetailPage() {
     }
     toast.success("Client deleted");
     router.push("/clients");
+  };
+
+  const handleSendConsentEmail = async () => {
+    setSendingConsent(true);
+    try {
+      const res = await fetch("/api/clients/send-consent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Consent e-postası gönderilemedi");
+        return;
+      }
+
+      toast.success("Consent e-postası başarıyla gönderildi");
+    } catch {
+      toast.error("Consent e-postası gönderilemedi");
+    } finally {
+      setSendingConsent(false);
+    }
   };
 
   if (loading) {
@@ -430,8 +457,28 @@ export default function ClientDetailPage() {
           </Card>
         </div>
 
-        {/* Sidebar - Reminder History */}
-        <div>
+        {/* Sidebar - Consent Status & Reminder History */}
+        <div className="space-y-6">
+          <ConsentStatusSection clientId={clientId} />
+
+          <Card>
+            <CardContent className="pt-4">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleSendConsentEmail}
+                disabled={sendingConsent}
+              >
+                {sendingConsent ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="mr-2 h-4 w-4" />
+                )}
+                Consent E-postası Gönder
+              </Button>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Reminder History</CardTitle>
