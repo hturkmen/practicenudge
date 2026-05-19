@@ -64,7 +64,7 @@ export default function DashboardLayout({
               user_id: user.id,
               role: "owner",
             });
-            firmUser = { firm_id: newFirm.id, role: "owner" };
+            firmUser = { firm_id: newFirm.id, role: "owner", status: "active" };
 
             // Notify super admin about new registration
             fetch("/api/admin/notify-new-firm", {
