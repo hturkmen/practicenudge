@@ -234,7 +234,17 @@ export async function suspendFirm(
   firmId: string,
   adminUserId: string
 ): Promise<void> {
-  // Update firm plan to indicate suspended (we use a metadata approach)
+  // Suspend all firm members
+  const { error: membersError } = await supabase
+    .from("firm_users")
+    .update({ status: "suspended" })
+    .eq("firm_id", firmId)
+    .eq("status", "active");
+
+  if (membersError) {
+    throw new Error(`Failed to suspend firm members: ${membersError.message}`);
+  }
+
   // Put all active document requests on hold
   const { error: requestsError } = await supabase
     .from("document_requests")
@@ -271,6 +281,17 @@ export async function reactivateFirm(
   firmId: string,
   adminUserId: string
 ): Promise<void> {
+  // Reactivate suspended firm members
+  const { error: membersError } = await supabase
+    .from("firm_users")
+    .update({ status: "active" })
+    .eq("firm_id", firmId)
+    .eq("status", "suspended");
+
+  if (membersError) {
+    throw new Error(`Failed to reactivate firm members: ${membersError.message}`);
+  }
+
   // Reactivate on_hold clients
   const { error: clientsError } = await supabase
     .from("clients")
