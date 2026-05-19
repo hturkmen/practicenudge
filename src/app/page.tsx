@@ -256,7 +256,7 @@ export default async function LandingPage() {
               { icon: Send, title: t("feature3Title"), body: t("feature3Body"), color: "text-slate-800", bg: "bg-slate-100", border: "border-slate-200" },
               { icon: BarChart3, title: t("feature4Title"), body: t("feature4Body"), color: "text-teal-700", bg: "bg-teal-50", border: "border-teal-200" },
               { icon: Calendar, title: t("feature5Title"), body: t("feature5Body"), color: "text-slate-800", bg: "bg-slate-100", border: "border-slate-200" },
-              { icon: Shield, title: t("feature6Title"), body: t("feature6Body"), color: "text-slate-800", bg: "bg-slate-100", border: "border-slate-200" },
+              { icon: Shield, title: t("feature6Title"), body: t("feature6Body"), color: "text-teal-700", bg: "bg-teal-50", border: "border-teal-200" },
             ].map((f, i) => (
               <div key={i} className="bg-white border border-slate-200 rounded-[14px] shadow-[0_1px_0_rgba(15,23,42,0.04)] p-[22px]">
                 <div className={`w-[38px] h-[38px] rounded-[10px] ${f.bg} ${f.color} border ${f.border} flex items-center justify-center mb-4`}>
