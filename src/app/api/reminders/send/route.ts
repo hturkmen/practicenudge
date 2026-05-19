@@ -63,6 +63,14 @@ export async function POST(request: Request) {
     );
   }
 
+  // Block reminders for cancelled/on_hold requests
+  if (docRequest.status === "on_hold" || docRequest.status === "cancelled") {
+    return NextResponse.json(
+      { error: "Request is " + docRequest.status.replace("_", " ") + ". No reminders can be sent." },
+      { status: 400 }
+    );
+  }
+
   // Fetch pending items
   const { data: items } = await supabase
     .from("request_items")

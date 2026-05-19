@@ -131,14 +131,16 @@ export function AddClientDialog({
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email *</Label>
                 <Input
                   id="email"
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="john@example.com"
+                  required
                 />
+                <p className="text-xs text-muted-foreground">Required for sending document requests</p>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="phone">Phone</Label>

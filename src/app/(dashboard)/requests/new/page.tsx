@@ -111,6 +111,14 @@ export default function NewRequestPage() {
       toast.error("Please select a client");
       return;
     }
+
+    // Check if selected client has an email
+    const selectedClient = clients.find((c) => c.id === selectedClientId);
+    if (!selectedClient?.email) {
+      toast.error("Selected client has no email address. Please add an email to the client first.");
+      return;
+    }
+
     if (!validateTitle(title)) {
       toast.error("Please enter a title");
       return;
@@ -238,9 +246,9 @@ export default function NewRequestPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {clients.map((client) => (
-                      <SelectItem key={client.id} value={client.id}>
+                      <SelectItem key={client.id} value={client.id} disabled={!client.email}>
                         {client.name}
-                        {client.email ? ` (${client.email})` : ""}
+                        {client.email ? ` (${client.email})` : " — no email"}
                       </SelectItem>
                     ))}
                   </SelectContent>

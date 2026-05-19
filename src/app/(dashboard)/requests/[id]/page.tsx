@@ -221,7 +221,7 @@ export default function RequestDetailPage() {
               Preview
             </Button>
           </Link>
-          <Button size="sm" onClick={handleSendReminder}>
+          <Button size="sm" onClick={handleSendReminder} disabled={request.status === "on_hold" || request.status === "cancelled" || request.status === "completed"}>
             <Mail className="mr-2 h-4 w-4" />
             Send Reminder
           </Button>
