@@ -99,7 +99,8 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning className={cn("font-sans", geistSans.variable)}>
-      <head>
+      <head />
+      <body className="antialiased">
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-B8P1PZSHZ9"
           strategy="afterInteractive"
@@ -112,8 +113,6 @@ export default async function RootLayout({
             gtag('config', 'G-B8P1PZSHZ9');
           `}
         </Script>
-      </head>
-      <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
             attribute="class"
