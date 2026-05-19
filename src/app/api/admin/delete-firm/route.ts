@@ -72,11 +72,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Delete auth users (so they can't log back in and recreate)
+  // Delete auth users completely (so they can register again with same email)
   for (const userId of userIds) {
     // Don't delete the super admin's own account
     if (userId === user.id) continue;
-    await serviceSupabase.auth.admin.deleteUser(userId);
+    await serviceSupabase.auth.admin.deleteUser(userId, false);
   }
 
   return NextResponse.json({ success: true, message: "Firm and all associated data deleted." });
