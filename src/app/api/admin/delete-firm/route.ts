@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createServiceClient } from "@supabase/supabase-js";
 
 /**
  * Deletes a suspended firm and all its associated data (clients, requests, members).
@@ -33,8 +34,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "firmId required" }, { status: 400 });
   }
 
+  // Use service role client for delete (bypasses RLS)
+  const serviceSupabase = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   // Verify firm has suspended members (i.e. firm is suspended)
-  const { data: suspendedMembers } = await supabase
+  const { data: suspendedMembers } = await serviceSupabase
     .from("firm_users")
     .select("id, status")
     .eq("firm_id", firmId)
@@ -48,7 +55,7 @@ export async function POST(request: Request) {
   }
 
   // Delete firm (CASCADE will handle clients, requests, firm_users, etc.)
-  const { error } = await supabase
+  const { error } = await serviceSupabase
     .from("firms")
     .delete()
     .eq("id", firmId);
