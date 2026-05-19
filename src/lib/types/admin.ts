@@ -189,7 +189,7 @@ export type ActivityLogEntry = {
 // Admin Actions API
 
 export type AdminActionRequest = {
-  action: "update_role" | "update_plan" | "suspend_member" | "reactivate_member";
+  action: "update_role" | "update_plan" | "suspend_member" | "reactivate_member" | "suspend_firm" | "reactivate_firm";
   target_id: string;
   value?: string;
 };
