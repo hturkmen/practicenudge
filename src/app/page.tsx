@@ -58,7 +58,7 @@ export default async function LandingPage() {
             <Link href="/login">
               <Button variant="outline" size="sm" className="text-[13.5px] shadow-sm">{tc("signIn")}</Button>
             </Link>
-            <Link href="#pricing">
+            <Link href="/register">
               <Button size="sm" className="text-[13.5px] bg-slate-900 hover:bg-slate-800 text-white">
                 {t("ctaPrimary")}
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
