@@ -45,7 +45,8 @@ export async function updateSession(request: NextRequest) {
       request.nextUrl.pathname === path ||
       request.nextUrl.pathname.startsWith("/upload/") ||
       request.nextUrl.pathname.startsWith("/api/") ||
-      request.nextUrl.pathname.startsWith("/auth/callback")
+      request.nextUrl.pathname.startsWith("/auth/callback") ||
+      request.nextUrl.pathname.startsWith("/consent/")
   );
 
   if (isPublicPath) {

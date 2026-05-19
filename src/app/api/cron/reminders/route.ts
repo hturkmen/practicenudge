@@ -24,7 +24,7 @@ export async function GET(request: Request) {
   // Fetch all active requests with deadlines
   const { data: requests, error } = await supabase
     .from("document_requests")
-    .select("*, clients(id, name, email, phone, status), firms(id, name, email)")
+    .select("*, clients(id, name, email, phone, status, gdpr_consent), firms(id, name, email)")
     .in("status", ["pending", "in_progress", "overdue"])
     .not("deadline", "is", null);
 
@@ -54,6 +54,11 @@ export async function GET(request: Request) {
   for (const req of requests) {
     // Skip clients that are on hold
     if (req.clients?.status === "on_hold") {
+      continue;
+    }
+
+    // Skip clients without GDPR consent
+    if (!req.clients?.gdpr_consent) {
       continue;
     }
 
