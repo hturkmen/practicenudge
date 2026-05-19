@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendReminderEmail } from "@/lib/email/resend";
 import { createNotificationLog } from "@/lib/notifications/logger";
+import { notifyCronError } from "@/lib/email/admin-notify";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export async function GET(request: Request) {
     .not("deadline", "is", null);
 
   if (error || !requests) {
+    await notifyCronError(error?.message || "No data returned", "Fetching document requests");
     return NextResponse.json({ error: "Failed to fetch requests" }, { status: 500 });
   }
 
@@ -163,6 +165,7 @@ export async function GET(request: Request) {
         emailsSent++;
       } catch (e) {
         console.error("Failed to send email:", e);
+        notifyCronError((e as Error).message, `Sending reminder for "${req.title}" to ${req.clients.email}`).catch(() => {});
         await supabase.from("reminder_logs").insert({
           request_id: req.id,
           client_id: req.clients.id,

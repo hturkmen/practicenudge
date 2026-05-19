@@ -60,6 +60,13 @@ export default function DashboardLayout({
               role: "owner",
             });
             firmUser = { firm_id: newFirm.id, role: "owner" };
+
+            // Notify super admin about new registration
+            fetch("/api/admin/notify-new-firm", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ firmName: displayName, email: user.email }),
+            }).catch(() => {});
           }
         }
 

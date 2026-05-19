@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { sendReminderEmail } from "@/lib/email/resend";
 import { createNotificationLog } from "@/lib/notifications/logger";
+import { notifyReminderFailed } from "@/lib/email/admin-notify";
 
 export async function POST(request: Request) {
   const supabase = createClient();
@@ -169,6 +170,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    // Notify super admin about the failure
+    notifyReminderFailed(
+      docRequest.title,
+      docRequest.clients.email,
+      error.message
+    ).catch(() => {});
+
     // Dual-write failure to notification_logs
     if (documentReminderTypeId && docRequest.firms?.id) {
       try {
