@@ -28,7 +28,7 @@ export type Client = {
   mtd_threshold: string | null;
   tax_reference: string | null;
   notes: string | null;
-  status: "active" | "inactive" | "archived";
+  status: "active" | "inactive" | "archived" | "on_hold";
   created_at: string;
 };
 
