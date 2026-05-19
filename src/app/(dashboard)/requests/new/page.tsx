@@ -33,6 +33,7 @@ import {
   GripVertical,
   Loader2,
   Send,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -214,22 +215,37 @@ export default function NewRequestPage() {
           <CardContent className="space-y-4">
             <div className="grid gap-2">
               <Label>Client *</Label>
-              <Select
-                value={selectedClientId}
-                onValueChange={setSelectedClientId}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a client..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {clients.map((client) => (
-                    <SelectItem key={client.id} value={client.id}>
-                      {client.name}
-                      {client.email ? ` (${client.email})` : ""}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {clients.length === 0 ? (
+                <div className="border border-dashed rounded-lg p-4 text-center space-y-2">
+                  <Users className="h-8 w-8 text-muted-foreground mx-auto" />
+                  <p className="text-sm text-muted-foreground">
+                    You need to add a client before creating a request.
+                  </p>
+                  <Link href="/clients">
+                    <Button type="button" variant="outline" size="sm">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Client
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <Select
+                  value={selectedClientId}
+                  onValueChange={setSelectedClientId}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a client..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {clients.map((client) => (
+                      <SelectItem key={client.id} value={client.id}>
+                        {client.name}
+                        {client.email ? ` (${client.email})` : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
