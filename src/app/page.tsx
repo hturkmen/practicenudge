@@ -30,7 +30,10 @@ import {
 import { LandingLanguageSwitcher } from "@/components/landing-language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { WebsiteStructuredData } from "@/components/structured-data";
+import { DeadlineBanner } from "@/components/deadline-banner";
 import { getTranslations } from "next-intl/server";
+
+export const revalidate = 3600;
 
 export default async function LandingPage() {
   const t = await getTranslations("landing");
@@ -39,6 +42,7 @@ export default async function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950">
       <WebsiteStructuredData />
+      <DeadlineBanner />
 
       {/* Nav — glassmorphism style */}
       <header>

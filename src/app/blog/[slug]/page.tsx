@@ -64,11 +64,11 @@ For each client, you need to confirm:
 - [ ] Capital allowances documented
 
 ### 5. Quarterly Submission Schedule
-- [ ] Q1 deadline noted (6 July 2026 for first cohort)
-- [ ] Q2 deadline noted (6 October 2026)
-- [ ] Q3 deadline noted (6 January 2027)
-- [ ] Q4 deadline noted (6 April 2027)
-- [ ] End of Period Statement deadline noted
+- [ ] Q1 submission deadline noted (7 August 2026 for first cohort, covering 6 Apr–5 Jul)
+- [ ] Q2 submission deadline noted (7 November 2026, covering 6 Jul–5 Oct)
+- [ ] Q3 submission deadline noted (7 February 2027, covering 6 Oct–5 Jan)
+- [ ] Q4 submission deadline noted (7 May 2027, covering 6 Jan–5 Apr)
+- [ ] Final declaration deadline noted (31 January 2028)
 
 ## The Problem With Spreadsheets
 
