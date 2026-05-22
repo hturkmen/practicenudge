@@ -478,6 +478,32 @@ export default function BlogPost({ params }: Props) {
           </Link>
         </div>
 
+        {/* Related articles */}
+        <div className="mt-10 pt-8 border-t">
+          <h3 className="text-lg font-bold mb-4">Related articles</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            {Object.entries(posts)
+              .filter(([slug]) => slug !== params.slug)
+              .slice(0, 4)
+              .map(([slug, relatedPost]) => (
+                <Link key={slug} href={`/blog/${slug}`} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
+                  <Badge variant="secondary" className="text-xs mb-2">{relatedPost.category}</Badge>
+                  <h4 className="text-sm font-semibold line-clamp-2">{relatedPost.title}</h4>
+                </Link>
+              ))}
+          </div>
+        </div>
+
+        {/* Free tracker CTA */}
+        <div className="mt-8 p-4 bg-slate-50 rounded-lg border text-center">
+          <p className="text-sm text-muted-foreground mb-2">
+            Want a free spreadsheet to track all of this?
+          </p>
+          <Link href="/mtd" className="text-sm text-primary font-medium hover:underline">
+            Download the free MTD Client Readiness Tracker →
+          </Link>
+        </div>
+
         {/* Article structured data */}
         <script
           type="application/ld+json"
@@ -491,6 +517,21 @@ export default function BlogPost({ params }: Props) {
               author: { "@type": "Organization", name: "PracticeNudge" },
               publisher: { "@type": "Organization", name: "PracticeNudge", url: "https://www.practicenudge.com" },
               mainEntityOfPage: `https://www.practicenudge.com/blog/${params.slug}`,
+            }),
+          }}
+        />
+        {/* Breadcrumb structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://www.practicenudge.com" },
+                { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.practicenudge.com/blog" },
+                { "@type": "ListItem", position: 3, name: post.title, item: `https://www.practicenudge.com/blog/${params.slug}` },
+              ],
             }),
           }}
         />

@@ -1,115 +1,127 @@
-"use client";
-
-import { useState } from "react";
+import type { Metadata } from "next";
+import { MTDLeadForm } from "./lead-form";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  ArrowRight,
-  Check,
   FileSpreadsheet,
   Download,
   Users,
   AlertTriangle,
+  ArrowRight,
+  Check,
 } from "lucide-react";
 
+export const metadata: Metadata = {
+  title: "Free MTD Client Readiness Tracker | PracticeNudge",
+  description:
+    "Download our free MTD Client Readiness Tracker — a Google Sheet template that shows which clients are MTD-ready, who needs chasing, and what documents are missing. Built for UK accountants.",
+  keywords: [
+    "MTD tracker",
+    "MTD spreadsheet",
+    "MTD client tracking template",
+    "free MTD tool",
+    "Making Tax Digital tracker",
+    "accountant MTD template",
+    "MTD readiness tracker",
+  ],
+  openGraph: {
+    title: "Free MTD Client Readiness Tracker | PracticeNudge",
+    description:
+      "Track which clients are MTD-ready with this free Google Sheet template. Built for small UK accounting practices.",
+    type: "website",
+    url: "https://www.practicenudge.com/mtd",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free MTD Client Readiness Tracker",
+    description:
+      "A free Google Sheet template for UK accountants to track MTD client readiness, missing documents, and deadlines.",
+  },
+  alternates: {
+    canonical: "https://www.practicenudge.com/mtd",
+  },
+};
+
 export default function MTDLandingPage() {
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      practice: formData.get("practice"),
-      clients: formData.get("clients"),
-    };
-
-    try {
-      const res = await fetch("/api/lead-capture", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) throw new Error("Submission failed");
-      setSubmitted(true);
-    } catch {
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "MTD Client Readiness Tracker",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "GBP",
+      description: "Free Google Sheets template",
+    },
+    description:
+      "Free MTD client readiness tracking spreadsheet for UK accountants. Track client status, missing documents, and quarterly deadlines.",
+    url: "https://www.practicenudge.com/mtd",
   };
 
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-white">
-        <nav className="border-b">
-          <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-primary">
-              PracticeNudge
-            </Link>
-          </div>
-        </nav>
-        <section className="py-20 px-4">
-          <div className="max-w-lg mx-auto text-center">
-            <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-              <Check className="h-8 w-8 text-green-600" />
-            </div>
-            <h1 className="text-3xl font-bold mb-4">You&apos;re in!</h1>
-            <p className="text-lg text-muted-foreground mb-6">
-              Check your inbox — we&apos;ve sent you the MTD Client Readiness Tracker Template.
-            </p>
-            <Card className="text-left">
-              <CardHeader>
-                <CardTitle className="text-lg">While you&apos;re here...</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  We&apos;re building PracticeNudge — a dashboard that does what this spreadsheet does,
-                  but automatically. Live status tracking, follow-up reminders, and risk scoring
-                  for every client.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  We&apos;re looking for 10 small UK practices to pilot it (free).
-                </p>
-                <Link href="/#pricing">
-                  <Button className="w-full mt-2">
-                    Learn about the pilot
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-      </div>
-    );
-  }
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Is the MTD tracker really free?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Yes, completely free. No credit card, no trial period. We send you the Google Sheet link and you make a copy to your own Drive.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What format is the MTD tracker?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "It is a Google Sheets template. You make a copy to your own Google Drive and can start using it immediately. You can also download it as Excel (.xlsx) if you prefer.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How many clients can I track?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "The spreadsheet has no hard limit, but performance may slow above 500 rows. For larger client bases, PracticeNudge offers a dedicated dashboard.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do I need PracticeNudge to use the tracker?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "No. The spreadsheet is a standalone tool that works independently. PracticeNudge automates what the spreadsheet does manually — reminders, status tracking, and document collection.",
+        },
+      },
+    ],
+  };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       {/* Nav */}
-      <nav className="border-b">
+      <nav className="border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-primary">
             PracticeNudge
           </Link>
-          <Badge variant="secondary">Free Template</Badge>
+          <div className="flex items-center gap-4 text-sm">
+            <Link href="/blog" className="text-muted-foreground hover:text-foreground">
+              Blog
+            </Link>
+            <Badge variant="secondary">Free Template</Badge>
+          </div>
         </div>
       </nav>
 
@@ -134,7 +146,7 @@ export default function MTDLandingPage() {
       </section>
 
       {/* What's Inside + Form */}
-      <section className="py-12 px-4 bg-gray-50">
+      <section className="py-12 px-4 bg-gray-50 dark:bg-slate-900">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
           {/* What's Inside */}
           <div>
@@ -171,77 +183,106 @@ export default function MTDLandingPage() {
                 </div>
               ))}
             </div>
+
+            <div className="mt-8 p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg">
+              <h3 className="font-semibold text-sm mb-2">What you&apos;ll stop doing:</h3>
+              <ul className="space-y-1.5 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-teal-700 shrink-0" />
+                  Manually checking who&apos;s MTD-ready
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-teal-700 shrink-0" />
+                  Guessing which clients need chasing
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-teal-700 shrink-0" />
+                  Losing track of missing documents
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 text-teal-700 shrink-0" />
+                  Worrying about missed deadlines
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* Form */}
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Get the free tracker</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Your name</Label>
-                    <Input id="name" name="name" placeholder="Jane Smith" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Work email</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="jane@yourpractice.co.uk"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="practice">Practice name</Label>
-                    <Input
-                      id="practice"
-                      name="practice"
-                      placeholder="Smith & Co Accountants"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="clients">How many clients do you have?</Label>
-                    <Select name="clients" required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select range" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-20">1–20 clients</SelectItem>
-                        <SelectItem value="21-50">21–50 clients</SelectItem>
-                        <SelectItem value="51-100">51–100 clients</SelectItem>
-                        <SelectItem value="101-200">101–200 clients</SelectItem>
-                        <SelectItem value="200+">200+ clients</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                    {loading ? "Sending..." : "Send me the tracker"}
-                    {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
-                  </Button>
-                  <p className="text-xs text-muted-foreground text-center">
-                    No spam. We&apos;ll send the template link and one follow-up about PracticeNudge.
-                  </p>
-                </form>
-              </CardContent>
-            </Card>
+          {/* Form (client component) */}
+          <MTDLeadForm />
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-12 px-4">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6">Frequently asked questions</h2>
+          <div className="space-y-0">
+            {[
+              {
+                q: "Is this really free?",
+                a: "Yes. No credit card, no trial period, no catch. We send you the Google Sheet link and you make a copy.",
+              },
+              {
+                q: "What format is it?",
+                a: "Google Sheets. Make a copy to your Drive and start using it. You can also download as Excel (.xlsx).",
+              },
+              {
+                q: "How many clients can I track?",
+                a: "No hard limit in the spreadsheet. It works well up to ~500 clients. Beyond that, PracticeNudge offers a dedicated dashboard.",
+              },
+              {
+                q: "Do I need PracticeNudge to use it?",
+                a: "No. The spreadsheet is completely standalone. PracticeNudge automates what the spreadsheet does manually — if you outgrow it, we're here.",
+              },
+              {
+                q: "What if I outgrow the spreadsheet?",
+                a: "That's exactly what PracticeNudge is for. Automated reminders, live status tracking, magic upload links for clients. Free during pilot.",
+              },
+            ].map((item, i) => (
+              <details key={i} className="border-b border-slate-200 dark:border-slate-700 group">
+                <summary className="flex items-center justify-between py-4 cursor-pointer list-none">
+                  <span className="text-[15px] font-semibold text-slate-900 dark:text-white">{item.q}</span>
+                  <ArrowRight className="h-4 w-4 text-slate-400 transition-transform group-open:rotate-90" />
+                </summary>
+                <p className="text-sm text-muted-foreground pb-4">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Related content links */}
+      <section className="py-8 px-4 bg-gray-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-lg font-semibold mb-4">Related resources</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            <Link href="/blog/mtd-client-readiness-checklist-2026" className="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-sm transition-shadow">
+              <span className="text-sm font-medium text-slate-900 dark:text-white">MTD Readiness Checklist 2026</span>
+              <p className="text-xs text-muted-foreground mt-1">Step-by-step assessment guide</p>
+            </Link>
+            <Link href="/blog/how-to-track-mtd-compliance-small-practice" className="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-sm transition-shadow">
+              <span className="text-sm font-medium text-slate-900 dark:text-white">Tracking MTD Without Spreadsheets</span>
+              <p className="text-xs text-muted-foreground mt-1">When to upgrade your system</p>
+            </Link>
+            <Link href="/compare/sage-mtd-agent" className="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-sm transition-shadow">
+              <span className="text-sm font-medium text-slate-900 dark:text-white">PracticeNudge vs Sage MTD Agent</span>
+              <p className="text-xs text-muted-foreground mt-1">Feature comparison</p>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-8 px-4">
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <Link href="/" className="font-semibold text-primary">
             PracticeNudge
           </Link>
-          <p className="text-xs text-muted-foreground">
-            PracticeNudge is a client readiness tracking tool. Not tax filing software.
-          </p>
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <Link href="/blog" className="hover:text-foreground">Blog</Link>
+            <Link href="/compare/sage-mtd-agent" className="hover:text-foreground">Comparisons</Link>
+            <span>PracticeNudge is a client readiness tracking tool. Not tax filing software.</span>
+          </div>
         </div>
       </footer>
     </div>

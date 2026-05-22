@@ -40,14 +40,23 @@ export async function updateSession(request: NextRequest) {
 
   // Public routes — never redirect these
   const publicPaths = ["/", "/login", "/register"];
-  const isPublicPath = publicPaths.some(
-    (path) =>
-      request.nextUrl.pathname === path ||
-      request.nextUrl.pathname.startsWith("/upload/") ||
-      request.nextUrl.pathname.startsWith("/api/") ||
-      request.nextUrl.pathname.startsWith("/auth/callback") ||
-      request.nextUrl.pathname.startsWith("/consent/")
-  );
+  const publicPrefixes = [
+    "/upload/",
+    "/api/",
+    "/auth/callback",
+    "/consent/",
+    "/blog",
+    "/mtd",
+    "/compare/",
+    "/templates/",
+    "/guides/",
+    "/features/",
+  ];
+  const isPublicPath =
+    publicPaths.includes(request.nextUrl.pathname) ||
+    publicPrefixes.some((prefix) =>
+      request.nextUrl.pathname.startsWith(prefix)
+    );
 
   if (isPublicPath) {
     return response;

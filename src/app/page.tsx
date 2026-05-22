@@ -246,6 +246,19 @@ export default async function LandingPage() {
       {/* Solution / Features */}
       <section id="solution" className="py-20 px-6 bg-[#F8FAFC] dark:bg-slate-950">
         <div className="max-w-[1080px] mx-auto">
+          {/* Mid-page secondary CTA */}
+          <div className="mb-12 p-5 bg-white dark:bg-slate-900 border border-teal-200 dark:border-teal-800 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-[15px] font-semibold text-slate-900 dark:text-white">Not ready to sign up? Grab the free MTD tracker first.</p>
+              <p className="text-[13px] text-slate-600 dark:text-slate-400">A Google Sheet template to track client readiness — no account needed.</p>
+            </div>
+            <Link href="/mtd">
+              <Button variant="outline" size="sm" className="whitespace-nowrap text-[13px]">
+                <Download className="mr-1.5 h-3.5 w-3.5" />
+                Get free tracker
+              </Button>
+            </Link>
+          </div>
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-400 text-xs font-medium mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-teal-700 dark:bg-teal-400" />
@@ -463,19 +476,46 @@ export default async function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 bg-slate-900 border-t border-white/10">
-        <div className="max-w-[1180px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-white/60">
-          <div className="flex items-center gap-3">
-            <Link href="/">
-              <span className="font-semibold text-white cursor-pointer">PracticeNudge</span>
-            </Link>
-            <span>· Built for UK accountancy practices</span>
+      <footer className="py-10 px-6 bg-slate-900 border-t border-white/10">
+        <div className="max-w-[1180px] mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <Link href="/">
+                <span className="font-semibold text-white cursor-pointer">PracticeNudge</span>
+              </Link>
+              <p className="text-[13px] text-white/50 mt-2">
+                MTD client readiness tracking for small UK accounting practices.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-[13px] font-semibold text-white/80 mb-3">Product</h4>
+              <div className="flex flex-col gap-2 text-[13px] text-white/50">
+                <Link href="/mtd" className="hover:text-white transition-colors">Free MTD Tracker</Link>
+                <Link href="/compare/sage-mtd-agent" className="hover:text-white transition-colors">vs Sage MTD Agent</Link>
+                <Link href="/#pricing" className="hover:text-white transition-colors">Pricing</Link>
+                <Link href="/register" className="hover:text-white transition-colors">Start Free Pilot</Link>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-[13px] font-semibold text-white/80 mb-3">Resources</h4>
+              <div className="flex flex-col gap-2 text-[13px] text-white/50">
+                <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
+                <Link href="/blog/mtd-itsa-deadlines-2026-2027-2028" className="hover:text-white transition-colors">MTD Deadlines</Link>
+                <Link href="/blog/mtd-client-readiness-checklist-2026" className="hover:text-white transition-colors">MTD Checklist</Link>
+                <Link href="/blog/stop-chasing-clients-mtd-documents" className="hover:text-white transition-colors">Stop Chasing Clients</Link>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-[13px] font-semibold text-white/80 mb-3">Company</h4>
+              <div className="flex flex-col gap-2 text-[13px] text-white/50">
+                <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
+                <a href="mailto:hello@practicenudge.com" className="hover:text-white transition-colors">Contact</a>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/blog" className="text-white/60 hover:text-white transition-colors">
-              Blog
-            </Link>
-            <p className="text-xs text-white/50">
+          <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-white/40">
+            <span>© 2025–2026 PracticeNudge. Built for UK accountancy practices.</span>
+            <p>
               Developed by{" "}
               <a
                 href="https://hermesyazilim.com"
