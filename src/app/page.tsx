@@ -129,11 +129,11 @@ export default async function LandingPage() {
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-[14px] shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18),0_4px_12px_rgba(15,23,42,0.04)] dark:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)] overflow-hidden">
                 {/* Mock top bar */}
                 <div className="flex items-center gap-2.5 px-3.5 py-2.5 border-b border-slate-100 dark:border-slate-800 bg-[#F8FAFC] dark:bg-slate-800/50">
-                  <div className="w-5 h-5 rounded-md bg-slate-900 flex items-center justify-center">
+                  <div className="w-5 h-5 rounded-md bg-slate-900 dark:bg-slate-700 flex items-center justify-center">
                     <ArrowRight className="w-3 h-3 text-teal-400" />
                   </div>
-                  <span className="text-xs font-semibold">PracticeNudge</span>
-                  <span className="text-[11.5px] text-slate-500 ml-2">Dashboard</span>
+                  <span className="text-xs font-semibold text-slate-900 dark:text-white">PracticeNudge</span>
+                  <span className="text-[11.5px] text-slate-500 dark:text-slate-400 ml-2">Dashboard</span>
                   <div className="flex-1" />
                   <span className="w-1.5 h-1.5 rounded-full bg-red-300" />
                   <span className="w-1.5 h-1.5 rounded-full bg-yellow-300" />
@@ -142,23 +142,23 @@ export default async function LandingPage() {
                 {/* Metrics row */}
                 <div className="grid grid-cols-4">
                   {[
-                    { lbl: "Total clients", val: "128", color: "text-slate-900" },
-                    { lbl: "MTD ready", val: "42", color: "text-green-700" },
-                    { lbl: "Follow-up due", val: "31", color: "text-amber-700" },
-                    { lbl: "High risk", val: "14", color: "text-red-700" },
+                    { lbl: "Total clients", val: "128", color: "text-slate-900 dark:text-white" },
+                    { lbl: "MTD ready", val: "42", color: "text-green-700 dark:text-green-400" },
+                    { lbl: "Follow-up due", val: "31", color: "text-amber-700 dark:text-amber-400" },
+                    { lbl: "High risk", val: "14", color: "text-red-700 dark:text-red-400" },
                   ].map((m, i) => (
-                    <div key={i} className={`px-4 py-3.5 ${i < 3 ? "border-r border-slate-100" : ""}`}>
-                      <div className="text-[11px] text-slate-500 mb-1">{m.lbl}</div>
+                    <div key={i} className={`px-4 py-3.5 ${i < 3 ? "border-r border-slate-100 dark:border-slate-800" : ""}`}>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mb-1">{m.lbl}</div>
                       <div className={`text-[22px] font-semibold tracking-tight ${m.color}`}>{m.val}</div>
                     </div>
                   ))}
                 </div>
                 {/* Chase list + funnel */}
-                <div className="grid grid-cols-2 border-t border-slate-100">
-                  <div className="px-4 py-3 border-r border-slate-100">
+                <div className="grid grid-cols-2 border-t border-slate-100 dark:border-slate-800">
+                  <div className="px-4 py-3 border-r border-slate-100 dark:border-slate-800">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold">Who needs chasing next</span>
-                      <span className="text-[11px] text-slate-500">Today · 5</span>
+                      <span className="text-xs font-semibold text-slate-900 dark:text-white">Who needs chasing next</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">Today · 5</span>
                     </div>
                     {[
                       { n: "Sarah W.", risk: "High" },
@@ -166,12 +166,12 @@ export default async function LandingPage() {
                       { n: "Roy B.", risk: "High" },
                       { n: "James P.", risk: "Med" },
                     ].map((x, i) => (
-                      <div key={i} className={`flex items-center gap-2 py-1.5 ${i > 0 ? "border-t border-slate-50" : ""}`}>
-                        <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-[9px] font-semibold text-slate-600">
+                      <div key={i} className={`flex items-center gap-2 py-1.5 ${i > 0 ? "border-t border-slate-50 dark:border-slate-800" : ""}`}>
+                        <div className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-[9px] font-semibold text-slate-600 dark:text-slate-300">
                           {x.n.split(" ").map(w => w[0]).join("")}
                         </div>
-                        <span className="text-[11px] font-medium text-slate-900 flex-1">{x.n}</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${x.risk === "High" ? "bg-red-50 text-red-700" : "bg-amber-50 text-amber-700"}`}>
+                        <span className="text-[11px] font-medium text-slate-900 dark:text-slate-200 flex-1">{x.n}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${x.risk === "High" ? "bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400" : "bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400"}`}>
                           {x.risk}
                         </span>
                       </div>
@@ -179,22 +179,22 @@ export default async function LandingPage() {
                   </div>
                   <div className="px-4 py-3">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold">Readiness funnel</span>
-                      <span className="text-[11px] text-slate-500">128 clients</span>
+                      <span className="text-xs font-semibold text-slate-900 dark:text-white">Readiness funnel</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">128 clients</span>
                     </div>
                     {[
-                      { stage: "Not assessed", pct: 14, color: "bg-slate-300" },
+                      { stage: "Not assessed", pct: 14, color: "bg-slate-300 dark:bg-slate-600" },
                       { stage: "Info missing", pct: 20, color: "bg-yellow-400" },
                       { stage: "Software chosen", pct: 11, color: "bg-teal-300" },
                       { stage: "Records ready", pct: 5, color: "bg-teal-500" },
                       { stage: "MTD ready", pct: 33, color: "bg-teal-700" },
                     ].map((f, i) => (
                       <div key={i} className="grid grid-cols-[80px_1fr_24px] gap-2 items-center py-0.5">
-                        <span className="text-[10px] text-slate-600">{f.stage}</span>
-                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <span className="text-[10px] text-slate-600 dark:text-slate-400">{f.stage}</span>
+                        <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                           <div className={`h-full ${f.color} rounded-full`} style={{ width: `${f.pct}%` }} />
                         </div>
-                        <span className="text-[10px] text-slate-700 text-right">{Math.round(128 * f.pct / 100)}</span>
+                        <span className="text-[10px] text-slate-700 dark:text-slate-300 text-right">{Math.round(128 * f.pct / 100)}</span>
                       </div>
                     ))}
                   </div>
