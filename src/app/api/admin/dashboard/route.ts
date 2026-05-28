@@ -40,7 +40,7 @@ export async function GET() {
 
   try {
     // Fetch summary stats
-    const [firmsRes, membersRes, clientsRes, requestsRes, completedRes] =
+    const [firmsRes, membersRes, clientsRes, requestsRes, completedRes, leadsRes] =
       await Promise.all([
         supabase.from("firms").select("id", { count: "exact", head: true }),
         supabase.from("firm_users").select("id", { count: "exact", head: true }),
@@ -50,6 +50,7 @@ export async function GET() {
           .from("document_requests")
           .select("id", { count: "exact", head: true })
           .eq("status", "completed"),
+        serviceSupabase.from("leads").select("id", { count: "exact", head: true }),
       ]);
 
     const totalFirms = firmsRes.count || 0;
@@ -57,6 +58,7 @@ export async function GET() {
     const totalClients = clientsRes.count || 0;
     const totalRequests = requestsRes.count || 0;
     const totalCompleted = completedRes.count || 0;
+    const totalLeads = leadsRes.count || 0;
 
     // Recent firms (up to 5, sorted by creation date DESC)
     const { data: recentFirmsData } = await supabase
@@ -161,6 +163,7 @@ export async function GET() {
         totalClients,
         totalRequests,
         totalCompleted,
+        totalLeads,
       },
       recentFirms,
       recentMembers,

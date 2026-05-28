@@ -41,6 +41,7 @@ interface DashboardStats {
   totalClients: number;
   totalRequests: number;
   totalCompleted: number;
+  totalLeads: number;
 }
 
 interface RecentFirm {
@@ -75,6 +76,7 @@ export default function AdminPage() {
     totalClients: 0,
     totalRequests: 0,
     totalCompleted: 0,
+    totalLeads: 0,
   });
   const [recentFirms, setRecentFirms] = useState<RecentFirm[]>([]);
   const [recentMembers, setRecentMembers] = useState<RecentMember[]>([]);
@@ -178,7 +180,7 @@ export default function AdminPage() {
         {!loading && !timedOut && (
           <>
             {/* Summary Cards */}
-            <div className="grid gap-4 md:grid-cols-5">
+            <div className="grid gap-4 md:grid-cols-6">
               <StatCard
                 title="Total Firms"
                 value={stats.totalFirms}
@@ -202,6 +204,12 @@ export default function AdminPage() {
                 value={stats.totalRequests}
                 icon={FileText}
                 href="/admin/usage"
+              />
+              <StatCard
+                title="Total Leads"
+                value={stats.totalLeads}
+                icon={UserPlus}
+                href="/admin/leads"
               />
               <StatCard
                 title="Completion Rate"
