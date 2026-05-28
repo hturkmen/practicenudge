@@ -12,6 +12,15 @@ function getResend() {
 
 export async function POST(request: Request) {
   try {
+    // Authenticate the user
+    const { createClient: createAuthClient } = await import("@/lib/supabase/server");
+    const authSupabase = createAuthClient();
+    const { data: { user } } = await authSupabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { email, role, firmId, firmName, inviterName } = body;
 
@@ -22,12 +31,44 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validate role to prevent privilege escalation
+    const validRoles = ["member", "admin"];
+    if (!validRoles.includes(role)) {
+      return NextResponse.json(
+        { error: "Invalid role. Must be 'member' or 'admin'." },
+        { status: 400 }
+      );
+    }
+
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: "Invalid email address" },
         { status: 400 }
+      );
+    }
+
+    // Verify the inviter belongs to this firm and has permission (owner or admin)
+    const authSupabaseForFirm = createAuthClient();
+    const { data: inviterFirmUser } = await authSupabaseForFirm
+      .from("firm_users")
+      .select("firm_id, role")
+      .eq("user_id", user.id)
+      .eq("firm_id", firmId)
+      .maybeSingle();
+
+    if (!inviterFirmUser) {
+      return NextResponse.json(
+        { error: "You do not belong to this firm" },
+        { status: 403 }
+      );
+    }
+
+    if (!["owner", "admin"].includes(inviterFirmUser.role)) {
+      return NextResponse.json(
+        { error: "Only owners and admins can invite team members" },
+        { status: 403 }
       );
     }
 
