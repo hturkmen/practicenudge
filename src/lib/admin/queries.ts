@@ -348,6 +348,14 @@ export async function getFirmDetail(
     .select("id", { count: "exact", head: true })
     .eq("firm_id", firmId);
 
+  // Fetch clients list (up to 200, sorted by name)
+  const { data: clientsData } = await supabase
+    .from("clients")
+    .select("id, name, email, phone, status, gdpr_consent, created_at")
+    .eq("firm_id", firmId)
+    .order("name", { ascending: true })
+    .limit(200);
+
   // Fetch document request count
   const { count: requestCount } = await supabase
     .from("document_requests")
@@ -378,6 +386,15 @@ export async function getFirmDetail(
   return {
     firm,
     members,
+    clients: (clientsData || []).map((c: any) => ({
+      id: c.id,
+      name: c.name,
+      email: c.email,
+      phone: c.phone,
+      status: c.status || "active",
+      gdpr_consent: c.gdpr_consent || false,
+      created_at: c.created_at,
+    })),
     total_clients: clientCount || 0,
     total_document_requests: requestCount || 0,
     subscription_history: (historyData || []).map((h: any) => ({

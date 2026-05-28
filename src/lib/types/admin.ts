@@ -120,6 +120,7 @@ export type FirmListItem = {
 export type FirmDetailResponse = {
   firm: FirmListItem;
   members: { id: string; name: string; email: string; role: string }[];
+  clients: { id: string; name: string; email: string | null; phone: string | null; status: string; gdpr_consent: boolean; created_at: string }[];
   total_clients: number;
   total_document_requests: number;
   subscription_history: {

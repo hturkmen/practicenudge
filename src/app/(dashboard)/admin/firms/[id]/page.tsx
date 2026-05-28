@@ -350,6 +350,77 @@ export default function FirmDetailPage() {
               </CardContent>
             </Card>
 
+            {/* Clients Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Clients
+                </CardTitle>
+                <CardDescription>
+                  {firmData.clients?.length || 0} client{(firmData.clients?.length || 0) !== 1 ? "s" : ""} registered under this firm
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                {!firmData.clients || firmData.clients.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p>No clients found for this firm.</p>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>GDPR Consent</TableHead>
+                        <TableHead>Created</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {firmData.clients.map((client) => (
+                        <TableRow key={client.id}>
+                          <TableCell className="font-medium">{client.name}</TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {client.email || "—"}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground">
+                            {client.phone || "—"}
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={`text-xs ${
+                              client.status === "active" ? "bg-green-100 text-green-700" :
+                              client.status === "on_hold" ? "bg-orange-100 text-orange-700" :
+                              client.status === "archived" ? "bg-gray-100 text-gray-700" :
+                              "bg-red-100 text-red-700"
+                            }`}>
+                              {client.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={`text-xs ${
+                              client.gdpr_consent ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                            }`}>
+                              {client.gdpr_consent ? "Yes" : "No"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground text-xs">
+                            {new Date(client.created_at).toLocaleDateString("en-GB", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Subscription History Table */}
             <Card>
               <CardHeader>
