@@ -106,16 +106,26 @@ export async function POST(
   const supabase = getServiceClient();
   const token = params.token;
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("clients")
     .update({
       gdpr_consent: true,
       gdpr_consented_at: new Date().toISOString(),
     })
-    .eq("gdpr_consent_token", token);
+    .eq("gdpr_consent_token", token)
+    .select("id")
+    .single();
 
   if (error) {
+    // PGRST116 = no rows matched (invalid token)
+    if (error.code === "PGRST116") {
+      return NextResponse.json({ error: "Invalid or expired consent token" }, { status: 404 });
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (!data) {
+    return NextResponse.json({ error: "Invalid or expired consent token" }, { status: 404 });
   }
 
   return NextResponse.json({ success: true });

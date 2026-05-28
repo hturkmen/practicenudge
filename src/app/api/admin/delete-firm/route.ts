@@ -73,11 +73,23 @@ export async function POST(request: Request) {
   }
 
   // Delete auth users completely (so they can register again with same email)
+  const deleteErrors: string[] = [];
   for (const userId of userIds) {
     // Don't delete the super admin's own account
     if (userId === user.id) continue;
-    await serviceSupabase.auth.admin.deleteUser(userId, false);
+    const { error: deleteUserError } = await serviceSupabase.auth.admin.deleteUser(userId, false);
+    if (deleteUserError) {
+      deleteErrors.push(`User ${userId}: ${deleteUserError.message}`);
+    }
   }
 
-  return NextResponse.json({ success: true, message: "Firm and all associated data deleted." });
+  if (deleteErrors.length > 0) {
+    console.error("[delete-firm] Some auth users failed to delete:", deleteErrors);
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: "Firm and all associated data deleted.",
+    ...(deleteErrors.length > 0 && { warnings: `${deleteErrors.length} auth user(s) could not be deleted` }),
+  });
 }

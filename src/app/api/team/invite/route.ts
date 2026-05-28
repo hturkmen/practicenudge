@@ -72,12 +72,13 @@ export async function POST(request: Request) {
         );
       }
 
-      // Send notification email
-      await getResend().emails.send({
-        from: "PracticeNudge <noreply@practicenudge.com>",
-        to: [email],
-        subject: `You've been added to ${firmName} on PracticeNudge`,
-        text: `Hi,
+      // Send notification email (non-fatal — user is already added)
+      try {
+        await getResend().emails.send({
+          from: "PracticeNudge <noreply@practicenudge.com>",
+          to: [email],
+          subject: `You've been added to ${firmName} on PracticeNudge`,
+          text: `Hi,
 
 ${inviterName || "Your colleague"} has added you to ${firmName} on PracticeNudge.
 
@@ -87,17 +88,21 @@ Your role: ${role}
 
 Best,
 PracticeNudge`,
-      });
+        });
+      } catch (emailError) {
+        console.error("[team-invite] Notification email failed:", emailError);
+      }
 
       return NextResponse.json({ success: true, status: "added" });
     }
 
     // User doesn't exist — send invitation email to register
-    await getResend().emails.send({
-      from: "PracticeNudge <noreply@practicenudge.com>",
-      to: [email],
-      subject: `${inviterName || "Your colleague"} invited you to ${firmName} on PracticeNudge`,
-      text: `Hi,
+    try {
+      await getResend().emails.send({
+        from: "PracticeNudge <noreply@practicenudge.com>",
+        to: [email],
+        subject: `${inviterName || "Your colleague"} invited you to ${firmName} on PracticeNudge`,
+        text: `Hi,
 
 ${inviterName || "Your colleague"} has invited you to join ${firmName} on PracticeNudge — a client readiness tracking tool for UK accountants.
 
@@ -108,7 +113,14 @@ Once you register, you'll automatically be added to the ${firmName} team.
 
 Best,
 PracticeNudge`,
-    });
+      });
+    } catch (emailError) {
+      console.error("[team-invite] Invitation email failed:", emailError);
+      return NextResponse.json(
+        { error: "Failed to send invitation email. Please check the email address and try again." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true, status: "invited" });
   } catch (error: any) {

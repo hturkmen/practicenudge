@@ -21,11 +21,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "firmName and email required" }, { status: 400 });
   }
 
-  // Send welcome email to the new user
-  await sendWelcomeEmail(email, firmName);
+  // Send welcome email to the new user (non-fatal if it fails)
+  try {
+    await sendWelcomeEmail(email, firmName);
+  } catch (error) {
+    console.error("[notify-new-firm] Welcome email failed:", error);
+  }
 
-  // Notify super admin
-  await notifyNewFirmRegistered(firmName, email);
+  // Notify super admin (non-fatal if it fails)
+  try {
+    await notifyNewFirmRegistered(firmName, email);
+  } catch (error) {
+    console.error("[notify-new-firm] Admin notification failed:", error);
+  }
 
   return NextResponse.json({ success: true });
 }

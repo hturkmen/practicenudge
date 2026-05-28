@@ -64,18 +64,34 @@ export async function POST(request: Request) {
   // Cascade logic
   if (newStatus === "on_hold" || newStatus === "inactive" || newStatus === "archived") {
     // Put all active/pending/in_progress/overdue requests on hold
-    await supabase
+    const { error: cascadeError } = await supabase
       .from("document_requests")
       .update({ status: "on_hold" })
       .eq("client_id", clientId)
       .in("status", ["pending", "in_progress", "overdue"]);
+
+    if (cascadeError) {
+      console.error("Cascade update failed (requests → on_hold):", cascadeError);
+      return NextResponse.json(
+        { error: "Client status updated but failed to update related requests: " + cascadeError.message },
+        { status: 500 }
+      );
+    }
   } else if (newStatus === "active") {
     // Restore on_hold requests to pending (only if they were put on hold by client status change)
-    await supabase
+    const { error: cascadeError } = await supabase
       .from("document_requests")
       .update({ status: "pending" })
       .eq("client_id", clientId)
       .eq("status", "on_hold");
+
+    if (cascadeError) {
+      console.error("Cascade update failed (requests → pending):", cascadeError);
+      return NextResponse.json(
+        { error: "Client status updated but failed to restore related requests: " + cascadeError.message },
+        { status: 500 }
+      );
+    }
   }
 
   return NextResponse.json({ success: true, status: newStatus });
