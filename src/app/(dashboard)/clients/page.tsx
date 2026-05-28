@@ -201,18 +201,25 @@ export default function ClientsPage() {
   };
 
   const deleteClient = async (clientId: string) => {
-    const { error } = await supabase
-      .from("clients")
-      .delete()
-      .eq("id", clientId);
+    try {
+      const res = await fetch("/api/clients/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId }),
+      });
 
-    if (error) {
-      toast.error("Failed to delete client: " + error.message);
-      return;
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || "Failed to delete client");
+        return;
+      }
+
+      toast.success("Client and all associated data deleted");
+      setDeleteClientId(null);
+      fetchClients();
+    } catch {
+      toast.error("Failed to delete client");
     }
-    toast.success("Client deleted");
-    setDeleteClientId(null);
-    fetchClients();
   };
 
   return (
