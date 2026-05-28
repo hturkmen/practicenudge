@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
 
 function getResend() {
   const apiKey = process.env.RESEND_API_KEY;
@@ -7,6 +8,13 @@ function getResend() {
     throw new Error("RESEND_API_KEY is not set");
   }
   return new Resend(apiKey);
+}
+
+function getServiceSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
 }
 
 // Google Sheet link for the MTD Client Readiness Tracker Template
@@ -119,6 +127,17 @@ Time: ${new Date().toISOString()}
 
 ---
 Follow up in 2-3 days with pilot offer.`,
+    });
+
+    // 3. Save lead to database
+    const supabase = getServiceSupabase();
+    await supabase.from("leads").insert({
+      name: safeName,
+      email,
+      practice: safePractice,
+      client_count: safeClients || null,
+      source: "mtd_tracker",
+      ip_address: ip,
     });
 
     return NextResponse.json({ success: true });
