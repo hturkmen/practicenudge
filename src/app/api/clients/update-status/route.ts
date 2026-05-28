@@ -29,26 +29,36 @@ export async function POST(request: Request) {
   }
 
   // Verify ownership
-  const { data: firmUser } = await supabase
+  const { data: firmUser, error: firmUserError } = await supabase
     .from("firm_users")
     .select("firm_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
   if (!firmUser) {
+    console.error("[update-status] No firm_user found for user:", user.id, firmUserError);
     return NextResponse.json({ error: "No firm found" }, { status: 403 });
   }
 
   // Verify client belongs to user's firm
-  const { data: client } = await supabase
+  // First fetch without firm_id filter to get better error diagnostics
+  const { data: client, error: clientError } = await supabase
     .from("clients")
     .select("id, firm_id, status")
     .eq("id", clientId)
-    .eq("firm_id", firmUser.firm_id)
-    .single();
+    .maybeSingle();
+
+  if (clientError) {
+    console.error("[update-status] DB error fetching client:", clientError);
+    return NextResponse.json({ error: "Failed to fetch client" }, { status: 500 });
+  }
 
   if (!client) {
     return NextResponse.json({ error: "Client not found" }, { status: 404 });
+  }
+
+  if (client.firm_id !== firmUser.firm_id) {
+    return NextResponse.json({ error: "Client does not belong to your firm" }, { status: 403 });
   }
 
   // Update client status
