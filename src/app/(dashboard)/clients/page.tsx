@@ -55,6 +55,7 @@ type ConsentSummary = "all_accepted" | "some_pending" | "some_rejected" | "no_re
 
 interface ClientWithConsent extends Client {
   consentSummary?: ConsentSummary;
+  firmName?: string;
 }
 
 function getConsentSummary(consents: { status: string }[]): ConsentSummary {
@@ -109,13 +110,29 @@ export default function ClientsPage() {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showCsvDialog, setShowCsvDialog] = useState(false);
   const [deleteClientId, setDeleteClientId] = useState<string | null>(null);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const supabase = createClient();
+
+  // Check if user is super admin
+  useEffect(() => {
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("super_admins")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setIsSuperAdmin(!!data);
+    }
+    checkAdmin();
+  }, [supabase]);
 
   const fetchClients = useCallback(async () => {
     setLoading(true);
     let query = supabase
       .from("clients")
-      .select("*, client_consents(status)")
+      .select("*, client_consents(status), firms(name)")
       .order("created_at", { ascending: false });
 
     if (statusFilter !== "all") {
@@ -131,6 +148,7 @@ export default function ClientsPage() {
     const { data } = await query;
     const clientsWithConsent: ClientWithConsent[] = (data || []).map((c: any) => ({
       ...c,
+      firmName: c.firms?.name || "—",
       consentSummary: getConsentSummary(c.client_consents || []),
     }));
     setClients(clientsWithConsent);
@@ -299,6 +317,7 @@ export default function ClientsPage() {
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Phone</TableHead>
+                  {isSuperAdmin && <TableHead>Firm</TableHead>}
                   <TableHead>Type</TableHead>
                   <TableHead>MTD Threshold</TableHead>
                   <TableHead>Consent</TableHead>
@@ -323,6 +342,13 @@ export default function ClientsPage() {
                     <TableCell className="text-muted-foreground">
                       {client.phone || "—"}
                     </TableCell>
+                    {isSuperAdmin && (
+                      <TableCell>
+                        <Badge variant="outline" className="text-xs">
+                          {client.firmName || "—"}
+                        </Badge>
+                      </TableCell>
+                    )}
                     <TableCell>
                       <Badge variant="secondary" className="text-xs">
                         {clientTypeLabels[client.client_type] ||
