@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { MTDLeadForm } from "./lead-form";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   FileSpreadsheet,
   Download,
@@ -41,6 +42,63 @@ export const metadata: Metadata = {
     canonical: "https://www.practicenudge.com/mtd",
   },
 };
+
+function TrackerPreview() {
+  const rows: {
+    name: string;
+    status: string;
+    missing: string;
+    risk: "Low" | "Med" | "High";
+  }[] = [
+    { name: "Sarah Williams", status: "Ready", missing: "—", risk: "Low" },
+    { name: "Ahmed Khan", status: "In progress", missing: "Software confirm", risk: "Med" },
+    { name: "Roy Baxter", status: "Not started", missing: "Income band, software", risk: "High" },
+    { name: "James Patel", status: "Ready", missing: "—", risk: "Low" },
+    { name: "Fatima Noor", status: "In progress", missing: "Bank feed link", risk: "Med" },
+  ];
+
+  const riskStyles: Record<string, string> = {
+    Low: "bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-400",
+    Med: "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-400",
+    High: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-400",
+  };
+
+  return (
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18),0_4px_12px_rgba(15,23,42,0.04)] overflow-hidden">
+      <div className="flex items-center gap-2.5 px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+        <FileSpreadsheet className="h-4 w-4 text-teal-700 dark:text-teal-400 shrink-0" />
+        <span className="text-[13px] font-semibold text-slate-900 dark:text-white">
+          MTD Client Readiness Tracker
+        </span>
+        <div className="flex-1" />
+        <span className="w-2 h-2 rounded-full bg-red-300" />
+        <span className="w-2 h-2 rounded-full bg-yellow-300" />
+        <span className="w-2 h-2 rounded-full bg-green-300" />
+      </div>
+      <div className="grid grid-cols-[1.3fr_1fr_1.2fr_0.7fr] gap-2 px-4 py-2 text-[10.5px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800">
+        <span>Client</span>
+        <span>Status</span>
+        <span>Missing</span>
+        <span>Risk</span>
+      </div>
+      {rows.map((r) => (
+        <div
+          key={r.name}
+          className="grid grid-cols-[1.3fr_1fr_1.2fr_0.7fr] gap-2 px-4 py-2.5 text-[12px] border-b border-slate-50 dark:border-slate-800/60 last:border-0 items-center"
+        >
+          <span className="font-medium text-slate-900 dark:text-white truncate">{r.name}</span>
+          <span className="text-slate-600 dark:text-slate-400">{r.status}</span>
+          <span className="text-slate-500 dark:text-slate-500 truncate">{r.missing}</span>
+          <span
+            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-medium w-fit ${riskStyles[r.risk]}`}
+          >
+            {r.risk}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function MTDLandingPage() {
   const jsonLd = {
@@ -126,60 +184,79 @@ export default function MTDLandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="py-16 md:py-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge className="mb-4" variant="outline">
-            <FileSpreadsheet className="h-3 w-3 mr-1" />
-            Free Google Sheet Template
-          </Badge>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-            Are your clients ready for MTD?
-            <br />
-            <span className="text-primary">Find out in 10 minutes.</span>
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Download our free MTD Client Readiness Tracker — a simple Google Sheet
-            that shows you exactly which clients are ready, which are at risk, and
-            what&apos;s missing.
-          </p>
+      <section className="py-16 md:py-20 px-4 md:px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[5fr_6fr] gap-12 items-center">
+          <div className="text-center md:text-left">
+            <Badge className="mb-4" variant="outline">
+              <FileSpreadsheet className="h-3 w-3 mr-1" />
+              Free Google Sheet Template
+            </Badge>
+            <h1 className="text-4xl md:text-[52px] leading-[1.08] font-bold tracking-tight mb-5">
+              Know who&apos;s MTD-ready.
+              <br />
+              <span className="text-teal-700 dark:text-teal-400">One glance, not one guess.</span>
+            </h1>
+            <p className="text-lg text-muted-foreground mb-7 max-w-md mx-auto md:mx-0">
+              Every client. Their MTD status. What&apos;s missing. Colour-coded,
+              in one free spreadsheet.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+              <a href="#get-tracker">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Get the free tracker
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              Free forever · No credit card · Ready in 10 minutes
+            </p>
+          </div>
+
+          <div className="hidden md:block">
+            <TrackerPreview />
+          </div>
         </div>
       </section>
 
       {/* What's Inside + Form */}
-      <section className="py-12 px-4 bg-gray-50 dark:bg-slate-900">
+      <section id="get-tracker" className="py-12 px-4 bg-gray-50 dark:bg-slate-900 scroll-mt-6">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
           {/* What's Inside */}
           <div>
-            <h2 className="text-2xl font-bold mb-6">What&apos;s inside the tracker</h2>
-            <div className="space-y-4">
+            <h2 className="text-2xl font-bold mb-6">What&apos;s inside</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
               {[
                 {
                   icon: Users,
                   title: "Client overview",
-                  desc: "Track every client's MTD status, software, and income band in one place.",
+                  desc: "One row per client. Status at a glance.",
                 },
                 {
                   icon: AlertTriangle,
-                  title: "Automatic risk scoring",
-                  desc: "Built-in formula flags high-risk clients so you know who to chase first.",
+                  title: "Risk scoring",
+                  desc: "Colour-coded. Know who to chase first.",
                 },
                 {
                   icon: FileSpreadsheet,
-                  title: "Missing info checklist",
-                  desc: "See exactly what's missing for each client — no more guessing.",
+                  title: "Missing info",
+                  desc: "See exactly what's still needed.",
                 },
                 {
                   icon: Download,
                   title: "Ready to use",
-                  desc: "Pre-filled with sample data. Make a copy and start tracking in minutes.",
+                  desc: "Sample data included. Copy and go.",
                 },
               ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3">
-                  <item.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-sm">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                <div
+                  key={item.title}
+                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-400 flex items-center justify-center mb-3">
+                    <item.icon className="h-4 w-4" />
                   </div>
+                  <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
+                  <p className="text-[13px] text-muted-foreground leading-snug">{item.desc}</p>
                 </div>
               ))}
             </div>
