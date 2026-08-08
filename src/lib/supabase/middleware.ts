@@ -39,7 +39,7 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Public routes — never redirect these
-  const publicPaths = ["/", "/login", "/register"];
+  const publicPaths = ["/", "/login", "/register", "/sitemap.xml", "/robots.txt"];
   const publicPrefixes = [
     "/upload/",
     "/api/",
