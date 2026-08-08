@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Free MTD Client Readiness Tracker | PracticeNudge",
+  title: "Free MTD Client Readiness Tracker",
   description:
     "Download our free MTD Client Readiness Tracker — a Google Sheet template that shows which clients are MTD-ready, who needs chasing, and what documents are missing. Built for UK accountants.",
   keywords: [

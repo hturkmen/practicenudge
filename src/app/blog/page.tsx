@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     description:
       "Practical guides on Making Tax Digital compliance, client readiness tracking, and document collection.",
   },
+  alternates: {
+    canonical: "https://www.practicenudge.com/blog",
+  },
 };
 
 const posts = [
