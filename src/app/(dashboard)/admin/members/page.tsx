@@ -1,5 +1,7 @@
 "use client";
 
+import { getMemberInsights } from "@/lib/admin/member-insights";
+import { memberDate } from "@/components/admin/member-insights";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AdminGuard } from "@/components/admin/admin-guard";
@@ -375,8 +377,11 @@ export default function MembersListPage() {
                         className="cursor-pointer select-none"
                         onClick={() => handleSort("created_at")}
                       >
-                        Registered {getSortIcon("created_at")}
+                        Joined firm {getSortIcon("created_at")}
                       </TableHead>
+                      <TableHead>Firm clients</TableHead>
+                      <TableHead>Last sign-in</TableHead>
+                      <TableHead>Review</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -420,6 +425,9 @@ export default function MembersListPage() {
                             year: "numeric",
                           })}
                         </TableCell>
+                        <TableCell className="tabular-nums">{member.firm_client_count ?? "Not recorded"}</TableCell>
+                        <TableCell className="text-sm whitespace-nowrap">{memberDate(member.last_sign_in_at)}</TableCell>
+                        <TableCell><Badge variant={getMemberInsights(member).signals.length ? "destructive" : "outline"}>{getMemberInsights(member).review}</Badge></TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

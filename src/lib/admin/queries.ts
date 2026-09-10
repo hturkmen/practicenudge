@@ -4,6 +4,9 @@ import type {
   MembersListRequest,
   MembersListResponse,
   MemberListItem,
+  MemberDetailResponse,
+  MemberUsage,
+  SignupNotification,
   FirmsListRequest,
   FirmsListResponse,
   FirmListItem,
@@ -16,172 +19,57 @@ import type {
   MemberActionType,
 } from "@/lib/types/admin";
 
-/**
- * Fetches a paginated, searchable, filterable list of members.
- * Supports pagination (20/page default), search (min 2 chars, case-insensitive on name/email/firm),
- * filters (firm, role, plan, status with AND logic), and sorting.
- */
+/** The supplied client must be service-role, created only after checking super_admins. */
 export async function getMembers(
   supabase: SupabaseClient,
   params: MembersListRequest
 ): Promise<MembersListResponse> {
   const page = params.page ?? 1;
   const pageSize = Math.min(params.page_size ?? 20, 100);
-  const sortBy = params.sort_by ?? "created_at";
-  const sortOrder = params.sort_order ?? "desc";
-
-  // Build the query on firm_users with a join to firms
-  let query = supabase
-    .from("firm_users")
-    .select("id, user_id, role, status, created_at, firm_id, firms(id, name, email, plan)", {
-      count: "exact",
-    });
-
-  // Apply filters (AND logic)
-  if (params.firm_id) {
-    query = query.eq("firm_id", params.firm_id);
+  const sortable = ["created_at", "name", "email", "firm_name", "role", "plan", "status", "last_sign_in_at", "firm_client_count"];
+  const sortBy = sortable.includes(params.sort_by || "") ? params.sort_by! : "created_at";
+  let query = supabase.from("admin_member_overview").select("*", { count: "exact" });
+  for (const key of ["firm_id", "role", "status", "plan"] as const) {
+    if (params[key]) query = query.eq(key, params[key]);
   }
-  if (params.role) {
-    query = query.eq("role", params.role);
+  // Strip PostgREST filter grammar/wildcards; search must never inject another predicate.
+  const search = (params.search || "").replace(/[\\%_,()."']/g, " ").trim().slice(0, 200);
+  if (search.length >= 2) {
+    query = query.or("name.ilike.%" + search + "%,email.ilike.%" + search + "%,firm_name.ilike.%" + search + "%");
   }
-  if (params.status) {
-    query = query.eq("status", params.status);
-  }
-  if (params.plan) {
-    query = query.eq("firms.plan", params.plan);
-  }
-
-  // Apply sorting
-  const ascending = sortOrder === "asc";
-  if (sortBy === "firm_name") {
-    query = query.order("name", { ascending, referencedTable: "firms" });
-  } else if (sortBy === "plan") {
-    query = query.order("plan", { ascending, referencedTable: "firms" });
-  } else {
-    query = query.order(sortBy, { ascending });
-  }
-
-  // Apply pagination
   const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-  query = query.range(from, to);
-
-  const { data, error, count } = await query;
-
-  if (error) {
-    throw new Error(`Failed to fetch members: ${error.message}`);
-  }
-
-  // Get user IDs to fetch auth user data (name/email)
-  const userIds = (data || []).map((row: any) => row.user_id);
-
-  // Fetch user metadata from auth.users via admin API
-  let userMap: Record<string, { name: string; email: string }> = {};
-  if (userIds.length > 0) {
-    const { data: usersData } = await supabase.auth.admin.listUsers({
-      perPage: userIds.length,
-    });
-
-    if (usersData?.users) {
-      for (const u of usersData.users) {
-        if (userIds.includes(u.id)) {
-          userMap[u.id] = {
-            name: (u.user_metadata?.full_name as string) || u.email?.split("@")[0] || "Unknown",
-            email: u.email || "",
-          };
-        }
-      }
-    }
-  }
-
-  // If we have a search term, we need to filter results after fetching user data
-  // because name/email come from auth.users which can't be filtered in the DB query
-  let members: MemberListItem[] = (data || []).map((row: any) => {
-    const firm = row.firms as any;
-    const user = userMap[row.user_id] || { name: "Unknown", email: "" };
-    return {
-      id: row.id,
-      user_id: row.user_id,
-      name: user.name,
-      email: user.email,
-      firm_name: firm?.name || "",
-      firm_id: row.firm_id,
-      role: row.role,
-      plan: firm?.plan || "free",
-      status: row.status || "active",
-      created_at: row.created_at,
-    };
-  });
-
-  // Apply search filter (min 2 chars, case-insensitive on name/email/firm name)
-  let total = count ?? 0;
-  if (params.search && params.search.length >= 2) {
-    const searchLower = params.search.toLowerCase();
-    members = members.filter(
-      (m) =>
-        m.name.toLowerCase().includes(searchLower) ||
-        m.email.toLowerCase().includes(searchLower) ||
-        m.firm_name.toLowerCase().includes(searchLower)
-    );
-    total = members.length;
-  }
-
-  const totalPages = Math.ceil(total / pageSize);
-
+  const { data, error, count } = await query
+    .order(sortBy, { ascending: params.sort_order === "asc", nullsFirst: false })
+    .order("id", { ascending: true }).range(from, from + pageSize - 1);
+  if (error) throw new Error("Failed to fetch members: " + error.message);
   return {
-    data: members,
-    pagination: {
-      page,
-      page_size: pageSize,
-      total,
-      total_pages: totalPages,
-    },
+    data: (data || []) as MemberListItem[],
+    pagination: { page, page_size: pageSize, total: count ?? 0, total_pages: Math.ceil((count ?? 0) / pageSize) },
   };
 }
 
-/**
- * Fetches detailed information about a single member including their activity log.
- */
-export async function getMemberDetail(
-  supabase: SupabaseClient,
-  memberId: string
-): Promise<{ member: MemberListItem; activity_log: ActivityLogEntry[] }> {
-  // Fetch the firm_user record with firm data
-  const { data: firmUser, error: fetchError } = await supabase
-    .from("firm_users")
-    .select("id, user_id, role, status, created_at, firm_id, firms(id, name, email, plan)")
-    .eq("id", memberId)
-    .single();
-
-  if (fetchError || !firmUser) {
-    throw new Error(`Failed to fetch member: ${fetchError?.message || "Not found"}`);
+export async function getMemberDetail(supabase: SupabaseClient, memberId: string): Promise<MemberDetailResponse | null> {
+  const { data: member, error } = await supabase.from("admin_member_overview").select("*").eq("id", memberId).maybeSingle();
+  if (error) throw new Error("Failed to fetch member: " + error.message);
+  if (!member) return null;
+  const [usage, activity, notification, firmActivity] = await Promise.all([
+    supabase.rpc("admin_member_usage", { p_member_id: memberId }),
+    getActivityLog(supabase, member.user_id, { limit: 100, firm_id: member.firm_id }),
+    supabase.from("admin_signup_notifications").select("status, attempts, sent_at, last_error").eq("member_id", memberId).eq("kind", "admin_registration").maybeSingle(),
+    supabase.from("activity_logs").select("id, action, created_at").eq("firm_id", member.firm_id)
+      .order("created_at", { ascending: false }).limit(20),
+  ]);
+  // A failed query is not evidence of zero usage or a clean account.
+  if (usage.error || !usage.data || notification.error || firmActivity.error) {
+    throw new Error("Member usage could not be loaded. Check migration 015 and database access.");
   }
-
-  // Fetch user metadata from auth
-  const { data: userData } = await supabase.auth.admin.getUserById(firmUser.user_id);
-  const user = userData?.user;
-  const name = (user?.user_metadata?.full_name as string) || user?.email?.split("@")[0] || "Unknown";
-  const email = user?.email || "";
-
-  const firm = firmUser.firms as any;
-
-  const member: MemberListItem = {
-    id: firmUser.id,
-    user_id: firmUser.user_id,
-    name,
-    email,
-    firm_name: firm?.name || "",
-    firm_id: firmUser.firm_id,
-    role: firmUser.role,
-    plan: firm?.plan || "free",
-    status: firmUser.status || "active",
-    created_at: firmUser.created_at,
+  return {
+    member: member as MemberListItem,
+    usage: usage.data as MemberUsage,
+    activity_log: activity,
+    signup_notification: notification.data as SignupNotification | null,
+    firm_activity: firmActivity.data || [],
   };
-
-  // Fetch activity log for this user (last 100 entries, sorted by timestamp DESC)
-  const activityLog = await getActivityLog(supabase, firmUser.user_id, { limit: 100 });
-
-  return { member, activity_log: activityLog };
 }
 
 /**
@@ -216,7 +104,13 @@ export async function getFirms(
     query = query.gte("created_at", params.date_from);
   }
   if (params.date_to) {
-    query = query.lte("created_at", params.date_to);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(params.date_to)) {
+      const nextDay = new Date(params.date_to + "T00:00:00Z");
+      nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+      query = query.lt("created_at", nextDay.toISOString());
+    } else {
+      query = query.lte("created_at", params.date_to);
+    }
   }
 
   // Order by creation date descending
@@ -647,6 +541,8 @@ export async function getActivityLog(
     .select("id, action_type, description, related_entity_name, metadata, created_at")
     .eq("user_id", userId);
 
+  if (params.firm_id) query = query.eq("firm_id", params.firm_id);
+
   // Apply action type filter
   if (params.action_type) {
     query = query.eq("action_type", params.action_type);
@@ -657,7 +553,13 @@ export async function getActivityLog(
     query = query.gte("created_at", params.date_from);
   }
   if (params.date_to) {
-    query = query.lte("created_at", params.date_to);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(params.date_to)) {
+      const nextDay = new Date(params.date_to + "T00:00:00Z");
+      nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+      query = query.lt("created_at", nextDay.toISOString());
+    } else {
+      query = query.lte("created_at", params.date_to);
+    }
   }
 
   // Order by timestamp descending and limit

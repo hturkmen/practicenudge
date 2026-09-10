@@ -7,6 +7,10 @@ export type MemberStatus = "active" | "suspended";
 export type AdminActionType = "role_change" | "plan_change" | "suspend" | "reactivate";
 
 export type MemberActionType =
+  | "registered"
+  | "document_request_created"
+  | "document_request_updated"
+  | "template_saved"
   | "login"
   | "client_added"
   | "client_updated"
@@ -82,6 +86,41 @@ export type MemberListItem = {
   plan: "free" | "starter" | "pro";
   status: MemberStatus;
   created_at: string;
+  account_created_at?: string;
+  email_confirmed_at?: string | null;
+  last_sign_in_at?: string | null;
+  last_activity_at?: string | null;
+  providers?: string[];
+  firm_client_count?: number;
+  firm_request_count?: number;
+};
+
+export type MemberUsage = {
+  clients: number;
+  active_clients: number;
+  requests: number;
+  completed_requests: number;
+  overdue_requests: number;
+  uploaded_files: number;
+  custom_templates: number;
+  member_actions_30d: number;
+  notifications: { channel: string; status: string; total: number }[];
+  templates: { id: string; name: string; is_system: boolean; requests: number }[];
+};
+
+export type SignupNotification = {
+  status: "pending" | "processing" | "sent" | "failed" | "review_required";
+  attempts: number;
+  sent_at: string | null;
+  last_error: string | null;
+};
+
+export type MemberDetailResponse = {
+  member: MemberListItem;
+  usage: MemberUsage;
+  activity_log: ActivityLogEntry[];
+  signup_notification: SignupNotification | null;
+  firm_activity: { id: string; action: string; created_at: string }[];
 };
 
 // Firms API
@@ -174,6 +213,7 @@ export type FirmUsageItem = {
 // Activity Log API
 
 export type ActivityLogRequest = {
+  firm_id?: string;
   action_type?: string;
   date_from?: string;
   date_to?: string;

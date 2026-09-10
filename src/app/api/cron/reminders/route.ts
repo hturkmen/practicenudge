@@ -1,3 +1,5 @@
+import { processSignupNotifications } from "@/lib/email/signup-notifications";
+import { hasBearerSecret } from "@/lib/admin/webhook-auth";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendReminderEmail } from "@/lib/email/resend";
@@ -13,10 +15,14 @@ export async function GET(request: Request) {
   );
 
   // Verify cron secret (Vercel Cron)
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!hasBearerSecret(request, process.env.CRON_SECRET)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // Daily safety net; immediate signup delivery is driven by the database webhook.
+  let signupNotifications;
+  try { signupNotifications = await processSignupNotifications(supabase); }
+  catch { signupNotifications = { error: "Signup queue unavailable" }; }
 
   const now = new Date();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.practicenudge.com";
@@ -237,6 +243,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     success: true,
+    signupNotifications,
     processed: requests.length,
     emailsSent,
     smsSent,

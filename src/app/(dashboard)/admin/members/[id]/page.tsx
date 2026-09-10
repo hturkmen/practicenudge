@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { MemberInsights } from "@/components/admin/member-insights";
 import { AdminGuard } from "@/components/admin/admin-guard";
 import { ConfirmationDialog } from "@/components/admin/confirmation-dialog";
 import { ActivityLogTable } from "@/components/admin/activity-log-table";
@@ -26,13 +27,15 @@ import {
 } from "@/components/ui/select";
 import { Loader2, ArrowLeft, User, Activity } from "lucide-react";
 import { toast } from "sonner";
-import type { MemberListItem, ActivityLogEntry } from "@/lib/types/admin";
+import type { MemberListItem, ActivityLogEntry, MemberDetailResponse } from "@/lib/types/admin";
 
 export default function MemberDetailPage() {
   const params = useParams();
   const memberId = params.id as string;
 
   // Member state
+  const [detail, setDetail] = useState<MemberDetailResponse | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [member, setMember] = useState<MemberListItem | null>(null);
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,19 +58,21 @@ export default function MemberDetailPage() {
   // Fetch member detail
   const fetchMember = useCallback(async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const res = await fetch(`/api/admin/members/${memberId}`);
       if (!res.ok) {
         const errorData = await res.json();
-        toast.error(errorData.message || "Failed to fetch member details");
+        setLoadError(errorData.message || "Failed to fetch member details");
         return;
       }
       const data = await res.json();
+      setDetail(data);
       setMember(data.member);
       setSelectedRole(data.member.role);
       setActivityLog(data.activity_log || []);
     } catch {
-      toast.error("Failed to fetch member details");
+      setLoadError("Failed to fetch member details. Please retry.");
     } finally {
       setLoading(false);
     }
@@ -81,6 +86,7 @@ export default function MemberDetailPage() {
   const fetchActivityLog = useCallback(async () => {
     try {
       const queryParams = new URLSearchParams();
+      if (member?.firm_id) queryParams.set("firm_id", member.firm_id);
       if (actionTypeFilter && actionTypeFilter !== "all") {
         queryParams.set("action_type", actionTypeFilter);
       }
@@ -102,7 +108,7 @@ export default function MemberDetailPage() {
     } catch {
       toast.error("Failed to fetch activity log");
     }
-  }, [member?.user_id, actionTypeFilter, dateFrom, dateTo]);
+  }, [member?.user_id, member?.firm_id, actionTypeFilter, dateFrom, dateTo]);
 
   // Re-fetch activity log when filters change
   useEffect(() => {
@@ -277,6 +283,10 @@ export default function MemberDetailPage() {
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
+        ) : loadError ? (
+          <Card><CardContent className="space-y-4 py-10 text-center">
+            <p role="alert">{loadError}</p><Button onClick={fetchMember}>Retry</Button>
+          </CardContent></Card>
         ) : !member ? (
           <Card>
             <CardContent className="py-20 text-center">
@@ -358,7 +368,7 @@ export default function MemberDetailPage() {
                   {/* Registration Date */}
                   <div className="space-y-1">
                     <Label className="text-sm text-muted-foreground">
-                      Registered
+                      Joined firm
                     </Label>
                     <p className="font-medium">
                       {new Date(member.created_at).toLocaleDateString("en-GB", {
@@ -394,6 +404,8 @@ export default function MemberDetailPage() {
               </CardContent>
             </Card>
 
+            {detail && <MemberInsights {...detail} member={member} />}
+
             {/* Activity Log Card */}
             <Card>
               <CardHeader>
@@ -402,7 +414,7 @@ export default function MemberDetailPage() {
                   <div>
                     <CardTitle>Activity Log</CardTitle>
                     <CardDescription>
-                      Last 100 actions sorted by most recent
+                      Last 100 actions in this firm. Individual tracking starts with the observability update; earlier actions are not reconstructed.
                     </CardDescription>
                   </div>
                 </div>
@@ -424,6 +436,10 @@ export default function MemberDetailPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Actions</SelectItem>
+                        <SelectItem value="registered">Joined firm</SelectItem>
+                        <SelectItem value="document_request_created">Request created</SelectItem>
+                        <SelectItem value="document_request_updated">Request updated</SelectItem>
+                        <SelectItem value="template_saved">Template saved</SelectItem>
                         <SelectItem value="login">Login</SelectItem>
                         <SelectItem value="client_added">
                           Client Added

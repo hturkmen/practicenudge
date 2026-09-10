@@ -4,6 +4,10 @@ import { getActivityLog } from "@/lib/admin/queries";
 
 const VALID_ACTION_TYPES = [
   "login",
+  "registered",
+  "document_request_created",
+  "document_request_updated",
+  "template_saved",
   "client_added",
   "client_updated",
   "document_request_sent",
@@ -51,6 +55,15 @@ export async function GET(
   const dateTo = searchParams.get("date_to") || undefined;
   const limitParam = searchParams.get("limit");
 
+  for (const date of [dateFrom, dateTo]) {
+    if (date && !Number.isFinite(Date.parse(date))) {
+      return NextResponse.json({ message: "Invalid activity date" }, { status: 400 });
+    }
+  }
+  if (dateFrom && dateTo && Date.parse(dateFrom) > Date.parse(dateTo)) {
+    return NextResponse.json({ message: "From date must precede To date" }, { status: 400 });
+  }
+
   // Validate action_type
   if (actionType && !VALID_ACTION_TYPES.includes(actionType)) {
     return NextResponse.json(
@@ -75,6 +88,7 @@ export async function GET(
       date_from: dateFrom,
       date_to: dateTo,
       limit,
+      firm_id: searchParams.get("firm_id") || undefined,
     });
 
     return NextResponse.json({ data: entries });

@@ -36,6 +36,9 @@ export default function DashboardLayout({
       }
 
       setFirmEmail(user.email || "");
+      // Best-effort immediate delivery, independent of who created the firm.
+      // The durable database outbox + webhook/cron handles users who never visit this page.
+      fetch("/api/admin/notify-new-firm", { method: "POST" }).catch(() => {});
 
       // Fetch firm data
       try {
@@ -71,12 +74,7 @@ export default function DashboardLayout({
               });
               firmUser = { firm_id: newFirm.id, role: "owner", status: "active" };
 
-              // Notify super admin about new registration
-              fetch("/api/admin/notify-new-firm", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ firmName: displayName, email: user.email }),
-              }).catch(() => {});
+
             }
           } else {
             // User exists but has no firm — account was deleted

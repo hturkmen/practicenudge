@@ -123,9 +123,9 @@ describe("Feature: super-admin-panel, Property 6: Role update persistence", () =
    * For any member and any valid target role (owner, admin, member), after a successful
    * role update, querying the member's role SHALL return the new role value.
    */
-  it("after a successful role update, the update call SHALL contain the new role value", () => {
-    fc.assert(
-      fc.property(
+  it("after a successful role update, the update call SHALL contain the new role value", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryRole(),
         arbitraryAdminUserId(),
@@ -149,9 +149,9 @@ describe("Feature: super-admin-panel, Property 6: Role update persistence", () =
     );
   });
 
-  it("the role update SHALL accept all valid role values (owner, admin, member)", () => {
-    fc.assert(
-      fc.property(
+  it("the role update SHALL accept all valid role values (owner, admin, member)", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryAdminUserId(),
         async (memberId, adminUserId) => {
@@ -182,9 +182,9 @@ describe("Feature: super-admin-panel, Property 7: Suspend/reactivate round-trip"
    * For any active member, suspending and then reactivating SHALL result in
    * status 'active' with original role and firm association unchanged.
    */
-  it("suspending then reactivating SHALL result in status 'active' with original role and firm unchanged", () => {
-    fc.assert(
-      fc.property(
+  it("suspending then reactivating SHALL result in status 'active' with original role and firm unchanged", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryAdminUserId(),
         arbitraryRole(),
@@ -245,9 +245,9 @@ describe("Feature: super-admin-panel, Property 7: Suspend/reactivate round-trip"
     );
   });
 
-  it("reactivation SHALL always set status to 'active' regardless of original role", () => {
-    fc.assert(
-      fc.property(
+  it("reactivation SHALL always set status to 'active' regardless of original role", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryAdminUserId(),
         arbitraryRole(),
@@ -279,9 +279,9 @@ describe("Feature: super-admin-panel, Property 9: Firm plan update persistence",
    * update, querying the firm's plan SHALL return the new plan value, and a subscription
    * history entry SHALL be created with the correct previous and new plan values.
    */
-  it("after a successful plan update, the update call SHALL contain the new plan value", () => {
-    fc.assert(
-      fc.property(
+  it("after a successful plan update, the update call SHALL contain the new plan value", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryFirmId(),
         arbitraryPlan(),
         arbitraryAdminUserId(),
@@ -305,9 +305,9 @@ describe("Feature: super-admin-panel, Property 9: Firm plan update persistence",
     );
   });
 
-  it("a subscription history entry SHALL be created with correct previous and new plan values", () => {
-    fc.assert(
-      fc.property(
+  it("a subscription history entry SHALL be created with correct previous and new plan values", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryFirmId(),
         arbitraryPlan(),
         arbitraryAdminUserId(),
@@ -334,9 +334,9 @@ describe("Feature: super-admin-panel, Property 9: Firm plan update persistence",
     );
   });
 
-  it("the plan update SHALL accept all valid plan values (free, starter, pro)", () => {
-    fc.assert(
-      fc.property(
+  it("the plan update SHALL accept all valid plan values (free, starter, pro)", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryFirmId(),
         arbitraryAdminUserId(),
         async (firmId, adminUserId) => {
@@ -371,9 +371,9 @@ describe("Feature: super-admin-panel, Property 19: Destructive action confirmati
    * This test verifies that each action function logs an audit entry when executed,
    * proving the action was performed and can be audited.
    */
-  it("all destructive actions SHALL log an audit entry when executed", () => {
-    fc.assert(
-      fc.property(
+  it("all destructive actions SHALL log an audit entry when executed", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryFirmId(),
         arbitraryAdminUserId(),
@@ -427,9 +427,9 @@ describe("Feature: super-admin-panel, Property 19: Destructive action confirmati
     );
   });
 
-  it("action functions SHALL execute without built-in confirmation (confirmation is UI responsibility)", () => {
-    fc.assert(
-      fc.property(
+  it("action functions SHALL execute without built-in confirmation (confirmation is UI responsibility)", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryAdminUserId(),
         arbitraryRole(),
@@ -462,9 +462,9 @@ describe("Feature: super-admin-panel, Property 20: Admin audit log completeness"
    * SHALL be created containing the admin's user ID, target entity ID, action type,
    * and a timestamp.
    */
-  it("role change SHALL create an audit log with admin_user_id, target_entity_id, and action_type", () => {
-    fc.assert(
-      fc.property(
+  it("role change SHALL create an audit log with admin_user_id, target_entity_id, and action_type", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryRole(),
         arbitraryAdminUserId(),
@@ -489,9 +489,9 @@ describe("Feature: super-admin-panel, Property 20: Admin audit log completeness"
     );
   });
 
-  it("suspend SHALL create an audit log with admin_user_id, target_entity_id, and action_type", () => {
-    fc.assert(
-      fc.property(
+  it("suspend SHALL create an audit log with admin_user_id, target_entity_id, and action_type", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryAdminUserId(),
         async (memberId, adminUserId) => {
@@ -516,9 +516,9 @@ describe("Feature: super-admin-panel, Property 20: Admin audit log completeness"
     );
   });
 
-  it("reactivate SHALL create an audit log with admin_user_id, target_entity_id, and action_type", () => {
-    fc.assert(
-      fc.property(
+  it("reactivate SHALL create an audit log with admin_user_id, target_entity_id, and action_type", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryAdminUserId(),
         async (memberId, adminUserId) => {
@@ -542,9 +542,9 @@ describe("Feature: super-admin-panel, Property 20: Admin audit log completeness"
     );
   });
 
-  it("plan change SHALL create an audit log with admin_user_id, target_entity_id, and action_type", () => {
-    fc.assert(
-      fc.property(
+  it("plan change SHALL create an audit log with admin_user_id, target_entity_id, and action_type", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryFirmId(),
         arbitraryPlan(),
         arbitraryAdminUserId(),
@@ -569,9 +569,9 @@ describe("Feature: super-admin-panel, Property 20: Admin audit log completeness"
     );
   });
 
-  it("audit log entries SHALL contain details about the action performed", () => {
-    fc.assert(
-      fc.property(
+  it("audit log entries SHALL contain details about the action performed", async () => {
+    await fc.assert(
+      fc.asyncProperty(
         arbitraryMemberId(),
         arbitraryRole(),
         arbitraryAdminUserId(),

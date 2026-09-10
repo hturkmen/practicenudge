@@ -34,6 +34,10 @@ const actionTypeBadgeColors: Record<string, string> = {
 };
 
 const actionTypeLabels: Record<string, string> = {
+  registered: "Joined firm",
+  document_request_created: "Request created",
+  document_request_updated: "Request updated",
+  template_saved: "Template saved",
   login: "Login",
   client_added: "Client Added",
   client_updated: "Client Updated",

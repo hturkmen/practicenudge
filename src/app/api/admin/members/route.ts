@@ -1,3 +1,4 @@
+import { createServiceClient } from "@/lib/supabase/service";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getMembers } from "@/lib/admin/queries";
@@ -8,6 +9,8 @@ const VALID_STATUSES = ["active", "suspended"];
 const VALID_SORT_ORDERS = ["asc", "desc"];
 const VALID_SORT_COLUMNS = [
   "created_at",
+  "last_sign_in_at",
+  "firm_client_count",
   "name",
   "email",
   "firm_name",
@@ -118,7 +121,7 @@ export async function GET(request: Request) {
 
   // 4. Call getMembers and return paginated response
   try {
-    const result = await getMembers(supabase, {
+    const result = await getMembers(createServiceClient(), {
       page,
       page_size: pageSize,
       search,
@@ -130,7 +133,7 @@ export async function GET(request: Request) {
       sort_order: sortOrder as "asc" | "desc" | undefined,
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to fetch members";
     return NextResponse.json(
