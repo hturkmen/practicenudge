@@ -2,8 +2,11 @@ import type { MemberListItem, MemberUsage } from "@/lib/types/admin";
 
 const DAY = 86400000;
 // A deliberately small signal list, not a comprehensive spam classifier.
-const DISPOSABLE_DOMAINS = new Set([
+export const DISPOSABLE_DOMAINS = new Set([
   "mailinator.com", "yopmail.com", "guerrillamail.com", "10minutemail.com", "tempmail.com",
+  "temp-mail.org", "sharklasers.com", "grr.la", "dispostable.com", "trashmail.com",
+  "getnada.com", "maildrop.cc", "throwawaymail.com", "fakeinbox.com", "mailnesia.com",
+  "mohmal.com", "emailondeck.com", "mintemail.com", "spamgourmet.com", "tempail.com",
 ]);
 
 export function getMemberInsights(member: MemberListItem, usage?: MemberUsage, now = Date.now()) {

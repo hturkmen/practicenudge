@@ -4,7 +4,7 @@
 
 export type MemberStatus = "active" | "suspended";
 
-export type AdminActionType = "role_change" | "plan_change" | "suspend" | "reactivate";
+export type AdminActionType = "role_change" | "plan_change" | "suspend" | "reactivate" | "verdict_change" | "stage_override";
 
 export type MemberActionType =
   | "registered"
@@ -22,7 +22,7 @@ export type AdminAuditLog = {
   id: string;
   admin_user_id: string;
   target_entity_id: string;
-  target_entity_type: "member" | "firm";
+  target_entity_type: "member" | "firm" | "contact";
   action_type: AdminActionType;
   details: Record<string, unknown>;
   created_at: string;

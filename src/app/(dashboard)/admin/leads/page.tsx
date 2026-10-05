@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { AdminGuard } from "@/components/admin/admin-guard";
+import {
+  LifecycleCellPlaceholder, LifecycleDrawer, QualityBadge, ReviewQueue, StageBadge, TimelineButton,
+  useLifecycle, type LifecycleTarget,
+} from "@/components/admin/lifecycle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,6 +56,17 @@ const statusColors: Record<string, string> = {
 export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const lifecycle = useLifecycle();
+  const [drawerTarget, setDrawerTarget] = useState<LifecycleTarget | null>(null);
+  // A person can have several lead rows; they share one lifecycle record keyed by email.
+  const lifecycleByEmail = useMemo(
+    () => new Map((lifecycle.data?.people ?? []).filter((p) => p.lead_id).map((p) => [p.email_key, p])),
+    [lifecycle.data]
+  );
+  const reviewQueue = useMemo(
+    () => (lifecycle.data?.people ?? []).filter((p) => p.lead_id && !p.member_id && p.quality.tier === "review"),
+    [lifecycle.data]
+  );
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -98,6 +113,16 @@ export default function LeadsPage() {
           </div>
         </div>
 
+        {lifecycle.error && (
+          <div role="alert" className="flex flex-wrap items-center gap-3 rounded-md border border-destructive/50 px-4 py-3 text-sm">
+            <span className="text-destructive">Stage and quality could not be loaded: {lifecycle.error}</span>
+            <Button variant="outline" size="sm" onClick={lifecycle.reload}>Retry</Button>
+          </div>
+        )}
+
+        <ReviewQueue people={reviewQueue} loading={lifecycle.loading && !lifecycle.data}
+          onOpen={(p) => setDrawerTarget({ lead_id: p.lead_id! })} />
+
         <Card>
           <CardHeader>
             <CardTitle>All Leads</CardTitle>
@@ -122,7 +147,10 @@ export default function LeadsPage() {
                     <TableHead>Practice</TableHead>
                     <TableHead>Clients</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Stage</TableHead>
+                    <TableHead>Quality</TableHead>
                     <TableHead>Date</TableHead>
+                    <TableHead><span className="sr-only">Timeline</span></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -156,12 +184,25 @@ export default function LeadsPage() {
                           </SelectContent>
                         </Select>
                       </TableCell>
+                      <TableCell>
+                        {lifecycleByEmail.get(lead.email.toLowerCase())
+                          ? <StageBadge person={lifecycleByEmail.get(lead.email.toLowerCase())!} />
+                          : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
+                      </TableCell>
+                      <TableCell>
+                        {lifecycleByEmail.get(lead.email.toLowerCase())
+                          ? <QualityBadge person={lifecycleByEmail.get(lead.email.toLowerCase())!} />
+                          : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
+                      </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
                         {new Date(lead.created_at).toLocaleDateString("en-GB", {
                           day: "numeric",
                           month: "short",
                           year: "numeric",
                         })}
+                      </TableCell>
+                      <TableCell>
+                        <TimelineButton label={lead.name} onClick={() => setDrawerTarget({ lead_id: lead.id })} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -170,6 +211,8 @@ export default function LeadsPage() {
             )}
           </CardContent>
         </Card>
+
+        <LifecycleDrawer target={drawerTarget} onClose={() => setDrawerTarget(null)} onChanged={lifecycle.reload} />
       </div>
     </AdminGuard>
   );

@@ -1,8 +1,11 @@
 "use client";
 
-import { getMemberInsights } from "@/lib/admin/member-insights";
 import { memberDate } from "@/components/admin/member-insights";
-import { useCallback, useEffect, useState } from "react";
+import {
+  FunnelSummary, LifecycleCellPlaceholder, LifecycleDrawer, QualityBadge, ReviewQueue, StageBadge, TimelineButton,
+  useLifecycle, type LifecycleTarget,
+} from "@/components/admin/lifecycle";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AdminGuard } from "@/components/admin/admin-guard";
 import { SearchInput } from "@/components/admin/search-input";
@@ -75,6 +78,16 @@ export default function MembersListPage() {
     total_pages: 0,
   });
   const [firms, setFirms] = useState<FirmOption[]>([]);
+  const lifecycle = useLifecycle();
+  const [drawerTarget, setDrawerTarget] = useState<LifecycleTarget | null>(null);
+  const lifecycleByMember = useMemo(
+    () => new Map((lifecycle.data?.people ?? []).filter((p) => p.member_id).map((p) => [p.member_id!, p])),
+    [lifecycle.data]
+  );
+  const reviewQueue = useMemo(
+    () => (lifecycle.data?.people ?? []).filter((p) => p.member_id && p.quality.tier === "review"),
+    [lifecycle.data]
+  );
 
   // Fetch firms for the filter dropdown
   useEffect(() => {
@@ -195,6 +208,15 @@ export default function MembersListPage() {
               Manage all registered members across the platform
             </p>
           </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <FunnelSummary funnel={lifecycle.data?.funnel} loading={lifecycle.loading}
+              error={lifecycle.error} onRetry={lifecycle.reload} />
+          </div>
+          <ReviewQueue people={reviewQueue} loading={lifecycle.loading && !lifecycle.data}
+            onOpen={(p) => setDrawerTarget({ member_id: p.member_id! })} />
         </div>
 
         {/* Search and Filters */}
@@ -381,7 +403,9 @@ export default function MembersListPage() {
                       </TableHead>
                       <TableHead>Firm clients</TableHead>
                       <TableHead>Last sign-in</TableHead>
-                      <TableHead>Review</TableHead>
+                      <TableHead>Stage</TableHead>
+                      <TableHead>Quality</TableHead>
+                      <TableHead><span className="sr-only">Timeline</span></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -427,7 +451,19 @@ export default function MembersListPage() {
                         </TableCell>
                         <TableCell className="tabular-nums">{member.firm_client_count ?? "Not recorded"}</TableCell>
                         <TableCell className="text-sm whitespace-nowrap">{memberDate(member.last_sign_in_at)}</TableCell>
-                        <TableCell><Badge variant={getMemberInsights(member).signals.length ? "destructive" : "outline"}>{getMemberInsights(member).review}</Badge></TableCell>
+                        <TableCell>
+                          {lifecycleByMember.get(member.id)
+                            ? <StageBadge person={lifecycleByMember.get(member.id)!} />
+                            : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
+                        </TableCell>
+                        <TableCell>
+                          {lifecycleByMember.get(member.id)
+                            ? <QualityBadge person={lifecycleByMember.get(member.id)!} />
+                            : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
+                        </TableCell>
+                        <TableCell>
+                          <TimelineButton label={member.name} onClick={() => setDrawerTarget({ member_id: member.id })} />
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -443,6 +479,8 @@ export default function MembersListPage() {
             )}
           </CardContent>
         </Card>
+
+        <LifecycleDrawer target={drawerTarget} onClose={() => setDrawerTarget(null)} onChanged={lifecycle.reload} />
       </div>
     </AdminGuard>
   );

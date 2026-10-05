@@ -1,5 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { isInactive } from "./metrics";
+import { getFunnel, withQuality } from "./lifecycle";
+import type { LifecycleRow, LifecycleResponse, TimelineEvent, TimelineResponse } from "./lifecycle";
 import type {
   MembersListRequest,
   MembersListResponse,
@@ -591,4 +593,32 @@ export async function getActivityLog(
       related_entity: relatedEntity,
     };
   });
+}
+
+// Lifecycle volumes are small today; the cap keeps a sudden spike from building an unbounded response.
+const LIFECYCLE_LIMIT = 1000;
+
+/** The supplied client must be service-role, created only after checking super_admins. */
+export async function getLifecycle(supabase: SupabaseClient): Promise<LifecycleResponse> {
+  const { data, error } = await supabase.from("admin_lifecycle_overview").select("*")
+    .order("last_seen_at", { ascending: false, nullsFirst: false })
+    .order("email_key", { ascending: true }).limit(LIFECYCLE_LIMIT + 1);
+  if (error) throw new Error("Lifecycle overview could not be loaded. Check migration 016.");
+  const now = Date.now();
+  const people = ((data || []) as LifecycleRow[]).slice(0, LIFECYCLE_LIMIT).map((row) => withQuality(row, now));
+  return { people, funnel: getFunnel(people), truncated: (data?.length ?? 0) > LIFECYCLE_LIMIT };
+}
+
+/** Looks a person up by record ID so no email address travels in a URL. */
+export async function getContactTimeline(
+  supabase: SupabaseClient,
+  ref: { member_id?: string; lead_id?: string }
+): Promise<TimelineResponse | null> {
+  const { data, error } = await supabase.rpc("admin_contact_timeline", {
+    p_member_id: ref.member_id || null, p_lead_id: ref.lead_id || null,
+  });
+  if (error) throw new Error("Timeline could not be loaded. Check migration 016.");
+  if (!data) return null;
+  const result = data as { person: LifecycleRow; events: TimelineEvent[] };
+  return { person: withQuality(result.person), events: result.events || [] };
 }
