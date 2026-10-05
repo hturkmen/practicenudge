@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { MarketingConsentPrompt } from "@/components/marketing-consent-prompt";
 
 export default function DashboardPage() {
   const supabase = createClient();
@@ -125,6 +126,8 @@ export default function DashboardPage() {
           Overview of your client document requests
         </p>
       </div>
+
+      <MarketingConsentPrompt />
 
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
