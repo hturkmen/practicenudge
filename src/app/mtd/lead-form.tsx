@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowRight, Check } from "lucide-react";
+import { LEAD_FORM_PROMISE } from "@/lib/outreach/consent";
 
 export function MTDLeadForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -132,7 +133,8 @@ export function MTDLeadForm() {
             {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
           </Button>
           <p className="text-xs text-muted-foreground text-center">
-            No spam. We&apos;ll send the template link and one follow-up about PracticeNudge.
+            {LEAD_FORM_PROMISE}{" "}
+            <Link href="/privacy" className="underline hover:text-foreground">Privacy notice</Link>
           </p>
         </form>
       </CardContent>

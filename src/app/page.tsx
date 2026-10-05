@@ -510,6 +510,7 @@ export default async function LandingPage() {
               <div className="flex flex-col gap-2 text-[13px] text-white/50">
                 <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
                 <a href="mailto:hello@practicenudge.com" className="hover:text-white transition-colors">Contact</a>
+                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
               </div>
             </div>
           </div>

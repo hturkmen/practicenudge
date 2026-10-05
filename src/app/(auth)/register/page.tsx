@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FileCheck, Loader2 } from "lucide-react";
+import { CONSENT_COOKIE, SIGNUP_CONSENT_TEXT, SIGNUP_CONSENT_VERSION } from "@/lib/outreach/consent";
 
 export default function RegisterPage() {
   const [firmName, setFirmName] = useState("");
@@ -26,6 +27,8 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  // Unticked by default: consent must be an active choice.
+  const [marketingConsent, setMarketingConsent] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const inviteFirmId = searchParams.get("invite");
@@ -57,6 +60,8 @@ export default function RegisterPage() {
           firm_name: firmName,
           invite_firm_id: inviteFirmId || undefined,
           invite_role: inviteFirmId ? inviteRole : undefined,
+          marketing_consent: marketingConsent,
+          marketing_consent_version: marketingConsent ? SIGNUP_CONSENT_VERSION : undefined,
         },
       },
     });
@@ -79,6 +84,11 @@ export default function RegisterPage() {
   const handleGoogleRegister = async () => {
     setGoogleLoading(true);
     setError(null);
+
+    // OAuth redirects cannot carry metadata, so the auth callback reads this short-lived cookie.
+    document.cookie = marketingConsent
+      ? `${CONSENT_COOKIE}=${SIGNUP_CONSENT_VERSION}; Max-Age=900; Path=/; SameSite=Lax; Secure`
+      : `${CONSENT_COOKIE}=; Max-Age=0; Path=/`;
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -143,6 +153,26 @@ export default function RegisterPage() {
               {error}
             </div>
           )}
+
+          {/* Applies to both sign-up methods, so it sits above them */}
+          <div className="flex items-start gap-3 rounded-md border p-3">
+            <input
+              id="marketing-consent"
+              type="checkbox"
+              checked={marketingConsent}
+              onChange={(e) => setMarketingConsent(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+            />
+            <div className="space-y-1">
+              <Label htmlFor="marketing-consent" className="text-sm font-normal leading-snug">
+                {SIGNUP_CONSENT_TEXT}
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Optional. See our{" "}
+                <Link href="/privacy" className="underline hover:text-foreground">privacy notice</Link>.
+              </p>
+            </div>
+          </div>
 
           {/* Google Register */}
           <Button
