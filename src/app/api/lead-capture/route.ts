@@ -105,8 +105,7 @@ We're looking for 10 small UK practices to pilot it (free). If you're interested
 https://www.practicenudge.com/#pricing
 
 Best,
-Halil
-PracticeNudge
+The PracticeNudge team
 
 ---
 You received this because you downloaded the MTD Client Readiness Tracker from practicenudge.com.`,
