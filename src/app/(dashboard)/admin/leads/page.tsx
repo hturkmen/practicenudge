@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { AdminGuard } from "@/components/admin/admin-guard";
 import {
-  LifecycleCellPlaceholder, LifecycleDrawer, QualityBadge, ReviewQueue, StageBadge, TimelineButton,
+  LifecycleCellPlaceholder, LifecycleDrawer, OutreachCell, QualityBadge, ReviewQueue, StageBadge, TimelineButton,
   useLifecycle, type LifecycleTarget,
 } from "@/components/admin/lifecycle";
 import { Badge } from "@/components/ui/badge";
@@ -149,6 +149,7 @@ export default function LeadsPage() {
                     <TableHead>Status</TableHead>
                     <TableHead>Stage</TableHead>
                     <TableHead>Quality</TableHead>
+                    <TableHead>Follow-up</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead><span className="sr-only">Timeline</span></TableHead>
                   </TableRow>
@@ -192,6 +193,11 @@ export default function LeadsPage() {
                       <TableCell>
                         {lifecycleByEmail.get(lead.email.toLowerCase())
                           ? <QualityBadge person={lifecycleByEmail.get(lead.email.toLowerCase())!} />
+                          : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
+                      </TableCell>
+                      <TableCell>
+                        {lifecycleByEmail.get(lead.email.toLowerCase())
+                          ? <OutreachCell person={lifecycleByEmail.get(lead.email.toLowerCase())!} />
                           : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">

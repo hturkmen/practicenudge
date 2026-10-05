@@ -2,7 +2,7 @@
 
 import { memberDate } from "@/components/admin/member-insights";
 import {
-  FunnelSummary, LifecycleCellPlaceholder, LifecycleDrawer, QualityBadge, ReviewQueue, StageBadge, TimelineButton,
+  FunnelSummary, LifecycleCellPlaceholder, LifecycleDrawer, OutreachCell, QualityBadge, ReviewQueue, StageBadge, TimelineButton,
   useLifecycle, type LifecycleTarget,
 } from "@/components/admin/lifecycle";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -405,6 +405,7 @@ export default function MembersListPage() {
                       <TableHead>Last sign-in</TableHead>
                       <TableHead>Stage</TableHead>
                       <TableHead>Quality</TableHead>
+                      <TableHead>Follow-up</TableHead>
                       <TableHead><span className="sr-only">Timeline</span></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -459,6 +460,11 @@ export default function MembersListPage() {
                         <TableCell>
                           {lifecycleByMember.get(member.id)
                             ? <QualityBadge person={lifecycleByMember.get(member.id)!} />
+                            : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
+                        </TableCell>
+                        <TableCell>
+                          {lifecycleByMember.get(member.id)
+                            ? <OutreachCell person={lifecycleByMember.get(member.id)!} />
                             : <LifecycleCellPlaceholder failed={!lifecycle.loading} />}
                         </TableCell>
                         <TableCell>

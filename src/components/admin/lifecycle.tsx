@@ -14,6 +14,9 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { ConfirmationDialog } from "@/components/admin/confirmation-dialog";
 import { memberDate } from "@/components/admin/member-insights";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { buildOutreachEmail } from "@/lib/outreach/message";
+import { basisCovers, stepContext, stepsFor, type StepDefinition } from "@/lib/outreach/templates";
 import { BASIS_LABELS, MARKETING_BASES, OVERRIDABLE_STAGES, STAGE_LABELS } from "@/lib/admin/lifecycle";
 import type {
   FunnelStep, LifecyclePerson, LifecycleResponse, LifecycleStage, MarketingBasis, TimelineEvent, TimelineResponse,
@@ -87,6 +90,19 @@ export function QualityBadge({ person }: { person: LifecyclePerson }) {
     : person.verdict === "real" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border-transparent"
     : "";
   return <Badge variant="outline" className={cn("text-xs whitespace-nowrap", style)}>{qualityLabel(person)}</Badge>;
+}
+
+const shortDate = (value: string) => new Date(value).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" });
+
+/** Last email sent and the next one queued, in one compact cell. */
+export function OutreachCell({ person }: { person: LifecyclePerson }) {
+  if (person.is_internal) return <span className="text-muted-foreground">—</span>;
+  if (person.suppression_reason) return <span className="text-xs text-muted-foreground capitalize">Suppressed ({person.suppression_reason})</span>;
+  const parts = [
+    person.last_outreach_at && "Sent " + shortDate(person.last_outreach_at),
+    person.next_outreach_at && "Next " + shortDate(person.next_outreach_at),
+  ].filter(Boolean);
+  return <span className="text-xs whitespace-nowrap text-muted-foreground">{parts.length ? parts.join(" · ") : person.paused ? "Paused" : "None"}</span>;
 }
 
 export function displayName(person: LifecyclePerson) {
@@ -260,6 +276,29 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
   const [confirmJunk, setConfirmJunk] = useState(false);
   const [basisChoice, setBasisChoice] = useState<MarketingBasis>("none");
   const [outreachNote, setOutreachNote] = useState("");
+  const [previewStep, setPreviewStep] = useState<StepDefinition | null>(null);
+  const [confirmStep, setConfirmStep] = useState<StepDefinition | null>(null);
+
+  const sendStep = async (step: StepDefinition, action: "test" | "send_now") => {
+    if (!target) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/admin/outreach/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...target, action, sequence: step.sequence, step: step.step }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.message || "Could not send");
+      if (action === "test") toast.success("Test email sent to the admin inbox");
+      else toast.success(body.sent ? "Email sent" : body.mode === "live" ? "Email queued" : "Queued. It will go out once sending is switched to live.");
+      if (action === "send_now") { await load(target); onChanged(); }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not send");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const load = useCallback(async (t: LifecycleTarget) => {
     setLoading(true);
@@ -454,6 +493,34 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
                       They replied
                     </Button>
                   </div>
+
+                  <div className="space-y-2 border-t pt-3">
+                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Emails</h4>
+                    {stepsFor(person).length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No follow-up emails apply to this contact (only firm owners and leads get them).</p>
+                    ) : (
+                      <ul className="space-y-3">
+                        {stepsFor(person).map((step) => {
+                          const blocked = person.suppression_reason ? "On the suppression list"
+                            : !basisCovers(person.marketing_basis, step) ? (person.marketing_basis === "lead_form" ? "Lead form covers only the tracker follow-up" : "No lawful basis recorded")
+                            : null;
+                          return (
+                            <li key={step.sequence + step.step} className="space-y-1.5">
+                              <div>
+                                <p className="text-sm font-medium">{step.label}</p>
+                                <p className="text-xs text-muted-foreground">{step.timing}{blocked && " · " + blocked}</p>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                <Button size="sm" variant="ghost" onClick={() => setPreviewStep(step)}>Preview</Button>
+                                <Button size="sm" variant="ghost" disabled={saving} onClick={() => sendStep(step, "test")}>Send test to me</Button>
+                                <Button size="sm" variant="outline" disabled={saving || !!blocked} onClick={() => setConfirmStep(step)}>Send now</Button>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
                 </>
               )}
             </section>
@@ -490,6 +557,35 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
               confirmLabel="Mark junk"
               onConfirm={() => save("verdict", "junk", verdictReason)}
             />
+
+            <ConfirmationDialog
+              open={!!confirmStep}
+              onOpenChange={(open) => { if (!open) setConfirmStep(null); }}
+              title="Send this email now?"
+              description={confirmStep ? `"${confirmStep.label}" will be sent to ${person.email_key}. Each email can only be sent once per person.` : ""}
+              confirmLabel="Send"
+              variant="warning"
+              onConfirm={() => { if (confirmStep) sendStep(confirmStep, "send_now"); }}
+            />
+
+            <Dialog open={!!previewStep} onOpenChange={(open) => { if (!open) setPreviewStep(null); }}>
+              <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-xl">
+                {previewStep && (() => {
+                  const rendered = previewStep.render(stepContext(person));
+                  const email = buildOutreachEmail({ to: person.email_key, subject: rendered.subject, body: rendered.body, unsubscribeToken: null });
+                  return (
+                    <>
+                      <DialogHeader>
+                        <DialogTitle>{email.subject}</DialogTitle>
+                        <DialogDescription>From {email.from} · Replies to {email.replyTo} · To {person.email_key}</DialogDescription>
+                      </DialogHeader>
+                      <pre className="whitespace-pre-wrap break-words rounded-md border bg-muted/40 p-4 font-sans text-sm leading-relaxed">{email.text}</pre>
+                      <p className="text-xs text-muted-foreground">The real email carries a personal unsubscribe link and one-click unsubscribe headers.</p>
+                    </>
+                  );
+                })()}
+              </DialogContent>
+            </Dialog>
           </div>
         ) : null}
       </SheetContent>

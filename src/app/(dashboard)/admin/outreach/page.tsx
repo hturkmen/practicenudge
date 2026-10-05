@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { STEPS } from "@/lib/outreach/templates";
 
 type Suppression = { id: string; email: string | null; reason: string; source: string; note: string | null; created_at: string };
 type OutreachStatus = { mode: "off" | "dry_run" | "live"; token_secret_set: boolean; webhook_secret_set: boolean };
@@ -128,6 +129,37 @@ export default function OutreachPage() {
                 </div>
               ))}
             </dl>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Sequences</CardTitle>
+            <CardDescription>
+              Sent only to real contacts with a recorded lawful basis, at most one a week and four in total. A step is
+              skipped if the person has moved on, replied, unsubscribed or been marked junk. Preview and test any email
+              from a contact&apos;s timeline.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Who</TableHead>
+                  <TableHead>When</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {STEPS.map((step) => (
+                  <TableRow key={step.sequence + step.step}>
+                    <TableCell className="font-medium">{step.label}</TableCell>
+                    <TableCell className="text-muted-foreground">{step.audience === "lead" ? "Leads without an account" : "Firm owners"}</TableCell>
+                    <TableCell className="text-muted-foreground">{step.timing}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
 
