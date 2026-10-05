@@ -14,9 +14,9 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { ConfirmationDialog } from "@/components/admin/confirmation-dialog";
 import { memberDate } from "@/components/admin/member-insights";
 import { cn } from "@/lib/utils";
-import { OVERRIDABLE_STAGES, STAGE_LABELS } from "@/lib/admin/lifecycle";
+import { BASIS_LABELS, MARKETING_BASES, OVERRIDABLE_STAGES, STAGE_LABELS } from "@/lib/admin/lifecycle";
 import type {
-  FunnelStep, LifecyclePerson, LifecycleResponse, LifecycleStage, TimelineEvent, TimelineResponse,
+  FunnelStep, LifecyclePerson, LifecycleResponse, LifecycleStage, MarketingBasis, TimelineEvent, TimelineResponse,
 } from "@/lib/admin/lifecycle";
 
 export type LifecycleTarget = { member_id?: string; lead_id?: string };
@@ -73,6 +73,7 @@ export function StageBadge({ person }: { person: LifecyclePerson }) {
 
 export function qualityLabel(person: LifecyclePerson) {
   const { tier } = person.quality;
+  if (tier === "internal") return "Team account";
   if (tier === "junk") return person.verdict === "junk" ? "Marked junk" : "Likely junk";
   if (tier === "review") return "Needs review";
   return person.verdict === "real" ? "Marked real" : "No strong signals";
@@ -80,7 +81,8 @@ export function qualityLabel(person: LifecyclePerson) {
 
 export function QualityBadge({ person }: { person: LifecyclePerson }) {
   const { tier } = person.quality;
-  const style = tier === "junk" ? "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 border-transparent"
+  const style = tier === "internal" ? "text-muted-foreground"
+    : tier === "junk" ? "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 border-transparent"
     : tier === "review" ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border-transparent"
     : person.verdict === "real" ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border-transparent"
     : "";
@@ -188,11 +190,28 @@ const EVENT_LABELS: Record<string, string> = {
   plan_changed: "Plan changed",
   admin_verdict_change: "Admin verdict",
   admin_stage_override: "Admin stage override",
+  admin_outreach_pause: "Outreach paused",
+  admin_outreach_resume: "Outreach resumed",
+  admin_basis_change: "Lawful basis changed",
+  admin_mark_replied: "Marked as replied",
+  outreach_scheduled: "Email scheduled",
+  outreach_processing: "Email sending",
+  outreach_sent: "Email sent",
+  outreach_failed: "Email failed, will retry",
+  outreach_cancelled: "Email cancelled",
+  outreach_review_required: "Email needs checking",
+  outreach_delivered: "Email delivered",
+  outreach_delivery_delayed: "Delivery delayed",
+  outreach_bounced: "Email bounced",
+  outreach_complained: "Marked as spam",
+  outreach_unsubscribed: "Unsubscribed",
+  outreach_replied: "Replied",
+  suppressed: "Added to suppression list",
 };
 
 function adminValue(value: unknown) {
   if (typeof value !== "string") return "automatic";
-  return STAGE_LABELS[value as LifecycleStage] ?? value;
+  return STAGE_LABELS[value as LifecycleStage] ?? BASIS_LABELS[value as MarketingBasis] ?? value;
 }
 
 function eventDetail(event: TimelineEvent) {
@@ -205,10 +224,28 @@ function eventDetail(event: TimelineEvent) {
     case "plan_changed": return `${d.from} → ${d.to}`;
     case "admin_verdict_change":
     case "admin_stage_override":
+    case "admin_basis_change":
       return `${adminValue(d.previous)} → ${adminValue(d.new)}` + (d.reason ? ` · ${d.reason}` : "");
-    default: return "";
+    case "admin_outreach_pause":
+    case "admin_mark_replied":
+      return d.reason ? `${d.reason}` : "";
+    case "suppressed": return `${d.reason}` + (d.source ? ` · ${String(d.source).replace(/_/g, " ")}` : "");
+    default:
+      if (event.kind.startsWith("outreach_") && d.sequence) {
+        return [d.subject || `${d.sequence}/${d.step}`, d.manual ? "sent by an admin" : "", d.reason]
+          .filter(Boolean).join(" · ");
+      }
+      return "";
   }
 }
+
+const SAVED_MESSAGES = {
+  verdict: "Verdict saved",
+  stage_override: "Stage updated",
+  pause: "Outreach setting saved",
+  basis: "Lawful basis saved",
+  replied: "Marked as replied; automated follow-ups stopped",
+};
 
 export function LifecycleDrawer({ target, onClose, onChanged }: {
   target: LifecycleTarget | null; onClose: () => void; onChanged: () => void;
@@ -221,6 +258,8 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
   const [stageChoice, setStageChoice] = useState<string>("automatic");
   const [stageReason, setStageReason] = useState("");
   const [confirmJunk, setConfirmJunk] = useState(false);
+  const [basisChoice, setBasisChoice] = useState<MarketingBasis>("none");
+  const [outreachNote, setOutreachNote] = useState("");
 
   const load = useCallback(async (t: LifecycleTarget) => {
     setLoading(true);
@@ -235,6 +274,8 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
       setStageChoice(result.person.stage_override ?? "automatic");
       setStageReason(result.person.stage_override_reason ?? "");
       setVerdictReason(result.person.verdict_reason ?? "");
+      setBasisChoice(result.person.marketing_basis ?? "none");
+      setOutreachNote("");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load timeline");
     } finally {
@@ -247,7 +288,7 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
     if (target) load(target);
   }, [target, load]);
 
-  const save = async (action: "verdict" | "stage_override", value: string | null, reason: string) => {
+  const save = async (action: keyof typeof SAVED_MESSAGES, value: string | null, reason: string) => {
     if (!target) return;
     setSaving(true);
     try {
@@ -258,7 +299,7 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.message || "Update failed");
-      toast.success(action === "verdict" ? "Verdict saved" : "Stage updated");
+      toast.success(SAVED_MESSAGES[action]);
       await load(target);
       onChanged();
     } catch (e) {
@@ -370,6 +411,53 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
               </Button>
             </section>
 
+            <section aria-labelledby="lifecycle-outreach" className="space-y-3 rounded-md border p-4">
+              <h3 id="lifecycle-outreach" className="text-sm font-semibold">Follow-up email</h3>
+              {person.is_internal ? (
+                <p className="text-sm text-muted-foreground">Team account. Never emailed by follow-up sequences.</p>
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-2">
+                    {person.suppression_reason && (
+                      <Badge variant="outline" className="border-transparent bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 capitalize">
+                        Suppressed: {person.suppression_reason}
+                      </Badge>
+                    )}
+                    {person.paused && <Badge variant="outline">Paused</Badge>}
+                    <Badge variant="outline">Basis: {BASIS_LABELS[person.marketing_basis]}</Badge>
+                  </div>
+                  <dl className="grid grid-cols-2 gap-4">
+                    <div><dt className="text-xs text-muted-foreground">Last sent</dt><dd className="text-sm">{person.last_outreach_at ? memberDate(person.last_outreach_at) : "Nothing sent"}</dd></div>
+                    <div><dt className="text-xs text-muted-foreground">Next step</dt><dd className="text-sm break-words">{person.next_outreach_at ? memberDate(person.next_outreach_at) + " · " + person.next_outreach_step : "None scheduled"}</dd></div>
+                  </dl>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="basis-choice">Lawful basis for email</Label>
+                    <Select value={basisChoice} onValueChange={(v) => setBasisChoice(v as MarketingBasis)}>
+                      <SelectTrigger id="basis-choice"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {MARKETING_BASES.map((basis) => <SelectItem key={basis} value={basis}>{BASIS_LABELS[basis]}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="outreach-note">Note {basisChoice !== person.marketing_basis && basisChoice !== "none" ? "(required: where does this basis come from?)" : "(optional)"}</Label>
+                    <Input id="outreach-note" maxLength={500} value={outreachNote} onChange={(e) => setOutreachNote(e.target.value)} />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button size="sm" disabled={saving || basisChoice === person.marketing_basis || (basisChoice !== "none" && !outreachNote.trim())}
+                      onClick={() => save("basis", basisChoice, outreachNote)}>Save basis</Button>
+                    <Button size="sm" variant="outline" disabled={saving}
+                      onClick={() => save("pause", person.paused ? "false" : "true", outreachNote)}>
+                      {person.paused ? "Resume follow-ups" : "Pause follow-ups"}
+                    </Button>
+                    <Button size="sm" variant="outline" disabled={saving} onClick={() => save("replied", null, outreachNote)}>
+                      They replied
+                    </Button>
+                  </div>
+                </>
+              )}
+            </section>
+
             <section aria-labelledby="lifecycle-history" className="space-y-3">
               <h3 id="lifecycle-history" className="text-sm font-semibold">History</h3>
               {data.events.length === 0 ? (
@@ -386,7 +474,6 @@ export function LifecycleDrawer({ target, onClose, onChanged }: {
                   ))}
                 </ol>
               )}
-              <p className="text-xs text-muted-foreground">Outreach history will appear here once email follow-ups are switched on.</p>
             </section>
 
             {person.member_id && (

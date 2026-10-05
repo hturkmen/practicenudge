@@ -11,6 +11,8 @@ const member: LifecycleRow = {
   request_count: 0, first_request_at: null, last_request_at: null, first_upload_at: null,
   last_activity_at: null, last_seen_at: null, contact_id: null, verdict: "unknown", verdict_reason: null,
   stage_override: null, stage_override_reason: null, derived_stage: "no_clients", stage: "no_clients",
+  is_internal: false, marketing_basis: "none", paused: false, suppression_reason: null,
+  last_outreach_at: null, next_outreach_at: null, next_outreach_step: null,
 };
 const lead: LifecycleRow = {
   ...member, email_key: "sam@hollowayco.co.uk", member_id: null, user_id: null, firm_id: null, role: null,
@@ -47,6 +49,10 @@ describe("contact quality", () => {
     expect(getContactQuality({ ...flagged, verdict: "real" }, now).tier).toBe("ok");
     expect(getContactQuality({ ...member, verdict: "junk" }, now).tier).toBe("junk");
   });
+  it("keeps team accounts out of review", () => {
+    expect(getContactQuality({ ...member, email_key: "admin@gmail.com", is_internal: true,
+      signed_up_at: "2026-05-01T09:00:00Z" }, now)).toEqual({ tier: "internal", signals: [] });
+  });
   it("checks leads on their practice name", () => {
     expect(getContactQuality(lead, now).tier).toBe("ok");
     expect(getContactQuality({ ...lead, lead_practice: "", email_key: "s@gmail.com" }, now).tier).toBe("review");
@@ -59,6 +65,7 @@ describe("activation funnel", () => {
       withQuality({ ...member, client_count: 3, first_request_at: "2026-10-04T10:00:00Z" }, now),
       withQuality({ ...member, email_key: "colleague@smithaccounts.co.uk", member_id: "m2", role: "member" }, now),
       withQuality({ ...member, email_key: "x@mailinator.com", member_id: "m3" }, now),
+      withQuality({ ...member, email_key: "admin@practicenudge.com", member_id: "m4", is_internal: true }, now),
       withQuality(lead, now),
     ];
     expect(Object.fromEntries(getFunnel(people).map((s) => [s.key, s.value]))).toEqual({

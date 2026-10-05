@@ -21,7 +21,17 @@ export const STAGE_LABELS: Record<LifecycleStage, string> = {
 
 export const VERDICTS = ["unknown", "real", "junk"] as const;
 export type Verdict = (typeof VERDICTS)[number];
-export type QualityTier = "ok" | "review" | "junk";
+export type QualityTier = "ok" | "review" | "junk" | "internal";
+
+/** Lawful basis for outreach email (mirrors migration 017). Nothing is sent on "none". */
+export const MARKETING_BASES = ["none", "consent", "lead_form", "corporate"] as const;
+export type MarketingBasis = (typeof MARKETING_BASES)[number];
+export const BASIS_LABELS: Record<MarketingBasis, string> = {
+  none: "None recorded",
+  consent: "Consent given",
+  lead_form: "Lead form (one follow-up only)",
+  corporate: "Corporate subscriber",
+};
 export type QualitySignal = { text: string; strength: "strong" | "weak" };
 export type ContactQuality = { tier: QualityTier; signals: QualitySignal[] };
 
@@ -62,6 +72,13 @@ export type LifecycleRow = {
   stage_override_reason: string | null;
   derived_stage: LifecycleStage;
   stage: LifecycleStage;
+  is_internal: boolean;
+  marketing_basis: MarketingBasis;
+  paused: boolean;
+  suppression_reason: string | null;
+  last_outreach_at: string | null;
+  next_outreach_at: string | null;
+  next_outreach_step: string | null;
 };
 
 export type LifecyclePerson = LifecycleRow & { quality: ContactQuality };
@@ -84,6 +101,7 @@ const DAY = 86400000;
  * never emailed automatically; an admin verdict always wins over the signals.
  */
 export function getContactQuality(row: LifecycleRow, now = Date.now()): ContactQuality {
+  if (row.is_internal) return { tier: "internal", signals: [] };
   const signals: QualitySignal[] = [];
   const [local = "", domain = ""] = row.email_key.split("@");
   const disposable = DISPOSABLE_DOMAINS.has(domain);
@@ -116,9 +134,9 @@ export function getContactQuality(row: LifecycleRow, now = Date.now()): ContactQ
   return { tier: strong > 0 || weak >= 2 ? "review" : "ok", signals };
 }
 
-/** Firm-level funnel: owners only (one per firm), excluding records marked junk. */
+/** Firm-level funnel: owners only (one per firm), excluding junk and team accounts. */
 export function getFunnel(people: LifecyclePerson[]): FunnelStep[] {
-  const counted = people.filter((p) => p.quality.tier !== "junk");
+  const counted = people.filter((p) => p.quality.tier !== "junk" && p.quality.tier !== "internal");
   const owners = counted.filter((p) => p.member_id && p.role === "owner");
   return [
     { key: "leads", label: "Leads", value: counted.filter((p) => p.lead_id).length },
@@ -130,6 +148,9 @@ export function getFunnel(people: LifecyclePerson[]): FunnelStep[] {
 }
 
 export function withQuality(row: LifecycleRow, now = Date.now()): LifecyclePerson {
-  const normalised = { ...row, client_count: Number(row.client_count ?? 0), request_count: Number(row.request_count ?? 0) };
+  const normalised = {
+    ...row, client_count: Number(row.client_count ?? 0), request_count: Number(row.request_count ?? 0),
+    is_internal: !!row.is_internal, paused: !!row.paused, marketing_basis: row.marketing_basis ?? "none",
+  };
   return { ...normalised, quality: getContactQuality(normalised, now) };
 }

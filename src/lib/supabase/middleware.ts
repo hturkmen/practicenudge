@@ -45,6 +45,7 @@ export async function updateSession(request: NextRequest) {
     "/api/",
     "/auth/callback",
     "/consent/",
+    "/unsubscribe",
     "/blog",
     "/mtd",
     "/compare/",
