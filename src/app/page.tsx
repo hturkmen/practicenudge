@@ -17,7 +17,6 @@ import {
   BarChart3,
   FileCheck,
   FileSpreadsheet,
-  Mail,
   AlertTriangle,
   Clock,
   Tag,
@@ -29,6 +28,7 @@ import {
 } from "lucide-react";
 import { LandingLanguageSwitcher } from "@/components/landing-language-switcher";
 import { LanguageContinueLinks } from "@/components/language-continue-links";
+import { MtdFiveAnswers } from "@/components/mtd-five-answers";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { WebsiteStructuredData } from "@/components/structured-data";
 import { DeadlineBanner } from "@/components/deadline-banner";
@@ -55,21 +55,25 @@ export default async function LandingPage() {
             </Link>
           </div>
           <div className="hidden md:flex items-center gap-6 text-[13.5px] font-medium text-slate-600 dark:text-slate-400">
-            <a href="#problem" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navProblem")}</a>
+            <a href="#mtd" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navMtd")}</a>
             <a href="#solution" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navSolution")}</a>
             <a href="#how-it-works" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navHowItWorks")}</a>
             <a href="#pricing" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navPricing")}</a>
             <a href="#faq" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navFaq")}</a>
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <LandingLanguageSwitcher />
+            {/* On phones the hero's language links take over, so the bar fits a 375px screen */}
+            <div className="hidden sm:flex items-center gap-2">
+              <ThemeToggle />
+              <LandingLanguageSwitcher />
+            </div>
             <Link href="/login">
               <Button variant="outline" size="sm" className="text-[13.5px] shadow-sm">{tc("signIn")}</Button>
             </Link>
             <Link href="/register">
               <Button size="sm" className="text-[13.5px] bg-slate-900 hover:bg-slate-800 text-white">
-                {t("ctaPrimary")}
+                <span className="sm:hidden">{t("ctaShort")}</span>
+                <span className="hidden sm:inline">{t("ctaPrimary")}</span>
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Button>
             </Link>
@@ -244,43 +248,8 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Problem */}
-      <section id="problem" className="py-20 px-6 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
-        <div className="max-w-[1080px] mx-auto">
-          <div className="grid md:grid-cols-2 gap-14">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 text-xs font-medium mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-700 dark:bg-amber-400" />
-                {t("navProblem")}
-              </div>
-              <h2 className="text-3xl md:text-[38px] tracking-tight font-semibold text-slate-900 dark:text-white mb-4 leading-tight" style={{ textWrap: "balance" as any }}>
-                {t("problemTitle")}
-              </h2>
-              <p className="text-base text-slate-600 dark:text-slate-400 max-w-[480px]" style={{ textWrap: "pretty" as any }}>
-                {t("problemText1")}
-              </p>
-            </div>
-            <div className="grid gap-3.5">
-              {[
-                { icon: FileSpreadsheet, title: t("problemCard1Title"), body: t("problemCard1Body") },
-                { icon: Mail, title: t("problemCard2Title"), body: t("problemCard2Body") },
-                { icon: AlertTriangle, title: t("problemCard3Title"), body: t("problemCard3Body") },
-                { icon: Clock, title: t("problemCard4Title"), body: t("problemCard4Body") },
-              ].map((x, i) => (
-                <div key={i} className="grid grid-cols-[36px_1fr] gap-3.5 p-4 bg-[#F8FAFC] dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl">
-                  <div className="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-700 dark:text-amber-400">
-                    <x.icon className="h-[17px] w-[17px]" />
-                  </div>
-                  <div>
-                    <div className="text-[14.5px] font-semibold text-slate-900 dark:text-white mb-0.5">{x.title}</div>
-                    <div className="text-[13px] text-slate-600 dark:text-slate-400">{x.body}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* MTD, in five answers (replaces the problem section) */}
+      <MtdFiveAnswers />
 
       {/* Solution / Features */}
       <section id="solution" className="py-20 px-6 bg-[#F8FAFC] dark:bg-slate-950">
