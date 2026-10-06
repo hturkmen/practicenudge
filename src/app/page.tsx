@@ -28,6 +28,7 @@ import {
   Download,
 } from "lucide-react";
 import { LandingLanguageSwitcher } from "@/components/landing-language-switcher";
+import { LanguageContinueLinks } from "@/components/language-continue-links";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { WebsiteStructuredData } from "@/components/structured-data";
 import { DeadlineBanner } from "@/components/deadline-banner";
@@ -89,7 +90,7 @@ export default async function LandingPage() {
               </div>
 
               <h1 className="text-4xl md:text-[56px] leading-[1.04] tracking-[-0.035em] font-semibold text-slate-900 dark:text-white mb-5" style={{ textWrap: "balance" as any }}>
-                {t("heroTitle").split("\n").map((line, i) => (
+                {t("heroTitle2").split("\n").map((line, i) => (
                   <span key={i}>
                     {i > 0 && " "}
                     {line.includes("MTD") ? (
@@ -106,12 +107,24 @@ export default async function LandingPage() {
                 ))}
               </h1>
 
-              <p className="text-lg text-slate-600 dark:text-slate-400 mb-7 max-w-[520px] leading-relaxed" style={{ textWrap: "pretty" as any }}>
-                {t("heroSubtitle")}
+              <p className="text-lg text-slate-600 dark:text-slate-400 mb-5 max-w-[520px] leading-relaxed" style={{ textWrap: "pretty" as any }}>
+                {t("heroSubtitle2")}
               </p>
 
+              {/* How it works, readable in one glance */}
+              <ol className="mb-7 space-y-2">
+                {[t("heroStep1"), t("heroStep2"), t("heroStep3")].map((step, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[15px] text-slate-700 dark:text-slate-300">
+                    <span aria-hidden className="h-6 w-6 shrink-0 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+
               <div className="flex gap-2.5 flex-wrap">
-                <Link href="#pricing">
+                <Link href="/register">
                   <Button size="lg" className="text-[14.5px] px-5 bg-slate-900 hover:bg-slate-800 text-white h-12 rounded-lg shadow-lg shadow-slate-900/20">
                     {t("ctaPrimary")}
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -120,11 +133,38 @@ export default async function LandingPage() {
               </div>
 
               <p className="text-sm text-slate-500 dark:text-slate-500 mt-4">
-                {t("ctaSubtext")}
+                {t("ctaSubtext2")}
               </p>
+
+              <LanguageContinueLinks />
             </div>
 
-            {/* Dashboard mock preview */}
+            {/* The answers a visitor needs first, visible without scrolling on every screen size */}
+            <aside aria-labelledby="mtd-in-30-seconds" className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-[14px] shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18),0_4px_12px_rgba(15,23,42,0.04)] dark:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)] p-6">
+              <h2 id="mtd-in-30-seconds" className="text-xs font-semibold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-5">
+                {t("mtdCardTitle")}
+              </h2>
+              <dl className="space-y-5">
+                {[FileSpreadsheet, Calendar, Send, Clock, BarChart3].map((Icon, i) => (
+                  <div key={i} className="flex gap-3.5">
+                    <div aria-hidden className="mt-0.5 h-8 w-8 shrink-0 rounded-lg bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-400 flex items-center justify-center">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <dt className="text-[15px] font-semibold text-slate-900 dark:text-white">{t(`mtdA${i + 1}Title`)}</dt>
+                      <dd className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{t(`mtdA${i + 1}Body`)}</dd>
+                    </div>
+                  </div>
+                ))}
+              </dl>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* Dashboard preview */}
+      <section className="hidden md:block px-6 pb-16 dark:bg-slate-950">
+        <div className="max-w-[860px] mx-auto">
             <div className="hidden md:block">
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-[14px] shadow-[0_20px_60px_-20px_rgba(15,23,42,0.18),0_4px_12px_rgba(15,23,42,0.04)] dark:shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)] overflow-hidden">
                 {/* Mock top bar */}
@@ -201,7 +241,6 @@ export default async function LandingPage() {
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </section>
 
