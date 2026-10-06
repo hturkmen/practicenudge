@@ -202,7 +202,12 @@
     "checkEmail": "E-postanızı kontrol edin",
     "checkEmailText": "Size bir onay bağlantısı gönderdik. Hesabınızı etkinleştirmek için e-postanızdaki bağlantıya tıklayın.",
     "backToLogin": "Giriş ekranına dön",
-    "passwordTooShort": "Şifre en az 6 karakter olmalıdır"
+    "passwordTooShort": "Şifre en az 6 karakter olmalıdır",
+    "consentOptional": "İsteğe bağlı. <privacy>Gizlilik bildirimimize</privacy> göz atabilirsiniz.",
+    "passwordHint": "En az 8 karakter, 1 büyük harf, 1 rakam",
+    "passwordErrorLength": "Şifre en az 8 karakter olmalıdır",
+    "passwordErrorStrength": "Şifrede en az bir büyük harf ve bir rakam bulunmalıdır",
+    "accountRemoved": "Hesabınız kaldırıldı. Bunun bir hata olduğunu düşünüyorsanız lütfen yönetici ile iletişime geçin."
   },
   "dashboard": {
     "title": "Panel",

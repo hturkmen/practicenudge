@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const t = useTranslations("auth");
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
@@ -78,15 +80,13 @@ export default function LoginPage() {
               </div>
             </Link>
           </div>
-          <CardTitle className="text-2xl">Welcome back</CardTitle>
-          <CardDescription>
-            Sign in to manage your client readiness dashboard
-          </CardDescription>
+          <CardTitle className="text-2xl">{t("welcomeBack")}</CardTitle>
+          <CardDescription>{t("signInSubtitle")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {accountDeleted && (
             <div className="bg-red-100 text-red-700 text-sm p-3 rounded-md">
-              Your account has been removed. Please contact the administrator if you believe this is an error.
+              {t("accountRemoved")}
             </div>
           )}
 
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 />
               </svg>
             )}
-            Continue with Google
+            {t("continueWithGoogle")}
           </Button>
 
           <div className="relative">
@@ -135,7 +135,7 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-card px-2 text-muted-foreground">
-                or continue with email
+                {t("orContinueWithEmail")}
               </span>
             </div>
           </div>
@@ -143,22 +143,22 @@ export default function LoginPage() {
           {/* Email Login */}
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("email")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@yourfirm.co.uk"
+                placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("password")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder={t("passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -166,18 +166,18 @@ export default function LoginPage() {
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Sign in
+              {t("signInButton")}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground text-center">
-            Don&apos;t have an account?{" "}
+            {t("noAccount")}{" "}
             <Link
               href="/register"
               className="text-primary font-medium hover:underline"
             >
-              Start free trial
+              {t("startFreeTrial")}
             </Link>
           </p>
         </CardFooter>

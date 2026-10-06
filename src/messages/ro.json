@@ -161,7 +161,12 @@
     "checkEmail": "Verifică-ți e-mailul",
     "checkEmailText": "Ți-am trimis un link de confirmare. Verifică-ți e-mailul pentru a activa contul.",
     "backToLogin": "Înapoi la conectare",
-    "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere"
+    "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+    "consentOptional": "Opțional. Vezi <privacy>nota noastră de confidențialitate</privacy>.",
+    "passwordHint": "Minimum 8 caractere, 1 literă mare, 1 cifră",
+    "passwordErrorLength": "Parola trebuie să aibă cel puțin 8 caractere",
+    "passwordErrorStrength": "Parola trebuie să conțină cel puțin o literă mare și o cifră",
+    "accountRemoved": "Contul tău a fost șters. Dacă crezi că este o greșeală, contactează administratorul."
   },
   "dashboard": {
     "title": "Panou",

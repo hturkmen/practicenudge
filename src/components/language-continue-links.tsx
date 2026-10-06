@@ -19,24 +19,22 @@ export function LanguageContinueLinks() {
   const [pending, startTransition] = useTransition();
 
   return (
-    <nav aria-label="Language" className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-slate-500 dark:text-slate-400">
-      {OPTIONS.filter((option) => option.locale !== current).map((option, i) => (
-        <span key={option.locale} className="flex items-center gap-3">
-          {i > 0 && <span aria-hidden>·</span>}
-          <button
-            type="button"
-            lang={option.locale}
-            dir={option.dir}
-            disabled={pending}
-            onClick={() => startTransition(async () => {
-              await setUserLocale(option.locale);
-              window.location.reload();
-            })}
-            className="underline-offset-4 hover:underline hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
-          >
-            {option.label}
-          </button>
-        </span>
+    <nav aria-label="Language" className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm">
+      {OPTIONS.filter((option) => option.locale !== current).map((option) => (
+        <button
+          key={option.locale}
+          type="button"
+          lang={option.locale}
+          dir={option.dir}
+          disabled={pending}
+          onClick={() => startTransition(async () => {
+            await setUserLocale(option.locale);
+            window.location.reload();
+          })}
+          className="font-medium text-teal-700 underline underline-offset-4 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100 disabled:opacity-50"
+        >
+          {option.label}
+        </button>
       ))}
     </nav>
   );

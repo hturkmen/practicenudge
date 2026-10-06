@@ -161,7 +161,12 @@
     "checkEmail": "Sprawdź swój e-mail",
     "checkEmailText": "Wysłaliśmy ci link potwierdzający. Sprawdź swój e-mail, aby aktywować konto.",
     "backToLogin": "Powrót do logowania",
-    "passwordTooShort": "Hasło musi mieć co najmniej 6 znaków"
+    "passwordTooShort": "Hasło musi mieć co najmniej 6 znaków",
+    "consentOptional": "Opcjonalnie. Zobacz naszą <privacy>informację o prywatności</privacy>.",
+    "passwordHint": "Min. 8 znaków, 1 wielka litera, 1 cyfra",
+    "passwordErrorLength": "Hasło musi mieć co najmniej 8 znaków",
+    "passwordErrorStrength": "Hasło musi zawierać co najmniej jedną wielką literę i jedną cyfrę",
+    "accountRemoved": "Twoje konto zostało usunięte. Jeśli uważasz, że to pomyłka, skontaktuj się z administratorem."
   },
   "dashboard": {
     "title": "Panel",

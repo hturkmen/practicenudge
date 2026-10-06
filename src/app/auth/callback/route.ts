@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { CONSENT_COOKIE, SIGNUP_CONSENT_VERSION } from "@/lib/outreach/consent";
+import { CONSENT_COOKIE, isSignupConsentVersion } from "@/lib/outreach/consent";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       if (consentVersion) {
         response.cookies.set(CONSENT_COOKIE, "", { maxAge: 0, path: "/" });
         const { data: { user } } = await supabase.auth.getUser();
-        if (user?.email && consentVersion === SIGNUP_CONSENT_VERSION) {
+        if (user?.email && isSignupConsentVersion(consentVersion)) {
           const { error: consentError } = await createServiceClient().rpc("outreach_record_basis", {
             p_email: user.email,
             p_basis: "consent",

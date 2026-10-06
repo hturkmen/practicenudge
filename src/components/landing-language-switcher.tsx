@@ -27,7 +27,7 @@ export function LandingLanguageSwitcher() {
 
   return (
     <Select value={locale} onValueChange={handleChange} disabled={isPending}>
-      <SelectTrigger className="w-[130px] h-9 text-sm border border-border bg-white hover:bg-gray-50 rounded-md gap-2">
+      <SelectTrigger className="w-[130px] h-9 text-sm border border-border bg-white hover:bg-gray-50 text-slate-900 rounded-md gap-2 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-100 dark:border-slate-600">
         <Globe className="h-4 w-4 text-muted-foreground" />
         <SelectValue />
       </SelectTrigger>

@@ -121,7 +121,12 @@
     "checkEmail": "Vérifiez votre e-mail",
     "checkEmailText": "Nous vous avons envoyé un lien de confirmation. Vérifiez votre e-mail pour activer votre compte.",
     "backToLogin": "Retour à la connexion",
-    "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères"
+    "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+    "consentOptional": "Facultatif. Consultez notre <privacy>avis de confidentialité</privacy>.",
+    "passwordHint": "8 caractères minimum, 1 majuscule, 1 chiffre",
+    "passwordErrorLength": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwordErrorStrength": "Le mot de passe doit contenir au moins une majuscule et un chiffre",
+    "accountRemoved": "Votre compte a été supprimé. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur."
   },
   "dashboard": {
     "title": "Tableau de bord",

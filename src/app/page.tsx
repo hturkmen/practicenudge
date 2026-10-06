@@ -52,7 +52,8 @@ export default async function LandingPage() {
         <div className="max-w-[1180px] mx-auto px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/">
-              <Image src="/logo.svg" alt="PracticeNudge - MTD Client Tracking Tool" width={112} height={28} priority />
+              <Image src="/logo.svg" alt="PracticeNudge - MTD Client Tracking Tool" width={112} height={28} priority className="dark:hidden" />
+              <Image src="/logo-dark.svg" alt="" width={112} height={28} priority className="hidden dark:block" />
             </Link>
           </div>
           <div className="hidden md:flex items-center gap-6 text-[13.5px] font-medium text-slate-600 dark:text-slate-400">
@@ -72,7 +73,7 @@ export default async function LandingPage() {
               <Button variant="outline" size="sm" className="text-[13.5px] shadow-sm">{tc("signIn")}</Button>
             </Link>
             <Link href="/register">
-              <Button size="sm" className="text-[13.5px] bg-slate-900 hover:bg-slate-800 text-white">
+              <Button size="sm" className="text-[13.5px] bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
                 <span className="sm:hidden">{t("ctaShort")}</span>
                 <span className="hidden sm:inline">{t("ctaPrimary")}</span>
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -139,14 +140,14 @@ export default async function LandingPage() {
 
               <div className="flex gap-2.5 flex-wrap">
                 <Link href="/register">
-                  <Button size="lg" className="text-[14.5px] px-5 bg-slate-900 hover:bg-slate-800 text-white h-12 rounded-lg shadow-lg shadow-slate-900/20">
+                  <Button size="lg" className="text-[14.5px] px-5 bg-slate-900 hover:bg-slate-800 text-white h-12 rounded-lg shadow-lg shadow-slate-900/20 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 dark:shadow-none">
                     {t("ctaPrimary")}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </div>
 
-              <p className="text-sm text-slate-500 dark:text-slate-500 mt-4">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-4">
                 {t("ctaSubtext2")}
               </p>
 
@@ -419,7 +420,7 @@ export default async function LandingPage() {
                   <Button
                     className={`w-full ${
                       p.primary
-                        ? "bg-slate-900 hover:bg-slate-800 text-white"
+                        ? "bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
                         : "bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 shadow-sm"
                     }`}
                     variant={p.primary ? "default" : "outline"}

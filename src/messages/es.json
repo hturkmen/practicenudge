@@ -121,7 +121,12 @@
     "checkEmail": "Revisa tu correo",
     "checkEmailText": "Te hemos enviado un enlace de confirmación. Revisa tu correo para activar tu cuenta.",
     "backToLogin": "Volver al inicio de sesión",
-    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "consentOptional": "Opcional. Consulta nuestro <privacy>aviso de privacidad</privacy>.",
+    "passwordHint": "Mínimo 8 caracteres, 1 mayúscula, 1 número",
+    "passwordErrorLength": "La contraseña debe tener al menos 8 caracteres",
+    "passwordErrorStrength": "La contraseña debe incluir al menos una mayúscula y un número",
+    "accountRemoved": "Tu cuenta ha sido eliminada. Si crees que es un error, ponte en contacto con el administrador."
   },
   "dashboard": {
     "title": "Panel",

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FileCheck, Loader2 } from "lucide-react";
-import { CONSENT_COOKIE, SIGNUP_CONSENT_TEXT, SIGNUP_CONSENT_VERSION } from "@/lib/outreach/consent";
+import { CONSENT_COOKIE, signupConsent } from "@/lib/outreach/consent";
 
 export default function RegisterPage() {
   const [firmName, setFirmName] = useState("");
@@ -29,6 +30,8 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false);
   // Unticked by default: consent must be an active choice.
   const [marketingConsent, setMarketingConsent] = useState(false);
+  const t = useTranslations("auth");
+  const consent = signupConsent(useLocale());
   const router = useRouter();
   const searchParams = useSearchParams();
   const inviteFirmId = searchParams.get("invite");
@@ -41,13 +44,13 @@ export default function RegisterPage() {
     setLoading(true);
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters");
+      setError(t("passwordErrorLength"));
       setLoading(false);
       return;
     }
 
     if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-      setError("Password must contain at least one uppercase letter and one number");
+      setError(t("passwordErrorStrength"));
       setLoading(false);
       return;
     }
@@ -61,7 +64,7 @@ export default function RegisterPage() {
           invite_firm_id: inviteFirmId || undefined,
           invite_role: inviteFirmId ? inviteRole : undefined,
           marketing_consent: marketingConsent,
-          marketing_consent_version: marketingConsent ? SIGNUP_CONSENT_VERSION : undefined,
+          marketing_consent_version: marketingConsent ? consent.version : undefined,
         },
       },
     });
@@ -87,7 +90,7 @@ export default function RegisterPage() {
 
     // OAuth redirects cannot carry metadata, so the auth callback reads this short-lived cookie.
     document.cookie = marketingConsent
-      ? `${CONSENT_COOKIE}=${SIGNUP_CONSENT_VERSION}; Max-Age=900; Path=/; SameSite=Lax; Secure`
+      ? `${CONSENT_COOKIE}=${consent.version}; Max-Age=900; Path=/; SameSite=Lax; Secure`
       : `${CONSENT_COOKIE}=; Max-Age=0; Path=/`;
 
     const { error } = await supabase.auth.signInWithOAuth({
@@ -115,15 +118,12 @@ export default function RegisterPage() {
                 </div>
               </Link>
             </div>
-            <CardTitle className="text-2xl">Check your email</CardTitle>
-            <CardDescription>
-              We&apos;ve sent you a confirmation link. Please check your email to
-              activate your account.
-            </CardDescription>
+            <CardTitle className="text-2xl">{t("checkEmail")}</CardTitle>
+            <CardDescription>{t("checkEmailText")}</CardDescription>
           </CardHeader>
           <CardFooter className="justify-center">
             <Link href="/login">
-              <Button variant="outline">Back to login</Button>
+              <Button variant="outline">{t("backToLogin")}</Button>
             </Link>
           </CardFooter>
         </Card>
@@ -142,10 +142,8 @@ export default function RegisterPage() {
               </div>
             </Link>
           </div>
-          <CardTitle className="text-2xl">Start your free trial</CardTitle>
-          <CardDescription>
-            Join the early access pilot. No credit card required.
-          </CardDescription>
+          <CardTitle className="text-2xl">{t("startFreeTrialTitle")}</CardTitle>
+          <CardDescription>{t("startFreeTrialSubtitle")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {error && (
@@ -165,11 +163,12 @@ export default function RegisterPage() {
             />
             <div className="space-y-1">
               <Label htmlFor="marketing-consent" className="text-sm font-normal leading-snug">
-                {SIGNUP_CONSENT_TEXT}
+                {consent.text}
               </Label>
               <p className="text-xs text-muted-foreground">
-                Optional. See our{" "}
-                <Link href="/privacy" className="underline hover:text-foreground">privacy notice</Link>.
+                {t.rich("consentOptional", {
+                  privacy: (chunks) => <Link href="/privacy" className="underline hover:text-foreground">{chunks}</Link>,
+                })}
               </p>
             </div>
           </div>
@@ -204,7 +203,7 @@ export default function RegisterPage() {
                 />
               </svg>
             )}
-            Continue with Google
+            {t("continueWithGoogle")}
           </Button>
 
           <div className="relative">
@@ -213,7 +212,7 @@ export default function RegisterPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-card px-2 text-muted-foreground">
-                or register with email
+                {t("orRegisterWithEmail")}
               </span>
             </div>
           </div>
@@ -221,33 +220,33 @@ export default function RegisterPage() {
           {/* Email Register */}
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="firmName">Firm name</Label>
+              <Label htmlFor="firmName">{t("firmName")}</Label>
               <Input
                 id="firmName"
                 type="text"
-                placeholder="Smith & Co Accountants"
+                placeholder={t("firmNamePlaceholder")}
                 value={firmName}
                 onChange={(e) => setFirmName(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("email")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@yourfirm.co.uk"
+                placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("password")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Min 8 chars, 1 uppercase, 1 number"
+                placeholder={t("passwordHint")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -256,18 +255,18 @@ export default function RegisterPage() {
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create account
+              {t("createAccount")}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground text-center">
-            Already have an account?{" "}
+            {t("alreadyHaveAccount")}{" "}
             <Link
               href="/login"
               className="text-primary font-medium hover:underline"
             >
-              Sign in
+              {t("signInButton")}
             </Link>
           </p>
         </CardFooter>

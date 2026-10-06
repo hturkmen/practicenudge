@@ -202,7 +202,12 @@
     "checkEmail": "Check your email",
     "checkEmailText": "We've sent you a confirmation link. Please check your email to activate your account.",
     "backToLogin": "Back to login",
-    "passwordTooShort": "Password must be at least 6 characters"
+    "passwordTooShort": "Password must be at least 6 characters",
+    "consentOptional": "Optional. See our <privacy>privacy notice</privacy>.",
+    "passwordHint": "Min 8 chars, 1 uppercase, 1 number",
+    "passwordErrorLength": "Password must be at least 8 characters",
+    "passwordErrorStrength": "Password must contain at least one uppercase letter and one number",
+    "accountRemoved": "Your account has been removed. Please contact the administrator if you believe this is an error."
   },
   "dashboard": {
     "title": "Dashboard",
