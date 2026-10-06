@@ -32,6 +32,7 @@ import { MtdFiveAnswers } from "@/components/mtd-five-answers";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { WebsiteStructuredData } from "@/components/structured-data";
 import { DeadlineBanner } from "@/components/deadline-banner";
+import { ExitIntentModal } from "@/components/exit-intent-modal";
 import { getTranslations } from "next-intl/server";
 
 export const revalidate = 3600;
@@ -547,6 +548,8 @@ export default async function LandingPage() {
           </div>
         </div>
       </footer>
+
+      <ExitIntentModal />
     </div>
   );
 }
