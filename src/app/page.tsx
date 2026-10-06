@@ -89,7 +89,16 @@ export default async function LandingPage() {
             <div>
               {/* Eyebrow badge */}
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-400 text-xs font-medium mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-teal-700 dark:bg-teal-400" />
+                <svg aria-label="UK" role="img" viewBox="0 0 60 30" className="w-4 h-auto rounded-[2px] shrink-0">
+                  <clipPath id="uk-flag-clip"><path d="M0,0 v30 h60 v-30 z" /></clipPath>
+                  <g clipPath="url(#uk-flag-clip)">
+                    <path d="M0,0 v30 h60 v-30 z" fill="#012169" />
+                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
+                    <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#uk-flag-clip)" stroke="#C8102E" strokeWidth="4" />
+                    <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10" />
+                    <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6" />
+                  </g>
+                </svg>
                 {t("badge")}
               </div>
 

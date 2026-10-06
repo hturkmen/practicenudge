@@ -54,7 +54,7 @@ export async function MtdFiveAnswers() {
                 <span className="font-bold tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                 <span className="text-[#4A5A55] dark:text-[#9FB3AB]"> · {column.question}</span>
               </p>
-              <h3 className="mb-4 break-words text-[28px] font-extrabold leading-[1.05] tracking-[-0.03em] xl:text-[32px]">{column.headline}</h3>
+              <h3 className="mb-4 hyphens-auto break-words text-[20px] font-extrabold leading-[1.12] tracking-[-0.02em] lg:text-[19px] xl:text-[22px]">{column.headline}</h3>
               <div className="text-[15px] leading-relaxed text-[#2E403B] dark:text-[#C9D8D2]">{column.body}</div>
             </li>
           ))}
