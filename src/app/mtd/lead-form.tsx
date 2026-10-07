@@ -19,10 +19,12 @@ import { LEAD_FORM_PROMISE } from "@/lib/outreach/consent";
 export function MTDLeadForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     const formData = new FormData(e.currentTarget);
     const data = {
@@ -42,7 +44,7 @@ export function MTDLeadForm() {
       if (!res.ok) throw new Error("Submission failed");
       setSubmitted(true);
     } catch {
-      alert("Something went wrong. Please try again.");
+      setError("Something went wrong. Please check your details and try again.");
     } finally {
       setLoading(false);
     }
@@ -50,33 +52,40 @@ export function MTDLeadForm() {
 
   if (submitted) {
     return (
-      <div className="text-center py-8">
+      <div className="text-center py-4" role="status">
         <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-950 flex items-center justify-center mx-auto mb-6">
           <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
         </div>
-        <h2 className="text-2xl font-bold mb-4">You&apos;re in!</h2>
-        <p className="text-muted-foreground mb-6">
-          Check your inbox — we&apos;ve sent you the MTD Client Readiness Tracker Template.
+        <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white">You&apos;re in!</h3>
+        <p className="text-slate-600 dark:text-slate-400 mb-1">
+          Check your inbox. We&apos;ve sent you the MTD Client Readiness Tracker.
         </p>
-        <Card className="text-left">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Not there after a few minutes? Check your spam folder.</p>
+        <Card className="text-left border-2 border-teal-700 dark:border-teal-500">
           <CardHeader>
-            <CardTitle className="text-lg">While you&apos;re here...</CardTitle>
+            <CardTitle className="text-lg">Next step: skip the spreadsheet</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              We&apos;re building PracticeNudge — a dashboard that does what this spreadsheet does,
-              but automatically. Live status tracking, follow-up reminders, and risk scoring
-              for every client.
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              Updating a sheet every week gets old. With PracticeNudge your clients send their records
+              through a secure upload link, reminders go out on their own, and the status of every
+              client stays up to date.
             </p>
-            <p className="text-sm text-muted-foreground">
-              We&apos;re looking for 10 small UK practices to pilot it (free).
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              The pilot is free for the first 3 months and open to the first 50 small UK practices.
+              No credit card.
             </p>
-            <Link href="/#pricing">
-              <Button className="w-full mt-2">
-                Learn about the pilot
+            <Link href="/register">
+              <Button className="w-full mt-2 h-11 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
+                Join the free pilot
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
+            <p className="text-center text-sm">
+              <Link href="/what-is-mtd" className="font-medium text-teal-700 dark:text-teal-300 underline underline-offset-4 hover:text-teal-900 dark:hover:text-teal-100">
+                New to MTD? Read the plain-English explanation
+              </Link>
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -86,13 +95,13 @@ export function MTDLeadForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Get the free tracker</CardTitle>
+        <CardTitle>Send me the tracker</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Your name</Label>
-            <Input id="name" name="name" placeholder="Jane Smith" required />
+            <Input id="name" name="name" placeholder="Jane Smith" autoComplete="name" required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Work email</Label>
@@ -101,6 +110,7 @@ export function MTDLeadForm() {
               name="email"
               type="email"
               placeholder="jane@yourpractice.co.uk"
+              autoComplete="email"
               required
             />
           </div>
@@ -110,13 +120,14 @@ export function MTDLeadForm() {
               id="practice"
               name="practice"
               placeholder="Smith & Co Accountants"
+              autoComplete="organization"
               required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="clients">How many clients do you have?</Label>
             <Select name="clients" required>
-              <SelectTrigger>
+              <SelectTrigger id="clients">
                 <SelectValue placeholder="Select range" />
               </SelectTrigger>
               <SelectContent>
@@ -128,6 +139,11 @@ export function MTDLeadForm() {
               </SelectContent>
             </Select>
           </div>
+          {error && (
+            <div role="alert" className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
+              {error}
+            </div>
+          )}
           <Button type="submit" className="w-full" size="lg" disabled={loading}>
             {loading ? "Sending..." : "Send me the tracker"}
             {!loading && <ArrowRight className="ml-2 h-4 w-4" />}

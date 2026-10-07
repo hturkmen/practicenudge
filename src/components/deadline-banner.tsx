@@ -1,20 +1,6 @@
 import Link from "next/link";
 import { Clock, ArrowRight } from "lucide-react";
-
-const DEADLINES = [
-  { label: "Q1", date: new Date("2026-08-07T23:59:59Z") },
-  { label: "Q2", date: new Date("2026-11-07T23:59:59Z") },
-  { label: "Q3", date: new Date("2027-02-07T23:59:59Z") },
-  { label: "Q4", date: new Date("2027-05-07T23:59:59Z") },
-];
-
-function nextDeadline(now: Date) {
-  return DEADLINES.find((d) => d.date.getTime() > now.getTime()) ?? null;
-}
-
-function formatDate(d: Date) {
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-}
+import { formatDeadlineDate, nextDeadline } from "@/lib/mtd-deadlines";
 
 export function DeadlineBanner() {
   const now = new Date();
@@ -44,7 +30,7 @@ export function DeadlineBanner() {
           aria-hidden
         />
         <span className="text-slate-700 dark:text-slate-300">
-          MTD ITSA <strong>{next.label} submission</strong> deadline · {formatDate(next.date)} ·{" "}
+          MTD ITSA <strong>{next.label} submission</strong> deadline · {formatDeadlineDate(next.date)} ·{" "}
           <strong
             className={
               urgent
