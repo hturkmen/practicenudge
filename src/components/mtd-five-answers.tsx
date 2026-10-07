@@ -65,6 +65,9 @@ export async function MtdFiveAnswers() {
             {t("ctaPrimary")}
           </Link>
           <p className="text-sm text-[#4A5A55] dark:text-[#9FB3AB]">{t("ctaSubtext")}</p>
+          <Link href="/what-is-mtd" className="text-sm font-semibold text-[#1F7A55] underline underline-offset-4 hover:text-[#0E2621] dark:text-[#6FD3A6] dark:hover:text-white">
+            {t("mtdReadMore")} →
+          </Link>
         </div>
       </div>
     </section>

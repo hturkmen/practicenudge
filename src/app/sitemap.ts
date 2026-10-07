@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Static pages
   const staticPages = [
     { url: baseUrl, lastModified: new Date("2026-05-22"), changeFrequency: "weekly" as const, priority: 1 },
+    { url: `${baseUrl}/what-is-mtd`, lastModified: new Date("2026-10-07"), changeFrequency: "monthly" as const, priority: 0.9 },
     { url: `${baseUrl}/mtd`, lastModified: new Date("2026-05-22"), changeFrequency: "monthly" as const, priority: 0.9 },
     { url: `${baseUrl}/compare/sage-mtd-agent`, lastModified: new Date("2026-05-20"), changeFrequency: "monthly" as const, priority: 0.8 },
     { url: `${baseUrl}/blog`, lastModified: new Date("2026-05-22"), changeFrequency: "weekly" as const, priority: 0.8 },
