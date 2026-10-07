@@ -13,13 +13,13 @@ export function nextDeadline(now: Date): MtdDeadline | null {
 }
 
 /** "7 November 2026" */
-export function formatDeadlineDate(d: Date): string {
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+export function formatDeadlineDate(d: Date, locale = "en-GB"): string {
+  return d.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 }
 
 /** "7 November" */
-export function formatDeadlineDay(d: Date): string {
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+export function formatDeadlineDay(d: Date, locale = "en-GB"): string {
+  return d.toLocaleDateString(locale, { day: "numeric", month: "long", timeZone: "UTC" });
 }
 
 /**

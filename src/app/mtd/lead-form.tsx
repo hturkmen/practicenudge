@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { LEAD_FORM_PROMISE } from "@/lib/outreach/consent";
 
 export function MTDLeadForm() {
+  const t = useTranslations("mtdPage");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export function MTDLeadForm() {
       if (!res.ok) throw new Error("Submission failed");
       setSubmitted(true);
     } catch {
-      setError("Something went wrong. Please check your details and try again.");
+      setError(t("fError"));
     } finally {
       setLoading(false);
     }
@@ -56,34 +58,31 @@ export function MTDLeadForm() {
         <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-950 flex items-center justify-center mx-auto mb-6">
           <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
         </div>
-        <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white">You&apos;re in!</h3>
+        <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white">{t("okTitle")}</h3>
         <p className="text-slate-600 dark:text-slate-400 mb-1">
-          Check your inbox. We&apos;ve sent you the MTD Client Readiness Tracker.
+          {t("okText")}
         </p>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Not there after a few minutes? Check your spam folder.</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">{t("okSpam")}</p>
         <Card className="text-left border-2 border-teal-700 dark:border-teal-500">
           <CardHeader>
-            <CardTitle className="text-lg">Next step: skip the spreadsheet</CardTitle>
+            <CardTitle className="text-lg">{t("nextTitle")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Updating a sheet every week gets old. With PracticeNudge your clients send their records
-              through a secure upload link, reminders go out on their own, and the status of every
-              client stays up to date.
+              {t("nextP1")}
             </p>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              The pilot is free for the first 3 months and open to the first 50 small UK practices.
-              No credit card.
+              {t("nextP2")}
             </p>
             <Link href="/register">
               <Button className="w-full mt-2 h-11 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
-                Join the free pilot
+                {t("joinPilot")}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <p className="text-center text-sm">
               <Link href="/what-is-mtd" className="font-medium text-teal-700 dark:text-teal-300 underline underline-offset-4 hover:text-teal-900 dark:hover:text-teal-100">
-                New to MTD? Read the plain-English explanation
+                {t("nextExplain")}
               </Link>
             </p>
           </CardContent>
@@ -95,47 +94,47 @@ export function MTDLeadForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Send me the tracker</CardTitle>
+        <CardTitle>{t("formTitle")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Your name</Label>
-            <Input id="name" name="name" placeholder="Jane Smith" autoComplete="name" required />
+            <Label htmlFor="name">{t("fName")}</Label>
+            <Input id="name" name="name" placeholder={t("fNamePh")} autoComplete="name" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Work email</Label>
+            <Label htmlFor="email">{t("fEmail")}</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder="jane@yourpractice.co.uk"
+              placeholder={t("fEmailPh")}
               autoComplete="email"
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="practice">Practice name</Label>
+            <Label htmlFor="practice">{t("fPractice")}</Label>
             <Input
               id="practice"
               name="practice"
-              placeholder="Smith & Co Accountants"
+              placeholder={t("fPracticePh")}
               autoComplete="organization"
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="clients">How many clients do you have?</Label>
+            <Label htmlFor="clients">{t("fClients")}</Label>
             <Select name="clients" required>
               <SelectTrigger id="clients">
-                <SelectValue placeholder="Select range" />
+                <SelectValue placeholder={t("fSelect")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1-20">1–20 clients</SelectItem>
-                <SelectItem value="21-50">21–50 clients</SelectItem>
-                <SelectItem value="51-100">51–100 clients</SelectItem>
-                <SelectItem value="101-200">101–200 clients</SelectItem>
-                <SelectItem value="200+">200+ clients</SelectItem>
+                <SelectItem value="1-20">{t("fRange1")}</SelectItem>
+                <SelectItem value="21-50">{t("fRange2")}</SelectItem>
+                <SelectItem value="51-100">{t("fRange3")}</SelectItem>
+                <SelectItem value="101-200">{t("fRange4")}</SelectItem>
+                <SelectItem value="200+">{t("fRange5")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -145,12 +144,12 @@ export function MTDLeadForm() {
             </div>
           )}
           <Button type="submit" className="w-full" size="lg" disabled={loading}>
-            {loading ? "Sending..." : "Send me the tracker"}
+            {loading ? t("fSending") : t("fSubmit")}
             {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
           </Button>
           <p className="text-xs text-muted-foreground text-center">
             {LEAD_FORM_PROMISE}{" "}
-            <Link href="/privacy" className="underline hover:text-foreground">Privacy notice</Link>
+            <Link href="/privacy" className="underline hover:text-foreground">{t("fPrivacy")}</Link>
           </p>
         </form>
       </CardContent>
