@@ -4,8 +4,21 @@
     {
       "name": "practicenudge-dev",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["node_modules/next/dist/bin/next", "dev", "-p", "3000"],
+      "runtimeArgs": [
+        "node_modules/next/dist/bin/next",
+        "dev",
+        "-p",
+        "3000"
+      ],
       "port": 3000
+    },
+    {
+      "name": "practicenudge-demo",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/demo/dev-demo.mjs"
+      ],
+      "port": 3100
     }
   ]
 }
