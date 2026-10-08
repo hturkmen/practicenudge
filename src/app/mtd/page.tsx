@@ -14,6 +14,7 @@ import {
   Download,
   Users,
   AlertTriangle,
+  ArrowLeft,
   ArrowRight,
   Check,
 } from "lucide-react";
@@ -192,6 +193,7 @@ export default async function MTDLandingPage() {
               <Image src="/logo-dark.svg" alt="" width={112} height={28} priority className="hidden dark:block" />
             </Link>
             <div className="hidden md:flex items-center gap-6 text-[13.5px] font-medium text-slate-600 dark:text-slate-400">
+              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navHome")}</Link>
               <Link href="/what-is-mtd" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navExplained")}</Link>
               <a href="#options" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navOptions")}</a>
               <Link href="/blog" className="hover:text-slate-900 dark:hover:text-white transition-colors">{t("navBlog")}</Link>
@@ -220,6 +222,10 @@ export default async function MTDLandingPage() {
         <section className="py-14 md:py-20 px-6">
           <div className="max-w-[1180px] mx-auto grid md:grid-cols-[5fr_6fr] gap-12 items-center">
             <div>
+              <Link href="/" className="flex w-fit items-center gap-1.5 text-sm font-medium text-teal-700 dark:text-teal-300 hover:text-teal-900 dark:hover:text-teal-100 mb-5">
+                <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                {t("backHome")}
+              </Link>
               <Badge className="mb-4" variant="outline">
                 {t("heroBadge")}
               </Badge>

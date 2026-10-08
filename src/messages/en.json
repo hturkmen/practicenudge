@@ -480,6 +480,8 @@
     "metaTitle": "Free MTD Client Readiness Tracker",
     "metaDescription": "A free MTD client readiness tracker for UK accountants, plus the PracticeNudge pilot that collects your clients' records for you: checklist, secure upload link and automatic reminders.",
     "ogDescription": "Know which clients are MTD-ready. Start with the free tracker, or let PracticeNudge collect the records for you.",
+    "navHome": "Home",
+    "backHome": "Back to the PracticeNudge home page",
     "navExplained": "MTD explained",
     "navOptions": "Tracker or pilot",
     "navBlog": "Blog",
