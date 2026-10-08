@@ -17,11 +17,16 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       const response = NextResponse.redirect(`${origin}${safeNext}`);
+      const { data: { user } } = await supabase.auth.getUser();
+      // A brand-new account: leave a short-lived flag so the browser can report the sign-up to Google Analytics.
+      // Readable by script on purpose, and it holds no personal data.
+      if (user?.created_at && Date.now() - new Date(user.created_at).getTime() < 2 * 60 * 1000) {
+        response.cookies.set("pn_signup", "google", { maxAge: 300, path: "/", sameSite: "lax", httpOnly: false });
+      }
       // Consent ticked on the sign-up page before a Google redirect; recorded for this user only.
       const consentVersion = cookies().get(CONSENT_COOKIE)?.value;
       if (consentVersion) {
         response.cookies.set(CONSENT_COOKIE, "", { maxAge: 0, path: "/" });
-        const { data: { user } } = await supabase.auth.getUser();
         if (user?.email && isSignupConsentVersion(consentVersion)) {
           const { error: consentError } = await createServiceClient().rpc("outreach_record_basis", {
             p_email: user.email,

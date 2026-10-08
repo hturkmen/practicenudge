@@ -219,7 +219,7 @@ export default async function MTDLandingPage() {
 
       <main>
         {/* Hero */}
-        <section className="py-14 md:py-20 px-6">
+        <section data-cta-location="hero" className="py-14 md:py-20 px-6">
           <div className="max-w-[1180px] mx-auto grid md:grid-cols-[5fr_6fr] gap-12 items-center">
             <div>
               <Link href="/" className="flex w-fit items-center gap-1.5 text-sm font-medium text-teal-700 dark:text-teal-300 hover:text-teal-900 dark:hover:text-teal-100 mb-5">
@@ -416,7 +416,7 @@ export default async function MTDLandingPage() {
         </section>
 
         {/* Closing call to action */}
-        <section className="py-[72px] px-6 bg-slate-900">
+        <section data-cta-location="closing" className="py-[72px] px-6 bg-slate-900">
           <div className="max-w-[760px] mx-auto text-center">
             <h2 className="text-3xl md:text-[40px] font-semibold text-white mb-3.5 tracking-tight" style={{ textWrap: "balance" as never }}>
               {t("closeTitle")}

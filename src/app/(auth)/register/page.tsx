@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/card";
 import { FileCheck, Loader2 } from "lucide-react";
 import { CONSENT_COOKIE, signupConsent } from "@/lib/outreach/consent";
+import { trackEvent } from "@/lib/analytics";
 
 export default function RegisterPage() {
   const [firmName, setFirmName] = useState("");
@@ -75,6 +76,8 @@ export default function RegisterPage() {
       return;
     }
 
+    trackEvent("sign_up", { method: "email" });
+
     if (data.session) {
       window.location.href = "/dashboard";
       return;
@@ -93,6 +96,7 @@ export default function RegisterPage() {
       ? `${CONSENT_COOKIE}=${consent.version}; Max-Age=900; Path=/; SameSite=Lax; Secure`
       : `${CONSENT_COOKIE}=; Max-Age=0; Path=/`;
 
+    trackEvent("sign_up_start", { method: "google" });
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {

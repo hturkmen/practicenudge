@@ -85,7 +85,7 @@ export default async function LandingPage() {
       </header>
 
       {/* Hero — split layout */}
-      <section className="py-16 md:py-20 px-6 dark:bg-slate-950" style={{ background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(15,118,110,0.07), transparent 60%)" }}>
+      <section data-cta-location="hero" className="py-16 md:py-20 px-6 dark:bg-slate-950" style={{ background: "radial-gradient(ellipse 80% 60% at 50% -20%, rgba(15,118,110,0.07), transparent 60%)" }}>
         <div className="max-w-[1180px] mx-auto">
           <div className="grid md:grid-cols-[5fr_6fr] gap-14 items-center">
             <div>
@@ -479,7 +479,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-[72px] px-6 bg-slate-900">
+      <section data-cta-location="closing" className="py-[72px] px-6 bg-slate-900">
         <div className="max-w-[760px] mx-auto text-center">
           <h2 className="text-3xl md:text-[40px] font-semibold text-white mb-3.5 tracking-tight" style={{ textWrap: "balance" as any }}>
             {t("finalCtaTitle")}

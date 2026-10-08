@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowRight, Check } from "lucide-react";
 import { LEAD_FORM_PROMISE } from "@/lib/outreach/consent";
+import { trackEvent } from "@/lib/analytics";
 
 export function MTDLeadForm() {
   const t = useTranslations("mtdPage");
@@ -44,6 +45,7 @@ export function MTDLeadForm() {
       });
 
       if (!res.ok) throw new Error("Submission failed");
+      trackEvent("generate_lead", { lead_source: "mtd_tracker", client_range: String(data.clients ?? "") });
       setSubmitted(true);
     } catch {
       setError(t("fError"));
