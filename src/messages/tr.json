@@ -30,6 +30,7 @@
     "superAdmin": "Süper Yönetici"
   },
   "landing": {
+    "mtdFull": "MTD = Making Tax Digital for Income Tax (Gelir Vergisi için Dijital Vergi)",
     "badge": "UK’deki küçük muhasebe firmaları için tasarlandı",
     "heroTitle": "MTD için gerekli bilgi ve belgelerin\npeşinden koşmayı bırakın.",
     "heroSubtitle": "PracticeNudge, hangi müşterilerinizin MTD’ye hazır olduğunu, hangi bilgi ve belgelerin eksik kaldığını ve kimlere hatırlatma göndermeniz gerektiğini tek ekranda gösterir. UK’deki küçük muhasebe firmaları için tasarlanmıştır.",
@@ -486,6 +487,7 @@
     "navOptions": "Tablo mu, pilot mu",
     "navBlog": "Blog",
     "joinPilot": "Pilot Programa Katılın",
+    "mtdFull": "MTD = Making Tax Digital for Income Tax (Gelir Vergisi için Dijital Vergi)",
     "heroBadge": "UK'deki küçük muhasebe firmaları için",
     "heroT1a": "MTD'ye kimin hazır",
     "heroT1b": "olduğunu bilin.",

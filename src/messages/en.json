@@ -30,6 +30,7 @@
     "superAdmin": "Super Admin"
   },
   "landing": {
+    "mtdFull": "MTD = Making Tax Digital for Income Tax",
     "badge": "Built for small UK practices",
     "heroTitle": "Stop chasing clients\nfor MTD information.",
     "heroSubtitle": "PracticeNudge shows you which clients are MTD-ready, what's missing, and who needs a nudge. All in one dashboard built for small UK practices.",
@@ -486,6 +487,7 @@
     "navOptions": "Tracker or pilot",
     "navBlog": "Blog",
     "joinPilot": "Join the free pilot",
+    "mtdFull": "MTD = Making Tax Digital for Income Tax",
     "heroBadge": "For small UK accounting practices",
     "heroT1a": "Know who's",
     "heroT1b": "MTD-ready.",

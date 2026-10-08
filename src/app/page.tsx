@@ -122,6 +122,8 @@ export default async function LandingPage() {
                 ))}
               </h1>
 
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4">{t("mtdFull")}</p>
+
               <p className="text-lg text-slate-600 dark:text-slate-400 mb-5 max-w-[520px] leading-relaxed" style={{ textWrap: "pretty" as any }}>
                 {t("heroSubtitle2")}
               </p>

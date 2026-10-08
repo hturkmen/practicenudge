@@ -234,6 +234,7 @@ export default async function MTDLandingPage() {
                 <br />
                 <span className="text-teal-700 dark:text-teal-400">{t("heroT2")}</span>
               </h1>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-3">{t("mtdFull")}</p>
               <p className="text-lg text-slate-600 dark:text-slate-400 mb-7 max-w-[480px] leading-relaxed">
                 {t("heroLead")}
               </p>
