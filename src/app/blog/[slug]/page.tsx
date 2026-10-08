@@ -18,7 +18,7 @@ const posts: Record<string, {
 }> = {
   "mtd-client-readiness-checklist-2026": {
     title: "MTD Client Readiness Checklist for 2026: What Every Small Practice Needs",
-    excerpt: "A practical checklist for UK accountants to assess which clients are MTD-ready, what documents are missing, and how to prioritise your workload before HMRC deadlines.",
+    excerpt: "MTD readiness checklist for UK accountants: work out which clients are MTD-ready, what documents are missing, and how to prioritise your workload before HMRC deadlines.",
     date: "2026-05-10",
     category: "MTD Compliance",
     readTime: "8 min read",

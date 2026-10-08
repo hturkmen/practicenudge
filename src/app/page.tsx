@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,10 @@ import { ExitIntentModal } from "@/components/exit-intent-modal";
 import { getTranslations } from "next-intl/server";
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  alternates: { canonical: "https://www.practicenudge.com" },
+};
 
 export default async function LandingPage() {
   const t = await getTranslations("landing");
@@ -524,6 +529,8 @@ export default async function LandingPage() {
                 <Link href="/blog/mtd-itsa-deadlines-2026-2027-2028" className="hover:text-white transition-colors">MTD Deadlines</Link>
                 <Link href="/blog/mtd-client-readiness-checklist-2026" className="hover:text-white transition-colors">MTD Checklist</Link>
                 <Link href="/blog/stop-chasing-clients-mtd-documents" className="hover:text-white transition-colors">Stop Chasing Clients</Link>
+                <Link href="/blog/how-to-track-mtd-compliance-small-practice" className="hover:text-white transition-colors">Track MTD Compliance</Link>
+                <Link href="/blog/sole-trader-landlord-mtd-what-accountants-need" className="hover:text-white transition-colors">Sole Traders and Landlords</Link>
               </div>
             </div>
             <div>

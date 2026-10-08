@@ -18,7 +18,7 @@ const geistSans = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.practicenudge.com"),
   title: {
-    default: "PracticeNudge — MTD Client Readiness Tracking for UK Accountants",
+    default: "MTD Client Readiness Software for UK Accountants | PracticeNudge",
     template: "%s | PracticeNudge",
   },
   description:
@@ -80,14 +80,7 @@ export const metadata: Metadata = {
       "Free tool to track MTD readiness, chase documents, and send reminders. Built for small UK practices.",
     images: ["/og-image.png"],
   },
-  alternates: {
-    canonical: "https://www.practicenudge.com",
-    languages: {
-      "en-GB": "https://www.practicenudge.com",
-      "tr": "https://www.practicenudge.com",
-      "x-default": "https://www.practicenudge.com",
-    },
-  },
+
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-touch-icon.png",

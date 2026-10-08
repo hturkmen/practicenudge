@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CONTACT_EMAIL, CONTROLLER_ADDRESS, CONTROLLER_LEGAL_NAME, PRIVACY_LAST_UPDATED } from "@/lib/site-legal";
 
 export const metadata: Metadata = {
-  title: "Privacy notice | PracticeNudge",
+  title: "Privacy notice",
   description: "How PracticeNudge collects and uses personal data.",
   alternates: { canonical: "https://www.practicenudge.com/privacy" },
 };
