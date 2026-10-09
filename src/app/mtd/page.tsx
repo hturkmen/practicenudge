@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DeadlineBanner } from "@/components/deadline-banner";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageContinueLinks } from "@/components/language-continue-links";
+import { CookieSettingsButton } from "@/components/cookie-settings-button";
 import { deadlineImage, formatDeadlineDate, formatDeadlineDay, nextDeadline } from "@/lib/mtd-deadlines";
 import {
   FileSpreadsheet,
@@ -452,6 +453,7 @@ export default async function MTDLandingPage() {
               <Link href="/blog" className="hover:text-white transition-colors">{t("footBlog")}</Link>
               <Link href="/compare/sage-mtd-agent" className="hover:text-white transition-colors">{t("footCompare")}</Link>
               <Link href="/privacy" className="hover:text-white transition-colors">{t("footPrivacy")}</Link>
+              <CookieSettingsButton className="hover:text-white transition-colors" />
               <a href="mailto:hello@practicenudge.com" className="hover:text-white transition-colors">{t("footContact")}</a>
             </div>
           </div>

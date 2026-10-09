@@ -1,4 +1,5 @@
 {
+  "cookies": { "text": "Hangi sayfaların işe yaradığını görmek için Google Analytics çerezleri kullanıyoruz. Siz kabul etmedikçe kapalı kalırlar.", "accept": "Analitiği kabul et", "decline": "Reddet", "privacy": "Gizlilik bildirimi", "settings": "Çerez ayarları", "label": "Çerez tercihleri" },
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Giriş yap",

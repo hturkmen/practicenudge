@@ -1,4 +1,5 @@
 {
+  "cookies": { "text": "Wir verwenden Google-Analytics-Cookies, um zu sehen, welche Seiten hilfreich sind. Sie bleiben ausgeschaltet, solange Sie nicht zustimmen.", "accept": "Analyse akzeptieren", "decline": "Ablehnen", "privacy": "Datenschutzhinweis", "settings": "Cookie-Einstellungen", "label": "Cookie-Präferenzen" },
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Anmelden",

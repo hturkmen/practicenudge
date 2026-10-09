@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AnalyticsEvents } from "@/components/analytics-events";
+import { GoogleAnalytics } from "@/components/google-analytics";
+import { CookieBanner } from "@/components/cookie-banner";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { isRtl } from "@/i18n/config";
@@ -103,27 +104,7 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
       <body className="antialiased">
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-B8P1PZSHZ9"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            // Own visits are tagged so a GA4 data filter can drop them: open any page once with ?pn_internal=1
-            // (and ?pn_internal=0 to undo). Local development counts as internal automatically.
-            var internal = /^(localhost|127\\.0\\.0\\.1)$/.test(location.hostname);
-            try {
-              if (location.search.indexOf('pn_internal=1') > -1) localStorage.setItem('pn_internal', '1');
-              if (location.search.indexOf('pn_internal=0') > -1) localStorage.removeItem('pn_internal');
-              internal = internal || localStorage.getItem('pn_internal') === '1';
-            } catch (e) {}
-            gtag('set', 'user_properties', { site_language: ${JSON.stringify(locale)} });
-            gtag('config', 'G-B8P1PZSHZ9', internal ? { traffic_type: 'internal' } : {});
-          `}
-        </Script>
+        <GoogleAnalytics />
         <AnalyticsEvents />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
@@ -133,6 +114,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <CookieBanner />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

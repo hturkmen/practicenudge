@@ -34,6 +34,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { WebsiteStructuredData } from "@/components/structured-data";
 import { DeadlineBanner } from "@/components/deadline-banner";
 import { ExitIntentModal } from "@/components/exit-intent-modal";
+import { CookieSettingsButton } from "@/components/cookie-settings-button";
 import { getTranslations } from "next-intl/server";
 
 export const revalidate = 3600;
@@ -539,6 +540,7 @@ export default async function LandingPage() {
                 <Link href="/login" className="hover:text-white transition-colors">Sign In</Link>
                 <a href="mailto:hello@practicenudge.com" className="hover:text-white transition-colors">Contact</a>
                 <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+                <CookieSettingsButton className="text-left hover:text-white transition-colors" />
               </div>
             </div>
           </div>

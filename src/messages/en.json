@@ -1,4 +1,5 @@
 {
+  "cookies": { "text": "We use Google Analytics cookies to see which pages are useful. They stay off unless you accept.", "accept": "Accept analytics", "decline": "Decline", "privacy": "Privacy notice", "settings": "Cookie settings", "label": "Cookie preferences" },
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Sign in",

@@ -1,4 +1,5 @@
 {
+  "cookies": { "text": "Folosim cookie-uri Google Analytics pentru a vedea ce pagini sunt utile. Rămân dezactivate dacă nu le accepți.", "accept": "Accept analiza", "decline": "Refuz", "privacy": "Notificare de confidențialitate", "settings": "Setări cookie", "label": "Preferințe cookie" },
   "common": {
     "appName": "PracticeNudge",
     "signIn": "Conectare",

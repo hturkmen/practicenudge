@@ -1,3 +1,4 @@
+import { CookieSettingsButton } from "@/components/cookie-settings-button";
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -271,6 +272,7 @@ export default async function WhatIsMtdPage() {
               <Link href="/" className="hover:text-slate-900 dark:hover:text-white">PracticeNudge</Link>
               <Link href="/blog" className="hover:text-slate-900 dark:hover:text-white">Blog</Link>
               <Link href="/privacy" className="hover:text-slate-900 dark:hover:text-white">Privacy</Link>
+              <CookieSettingsButton className="hover:text-slate-900 dark:hover:text-white" />
               <a href="mailto:hello@practicenudge.com" className="hover:text-slate-900 dark:hover:text-white">Contact</a>
           </div>
         </div>
