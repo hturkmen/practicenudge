@@ -65,21 +65,12 @@ export const metadata: Metadata = {
     title: "PracticeNudge — MTD Client Readiness Tracking for UK Accountants",
     description:
       "Free MTD client tracking tool for UK accountants. Stop chasing clients for documents. See who's MTD-ready, send reminders, track compliance — all in one dashboard.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "PracticeNudge — MTD Client Readiness Dashboard",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "PracticeNudge — MTD Client Tracking for UK Accountants",
     description:
       "Free tool to track MTD readiness, chase documents, and send reminders. Built for small UK practices.",
-    images: ["/og-image.png"],
   },
 
   icons: {

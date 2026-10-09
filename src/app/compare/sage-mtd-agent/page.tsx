@@ -27,6 +27,7 @@ export const metadata: Metadata = {
       "An honest comparison for small UK practices choosing between Sage MTD Agent and PracticeNudge for MTD client tracking.",
     type: "article",
     url: "https://www.practicenudge.com/compare/sage-mtd-agent",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "PracticeNudge: collect your clients' MTD records without chasing them" }],
   },
 };
 
