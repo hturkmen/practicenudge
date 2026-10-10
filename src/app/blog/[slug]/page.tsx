@@ -2,14 +2,18 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, RefreshCw } from "lucide-react";
 import type { Metadata } from "next";
-import { posts } from "@/lib/blog-posts";
+import { allPosts, posts, relatedPosts } from "@/lib/blog-posts";
+import { renderMarkdown } from "@/lib/markdown";
+import { jsonLdString } from "@/lib/json-ld";
 
 type Props = { params: { slug: string } };
 
+const SITE = "https://www.practicenudge.com";
+
 export async function generateStaticParams() {
-  return Object.keys(posts).map((slug) => ({ slug }));
+  return allPosts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -20,12 +24,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: post.title,
     description: post.excerpt,
     keywords: post.keywords,
+    authors: [{ name: post.author }],
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
       publishedTime: post.date,
-      authors: ["PracticeNudge"],
+      modifiedTime: post.updated,
+      authors: [post.author],
+      section: post.category,
     },
     twitter: {
       card: "summary_large_image",
@@ -33,14 +40,51 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.excerpt,
     },
     alternates: {
-      canonical: `https://www.practicenudge.com/blog/${params.slug}`,
+      canonical: `${SITE}/blog/${params.slug}`,
     },
   };
 }
 
+const fmtLong = (date: string) =>
+  new Date(date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
 export default function BlogPost({ params }: Props) {
   const post = posts[params.slug];
   if (!post) notFound();
+
+  const url = `${SITE}/blog/${params.slug}`;
+  const isUpdated = post.updated > post.date;
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.updated,
+    articleSection: post.category,
+    keywords: post.keywords.join(", "),
+    image: [`${url}/opengraph-image`],
+    author: { "@type": "Organization", name: post.author, url: SITE },
+    publisher: {
+      "@type": "Organization",
+      name: "PracticeNudge",
+      url: SITE,
+      logo: { "@type": "ImageObject", url: `${SITE}/logo.svg` },
+    },
+    mainEntityOfPage: url,
+    ...(post.sources.length ? { citation: post.sources.map((s) => s.url) } : {}),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: url },
+    ],
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -51,6 +95,7 @@ export default function BlogPost({ params }: Props) {
           </Link>
           <div className="flex items-center gap-4 text-sm">
             <Link href="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link>
+            <Link href="/updates" className="text-muted-foreground hover:text-foreground">MTD Updates</Link>
             <Link href="/register" className="text-primary font-medium">Free Trial</Link>
           </div>
         </div>
@@ -62,74 +107,46 @@ export default function BlogPost({ params }: Props) {
         </Link>
 
         <header className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex flex-wrap items-center gap-3 mb-4">
             <Badge variant="secondary">{post.category}</Badge>
             <span className="text-sm text-muted-foreground flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
-              {new Date(post.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+              <time dateTime={post.date}>{fmtLong(post.date)}</time>
             </span>
+            {isUpdated && (
+              <span className="text-sm text-muted-foreground flex items-center gap-1">
+                <RefreshCw className="h-3.5 w-3.5" />
+                Updated <time dateTime={post.updated}>{fmtLong(post.updated)}</time>
+              </span>
+            )}
             <span className="text-sm text-muted-foreground">{post.readTime}</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">{post.title}</h1>
           <p className="text-lg text-muted-foreground">{post.excerpt}</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            By {post.author}. Last reviewed <time dateTime={post.updated}>{fmtLong(post.updated)}</time>.
+          </p>
         </header>
 
-        <div className="prose prose-slate max-w-none prose-headings:font-bold prose-h2:text-2xl prose-h3:text-xl prose-p:text-base prose-li:text-base">
-          {post.content.split("\n\n").map((block, i) => {
-            if (block.startsWith("## ")) {
-              return <h2 key={i} className="text-2xl font-bold mt-8 mb-4">{block.replace("## ", "")}</h2>;
-            }
-            if (block.startsWith("### ")) {
-              return <h3 key={i} className="text-xl font-semibold mt-6 mb-3">{block.replace("### ", "")}</h3>;
-            }
-            if (block.startsWith("| ")) {
-              const rows = block.split("\n").filter(r => !r.startsWith("|--"));
-              const headers = rows[0]?.split("|").filter(Boolean).map(h => h.trim());
-              const data = rows.slice(1).map(r => r.split("|").filter(Boolean).map(c => c.trim()));
-              return (
-                <div key={i} className="overflow-x-auto my-4">
-                  <table className="w-full text-sm border">
-                    <thead><tr className="bg-gray-50">{headers?.map((h, j) => <th key={j} className="border px-3 py-2 text-left font-medium">{h}</th>)}</tr></thead>
-                    <tbody>{data.map((row, ri) => <tr key={ri}>{row.map((cell, ci) => <td key={ci} className="border px-3 py-2">{cell}</td>)}</tr>)}</tbody>
-                  </table>
-                </div>
-              );
-            }
-            if (block.startsWith("- [ ]") || block.startsWith("- **")) {
-              const items = block.split("\n");
-              return (
-                <ul key={i} className="space-y-1 my-4 list-disc pl-5">
-                  {items.map((item, j) => (
-                    <li key={j} className="text-sm">{item.replace(/^- \[.\] /, "").replace(/^- /, "")}</li>
-                  ))}
-                </ul>
-              );
-            }
-            if (block.startsWith("1. ")) {
-              const items = block.split("\n");
-              return (
-                <ol key={i} className="space-y-1 my-4 list-decimal pl-5">
-                  {items.map((item, j) => (
-                    <li key={j} className="text-sm">{item.replace(/^\d+\. /, "")}</li>
-                  ))}
-                </ol>
-              );
-            }
-            if (block.includes("[") && block.includes("](")) {
-              const match = block.match(/\[(.+?)\]\((.+?)\)/);
-              if (match) {
-                return (
-                  <p key={i} className="my-4">
-                    <Link href={match[2]} className="text-primary font-medium hover:underline">
-                      {match[1]}
-                    </Link>
-                  </p>
-                );
-              }
-            }
-            return <p key={i} className="my-4 text-muted-foreground leading-relaxed">{block}</p>;
-          })}
-        </div>
+        <div className="max-w-none">{renderMarkdown(post.content)}</div>
+
+        {post.sources.length > 0 && (
+          <section aria-labelledby="sources-title" className="mt-10 rounded-lg border bg-slate-50 p-5">
+            <h2 id="sources-title" className="text-base font-semibold mb-2">Sources</h2>
+            <p className="text-sm text-muted-foreground mb-3">
+              Rules and dates come from HMRC and GOV.UK. Check them there before you rely on this page.
+            </p>
+            <ul className="space-y-1.5 text-sm">
+              {post.sources.map((s) => (
+                <li key={s.url}>
+                  <a href={s.url} rel="noopener noreferrer" className="text-primary underline underline-offset-2 hover:no-underline">
+                    {s.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* CTA */}
         <div className="mt-12 p-6 bg-primary/5 rounded-lg border border-primary/20 text-center">
@@ -148,15 +165,12 @@ export default function BlogPost({ params }: Props) {
         <div className="mt-10 pt-8 border-t">
           <h3 className="text-lg font-bold mb-4">Related articles</h3>
           <div className="grid md:grid-cols-2 gap-4">
-            {Object.entries(posts)
-              .filter(([slug]) => slug !== params.slug)
-              .slice(0, 4)
-              .map(([slug, relatedPost]) => (
-                <Link key={slug} href={`/blog/${slug}`} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
-                  <Badge variant="secondary" className="text-xs mb-2">{relatedPost.category}</Badge>
-                  <h4 className="text-sm font-semibold line-clamp-2">{relatedPost.title}</h4>
-                </Link>
-              ))}
+            {relatedPosts(params.slug).map((related) => (
+              <Link key={related.slug} href={`/blog/${related.slug}`} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
+                <Badge variant="secondary" className="text-xs mb-2">{related.category}</Badge>
+                <h4 className="text-sm font-semibold line-clamp-2">{related.title}</h4>
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -170,37 +184,8 @@ export default function BlogPost({ params }: Props) {
           </Link>
         </div>
 
-        {/* Article structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Article",
-              headline: post.title,
-              description: post.excerpt,
-              datePublished: post.date,
-              author: { "@type": "Organization", name: "PracticeNudge" },
-              publisher: { "@type": "Organization", name: "PracticeNudge", url: "https://www.practicenudge.com" },
-              mainEntityOfPage: `https://www.practicenudge.com/blog/${params.slug}`,
-            }),
-          }}
-        />
-        {/* Breadcrumb structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              itemListElement: [
-                { "@type": "ListItem", position: 1, name: "Home", item: "https://www.practicenudge.com" },
-                { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.practicenudge.com/blog" },
-                { "@type": "ListItem", position: 3, name: post.title, item: `https://www.practicenudge.com/blog/${params.slug}` },
-              ],
-            }),
-          }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(articleJsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }} />
       </article>
     </div>
   );

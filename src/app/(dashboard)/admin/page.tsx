@@ -32,6 +32,7 @@ import {
   TrendingUp,
   UserPlus,
   Send,
+  Newspaper,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -156,6 +157,12 @@ export default function AdminPage() {
               <Button variant="outline" className="gap-2">
                 <Bell className="h-4 w-4" />
                 Notifications
+              </Button>
+            </Link>
+            <Link href="/admin/updates">
+              <Button variant="outline" className="gap-2">
+                <Newspaper className="h-4 w-4" />
+                MTD Updates
               </Button>
             </Link>
             <Link href="/admin/outreach">

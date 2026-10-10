@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
+    "blog:build": "node scripts/build-blog-data.mjs",
     "test:watch": "vitest"
   },
   "dependencies": {

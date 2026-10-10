@@ -5,8 +5,11 @@ import { createClient } from "@supabase/supabase-js";
 import { sendReminderEmail } from "@/lib/email/resend";
 import { createNotificationLog } from "@/lib/notifications/logger";
 import { notifyCronError } from "@/lib/email/admin-notify";
+import { runMtdUpdatesJob } from "@/lib/mtd-updates/job";
 
 export const dynamic = "force-dynamic";
+// The MTD Updates drafting step runs after the reminders and is time-boxed; this leaves it room.
+export const maxDuration = 60;
 
 export async function GET(request: Request) {
   const supabase = createClient(
@@ -241,9 +244,14 @@ export async function GET(request: Request) {
     }
   }
 
+  // Vercel Hobby allows two cron jobs, so the daily MTD Updates check rides on this one. It runs last,
+  // never throws, and stops calling the AI model after its time budget.
+  const mtdUpdates = await runMtdUpdatesJob(supabase);
+
   return NextResponse.json({
     success: true,
     signupNotifications,
+    mtdUpdates,
     processed: requests.length,
     emailsSent,
     smsSent,
